@@ -46,7 +46,7 @@ public class Animation {
 				top = row*frameHeight;
 				right = left + frameWidth;
 				bottom = top + frameHeight;
-				rect = new Rect(left,right,top,bottom);
+				rect = new Rect(left,top,right,bottom);
 
 				try {
 					regionDecoder = BitmapRegionDecoder.newInstance(is, false);
@@ -65,10 +65,6 @@ public class Animation {
 		case zombie:
 			spriteSheetHeight = 1024;
 			spriteSheetWidth = 4068;
-			
-			frameWidth = spriteSheetWidth/columns;
-			frameHeight = spriteSheetHeight/rows;
-			
 			frames = 9; //9
 			columns = 36; //36
 			rows = 8; //1
@@ -81,6 +77,9 @@ public class Animation {
 			southeast = 5;
 			south = 6;
 			southwest = 7;
+			
+			frameWidth = spriteSheetWidth/columns;
+			frameHeight = spriteSheetHeight/rows;
 			break;
 		}
 	}
