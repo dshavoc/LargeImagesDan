@@ -29,7 +29,7 @@ public class LargeBitmapView extends View{
 		//largeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.huge,o);
 		
 		try {
-			InputStream is = getResources().openRawResource(R.drawable.huge);
+			InputStream is = getResources().openRawResource(R.drawable.zombie);
 			BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(is, false);
 			croppedBitmap = regionDecoder.decodeRegion(new Rect(100,100,200,200), null);
 		

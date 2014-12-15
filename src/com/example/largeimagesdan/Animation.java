@@ -2,6 +2,7 @@ package com.example.largeimagesdan;
 
 
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 import android.graphics.BitmapRegionDecoder;
@@ -22,10 +23,25 @@ public class Animation {
 	int startFrame;
 	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
 
-public Animation (AnimationModel animationModel){
+public Animation (AnimationModel animationModel, InputStream is){
 		defineAnimationAttributes(animationModel);
+		
 	}
-
+private void createFrames(InputStream is){
+	BitmapRegionDecoder regionDecoder = null;
+	Bitmap croppedBitmap;
+	Rect rect;
+	int left, right, top, bottom;
+	try {
+		regionDecoder = BitmapRegionDecoder.newInstance(is, false);
+		croppedBitmap = regionDecoder.decodeRegion(new Rect(100,100,200,200), null);
+		animationFrames.add(croppedBitmap);
+	
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 	private void defineAnimationAttributes(AnimationModel animationModel){
 		switch(animationModel){
 		case zombie:
