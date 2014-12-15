@@ -15,6 +15,7 @@ import android.graphics.BitmapRegionDecoder;
 
 public class LargeBitmapView extends View{
 	Bitmap croppedBitmap;
+	Animation zombieAnimation;
 	public LargeBitmapView(Context context) {
 		super(context);
 		setup();
@@ -23,20 +24,13 @@ public class LargeBitmapView extends View{
 	
 	private void setup(){
 		
-		try {
 			InputStream is = getResources().openRawResource(R.drawable.zombie);
-			BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(is, false);
-			croppedBitmap = regionDecoder.decodeRegion(new Rect(100,100,200,200), null);
-		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  	
+			zombieAnimation = new Animation(AnimationModel.zombie,is);
 	}
 	
 	protected void onDraw(Canvas canvas)
 	{	
-
+		croppedBitmap = zombieAnimation.animationFrames.elementAt(0);
 		canvas.drawBitmap(croppedBitmap,20,20,null); //20 20 works
 		
 		try {  
