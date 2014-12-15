@@ -38,18 +38,21 @@ public class Animation {
 		Bitmap croppedBitmap;
 		Rect rect;
 		int left, right, top, bottom;
-
+		InputStream original = is;
+		InputStream used;
 		for (int row =0; row < rows; row++)
 			for (int col = 0; col < columns; col++)
 			{	
-				left = col*frameWidth;
-				top = row*frameHeight;
-				right = left + frameWidth;
-				bottom = top + frameHeight;
+				used = original;
+				left = col*frameWidth+1;
+				top = row*frameHeight+1;
+				right = left + frameWidth-1;
+				bottom = top + frameHeight-1;
+				
 				rect = new Rect(left,top,right,bottom);
 
 				try {
-					regionDecoder = BitmapRegionDecoder.newInstance(is, false);
+					regionDecoder = BitmapRegionDecoder.newInstance(used, false);
 					croppedBitmap = regionDecoder.decodeRegion(rect, null);
 					animationFrames.add(croppedBitmap);
 

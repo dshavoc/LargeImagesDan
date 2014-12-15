@@ -14,6 +14,7 @@ import android.view.View;
 import android.graphics.BitmapRegionDecoder;
 
 public class LargeBitmapView extends View{
+	int animationCount = 0;
 	Bitmap croppedBitmap;
 	Animation zombieAnimation;
 	public LargeBitmapView(Context context) {
@@ -31,7 +32,10 @@ public class LargeBitmapView extends View{
 	
 	protected void onDraw(Canvas canvas)
 	{	
-		croppedBitmap = zombieAnimation.animationFrames.elementAt(0);
+		
+		croppedBitmap = zombieAnimation.animationFrames.elementAt(animationCount);
+		animationCount++;
+		if (animationCount>=zombieAnimation.animationFrames.size()) animationCount = 0;
 		canvas.drawBitmap(croppedBitmap,20,20,null); //20 20 works
 		
 		try {  
