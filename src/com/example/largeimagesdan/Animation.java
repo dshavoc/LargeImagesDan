@@ -16,14 +16,14 @@ enum AnimationModel{zombie};//add names to this in or
 
 public class Animation {
 	int columns, rows;
-	
+
 	int spriteSheetWidth, spriteSheetHeight; 
 	int frameWidth, frameHeight;
-	
+
 	int animationCount=1; // number of frames in a single animation, if a NSEW 3x4 animation count = 3 because three images make the animation in each of the 4 directions. 
 	int north,northeast,east,southeast, south, southwest, west, northwest;
-	
-	
+
+
 	int frames;
 	int startFrame;
 	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
@@ -42,18 +42,21 @@ public class Animation {
 			for (int col = 0; col < columns; col++)
 			{	
 				left = col*frameWidth;
-				
-				
-				try {
-				regionDecoder = BitmapRegionDecoder.newInstance(is, false);
-				croppedBitmap = regionDecoder.decodeRegion(new Rect(100,100,200,200), null);
-				animationFrames.add(croppedBitmap);
+				top = row*frameHeight;
+				right = left + frameWidth;
+				bottom = top + frameHeight;
+				rect = new Rect(left,right,top,bottom);
 
-			} 
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					regionDecoder = BitmapRegionDecoder.newInstance(is, false);
+					croppedBitmap = regionDecoder.decodeRegion(rect, null);
+					animationFrames.add(croppedBitmap);
+
+				} 
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 	}
 	private void defineAnimationAttributes(AnimationModel animationModel){
