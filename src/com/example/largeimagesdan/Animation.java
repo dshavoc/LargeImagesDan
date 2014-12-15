@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.View;
 
 enum AnimationModel{zombie};//add names to this in or
 
@@ -55,9 +56,9 @@ public class Animation {
 		BitmapRegionDecoder regionDecoder = null;
 		Bitmap croppedBitmap;
 		Rect rect;
+		//InputStream is;
 		int left, right, top, bottom;
-		//InputStream original = is;		no need to be copying all this data around now that the input stream is decoded only once
-		//InputStream used;
+
 		try {
 			regionDecoder = BitmapRegionDecoder.newInstance(is, false);
 		} catch (IOException e1) {

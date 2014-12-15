@@ -20,6 +20,7 @@ public class LargeBitmapView extends View{
 	public LargeBitmapView(Context context) {
 		super(context);
 		setup();
+		System.out.println("set up completed");
 		// TODO Auto-generated constructor stub
 	}
 	
