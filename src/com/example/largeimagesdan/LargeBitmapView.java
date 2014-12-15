@@ -26,6 +26,7 @@ public class LargeBitmapView extends View{
 		
 			InputStream is = getResources().openRawResource(R.drawable.zombie);
 			zombieAnimation = new Animation(AnimationModel.zombie,is);
+			System.out.println("query");
 	}
 	
 	protected void onDraw(Canvas canvas)

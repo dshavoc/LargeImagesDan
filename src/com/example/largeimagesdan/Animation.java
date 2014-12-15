@@ -30,6 +30,7 @@ public class Animation {
 
 	public Animation (AnimationModel animationModel, InputStream is){
 		defineAnimationAttributes(animationModel);
+		createFrames(is);
 
 	}
 	private void createFrames(InputStream is){
@@ -62,6 +63,12 @@ public class Animation {
 	private void defineAnimationAttributes(AnimationModel animationModel){
 		switch(animationModel){
 		case zombie:
+			spriteSheetHeight = 1024;
+			spriteSheetWidth = 4068;
+			
+			frameWidth = spriteSheetWidth/columns;
+			frameHeight = spriteSheetHeight/rows;
+			
 			frames = 9; //9
 			columns = 36; //36
 			rows = 8; //1
