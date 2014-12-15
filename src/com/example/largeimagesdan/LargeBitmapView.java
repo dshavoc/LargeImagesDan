@@ -14,19 +14,14 @@ import android.view.View;
 import android.graphics.BitmapRegionDecoder;
 
 public class LargeBitmapView extends View{
-	Bitmap largeBitmap;
 	Bitmap croppedBitmap;
-	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
 	public LargeBitmapView(Context context) {
 		super(context);
 		setup();
 		// TODO Auto-generated constructor stub
 	}
 	
-	@SuppressLint("NewApi") 
 	private void setup(){
-		
-		//largeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.huge,o);
 		
 		try {
 			InputStream is = getResources().openRawResource(R.drawable.zombie);
