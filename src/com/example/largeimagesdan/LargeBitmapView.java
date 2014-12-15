@@ -20,13 +20,13 @@ public class LargeBitmapView extends View{
 	public LargeBitmapView(Context context) {
 		super(context);
 		setup();
+		System.out.println("set up completed");
 		// TODO Auto-generated constructor stub
 	}
 	
 	private void setup(){
 		
-			InputStream is = getResources().openRawResource(R.drawable.zombie);
-			zombieAnimation = new Animation(AnimationModel.zombie,is);
+			zombieAnimation = new Animation(AnimationModel.zombie,this);
 			System.out.println("query");
 	}
 	

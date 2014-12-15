@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.View;
 
 enum AnimationModel{zombie};//add names to this in or
 
@@ -28,31 +29,30 @@ public class Animation {
 	int startFrame;
 	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
 
-	public Animation (AnimationModel animationModel, InputStream is){
+	public Animation (AnimationModel animationModel, View v){
 		defineAnimationAttributes(animationModel);
-		createFrames(is);
+		createFrames(v);
 
 	}
-	private void createFrames(InputStream is){
+	private void createFrames(View v){
 		BitmapRegionDecoder regionDecoder = null;
 		Bitmap croppedBitmap;
 		Rect rect;
+		InputStream is;
 		int left, right, top, bottom;
-		InputStream original = is;
-		InputStream used;
 		for (int row =0; row < rows; row++)
 			for (int col = 0; col < columns; col++)
 			{	
-				used = original;
+				
 				left = col*frameWidth+1;
 				top = row*frameHeight+1;
 				right = left + frameWidth-1;
 				bottom = top + frameHeight-1;
 				
 				rect = new Rect(left,top,right,bottom);
-
+				is = v.getResources().openRawResource(R.drawable.zombie);
 				try {
-					regionDecoder = BitmapRegionDecoder.newInstance(used, false);
+					regionDecoder = BitmapRegionDecoder.newInstance(is, false);
 					croppedBitmap = regionDecoder.decodeRegion(rect, null);
 					animationFrames.add(croppedBitmap);
 
