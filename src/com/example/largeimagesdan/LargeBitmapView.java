@@ -17,6 +17,7 @@ public class LargeBitmapView extends View{
 	int animationCount = 0;
 	Bitmap croppedBitmap;
 	Animation zombieAnimation;
+	Vector<AnimatedObject> animatedObjects = new Vector<AnimatedObject>();
 	public LargeBitmapView(Context context) {
 		super(context);
 		setup();
@@ -29,16 +30,14 @@ public class LargeBitmapView extends View{
 		InputStream is = getResources().openRawResource(R.drawable.zombie);
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
 		System.out.println("Setup called.");
+		animatedObjects.add(new Zombie(100, 100, zombieAnimation.animLayout));
 	}
 	
 	protected void onDraw(Canvas canvas)
 	{	
 		
-		croppedBitmap = zombieAnimation.animationFrames.elementAt(animationCount);
-		animationCount++;
-		if (animationCount>=zombieAnimation.animationFrames.size()) animationCount = 0;
-		canvas.drawBitmap(croppedBitmap,20,20,null); //20 20 works
-		
+		Zombie z = (Zombie) animatedObjects.elementAt(0);
+		z.update(canvas, zombieAnimation);
 		try {  
 			Thread.sleep(100);   
 		} catch (InterruptedException e) { }      
