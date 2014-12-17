@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 
 public class Zombie extends AnimatedObject{
 	Random rand = new Random();
-	boolean attacking = false;
+	boolean isAttacking = false;
 	public Zombie(float rx, float ry, AnimationLayout animationLayout) {
 		super(rx, ry, animationLayout);
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
@@ -28,8 +28,7 @@ public class Zombie extends AnimatedObject{
 	private void walk(){
 		animationFrames = 8;
 		animationStart = 4;
-		animationFrames = animationLayout.pursueLen;
-		animationStart = animationLayout.pursueCol;
+		isAttacking = true;
 		move();
 	}
 	private void stand(){
@@ -37,13 +36,20 @@ public class Zombie extends AnimatedObject{
 		animationStart = animationLayout.roamCol;
 	}
 	public void update(Canvas canvas, Animation animation) {
-		if (rx == destinationX && ry == destinationY)
-			attack();
+		if (rx == destinationX && ry == destinationY && !isAttacking)
+		{	
+			{
+				stand();
+			}
+			if (rx == destinationX && ry == destinationY && isAttacking)
+				if (attack())
+					isAttacking = false;
+		}
 		else {
 			walk();
 		}
-		
-		
+
+
 		drawSelf(canvas, animation);
 		int r = rand.nextInt(10);
 		if (r == 9) setDestination(rand.nextInt(300)+100, rand.nextInt(700)+100);
