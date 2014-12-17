@@ -26,6 +26,8 @@ public class Zombie extends AnimatedObject{
 
 
 	private void walk(){
+		animationFrames = 8;
+		animationStart = 4;
 		animationFrames = animationLayout.pursueLen;
 		animationStart = animationLayout.pursueCol;
 		move();
