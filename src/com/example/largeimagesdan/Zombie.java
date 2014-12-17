@@ -19,7 +19,7 @@ public class Zombie extends AnimatedObject{
 		boolean ret = false;
 		animationFrames = animationLayout.attackLen;
 		animationStart = animationLayout.attackCol;
-		if (animationCount == animationFrames)
+		if (animationCount == animationFrames-1)
 			ret = true;
 		return ret;
 	}
@@ -38,17 +38,26 @@ public class Zombie extends AnimatedObject{
 	public void update(Canvas canvas, Animation animation) {
 		boolean isAtDestination = false;
 		if (rx == destinationX && ry == destinationY) isAtDestination = true;
+
 		if (isAtDestination && !isAttacking)	
+			{
+			isAttacking = true;
+			animationCount = 0;
 			stand();
+			}
 		if (isAtDestination && isAttacking)
 			if (attack())
+				{
+				setDestination(rand.nextInt(800),rand.nextInt(800));
+				move();
 				isAttacking = false;
+				}
 		if (!isAtDestination)
 			walk();
-	
-	drawSelf(canvas, animation);
-	int r = rand.nextInt(10);
-	if (r == 9) setDestination(rand.nextInt(300)+100, rand.nextInt(700)+100);
-}
+
+		drawSelf(canvas, animation);
+		int r = rand.nextInt(10);
+		if (r == 9 && !isAttacking) setDestination(rand.nextInt(300)+100, rand.nextInt(700)+100);
+	}
 
 }

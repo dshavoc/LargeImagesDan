@@ -41,6 +41,7 @@ public class AnimatedObject {
 		int dx = (int) (newDestinationX-rx);
 		int dy = (int) (newDestinationY-ry);
 		double d = Math.pow(dx*dx+dy*dy, .5);
+		//double e = Math.hypot(dx,dy);
 		int ax;
 		ax = Math.abs(dx);
 		double px = ax/(d);
