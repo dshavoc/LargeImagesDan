@@ -30,14 +30,20 @@ public class LargeBitmapView extends View{
 		InputStream is = getResources().openRawResource(R.drawable.zombie);
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
 		System.out.println("Setup called.");
-		animatedObjects.add(new Zombie(100, 100, zombieAnimation.animLayout));
+		for (int i = 0; i <2000; i ++)
+			animatedObjects.add(new Zombie(i*30, 100, zombieAnimation.animLayout));
 	}
-	
+	private void drawZombies(Canvas canvas){
+		for (int i = 0; i < animatedObjects.size(); i++)
+		{
+			Zombie z = (Zombie) animatedObjects.elementAt(i);
+			z.update(canvas, zombieAnimation);
+			
+		}
+	}
 	protected void onDraw(Canvas canvas)
 	{	
-		
-		Zombie z = (Zombie) animatedObjects.elementAt(0);
-		z.update(canvas, zombieAnimation);
+		drawZombies(canvas);
 		try {  
 			Thread.sleep(100);   
 		} catch (InterruptedException e) { }      

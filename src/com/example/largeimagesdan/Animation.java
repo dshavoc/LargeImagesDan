@@ -106,10 +106,10 @@ public class Animation {
 			
 			//mostly works... check these points one is wrong... I am out of time. 
 			animLayout.roamCol = 0;			animLayout.roamLen = 4;
-			animLayout.pursueCol = 4;		animLayout.pursueLen = 8;
-			animLayout.attackCol = 12;		animLayout.attackLen = 10;
-			animLayout.deathCol = 22;		animLayout.deathLen = 6;
-			animLayout.headshotCol = 28;	animLayout.headshotLen = 8;
+			animLayout.pursueCol = 3;		animLayout.pursueLen = 8;
+			animLayout.attackCol = 11;		animLayout.attackLen = 10;
+			animLayout.deathCol = 23;		animLayout.deathLen = 6;
+			animLayout.headshotCol = 27;	animLayout.headshotLen = 8;
 			
 			animLayout.frameWidth = spriteSheetWidth/columns;
 			animLayout.frameHeight = spriteSheetHeight/rows;
