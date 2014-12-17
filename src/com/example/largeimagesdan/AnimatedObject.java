@@ -125,7 +125,7 @@ public class AnimatedObject {
 		Bitmap b = animation.animationFrames.elementAt(animationFrame);
 		canvas.drawBitmap(b, rx-radius, ry-radius, null);
 		animationCount++;
-		if(animationCount>=animationFrames)animationCount = animationStart;
+		if(animationCount>animationFrames)animationCount = 0;
 	}
 	
 }

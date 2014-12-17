@@ -89,7 +89,7 @@ public class Animation {
 			spriteSheetWidth = 4608;	//This was originally a typo: 4068, resulting in sprite drifting
 			frames = 9; //9
 			columns = 36; //36
-			rows = 8; //1
+			rows = 8; //12
 			startFrame = 1;
 			
 			//Map rows to sprite orientation
@@ -102,12 +102,14 @@ public class Animation {
 			animLayout.southRow = 6;
 			animLayout.southWestRow = 7;
 			
-			//Map columns to sequence boundaries 
-			animLayout.roamCol = 1;			animLayout.roamLen = 4;
-			animLayout.pursueCol = 5;		animLayout.pursueLen = 8;
-			animLayout.attackCol = 13;		animLayout.attackLen = 10;
-			animLayout.deathCol = 23;		animLayout.deathLen = 6;
-			animLayout.headshotCol = 29;	animLayout.headshotLen = 8;
+			//Map columns to sequence boundaries
+			
+			//mostly works... check these points one is wrong... I am out of time. 
+			animLayout.roamCol = 0;			animLayout.roamLen = 4;
+			animLayout.pursueCol = 4;		animLayout.pursueLen = 8;
+			animLayout.attackCol = 12;		animLayout.attackLen = 10;
+			animLayout.deathCol = 22;		animLayout.deathLen = 6;
+			animLayout.headshotCol = 28;	animLayout.headshotLen = 8;
 			
 			animLayout.frameWidth = spriteSheetWidth/columns;
 			animLayout.frameHeight = spriteSheetHeight/rows;

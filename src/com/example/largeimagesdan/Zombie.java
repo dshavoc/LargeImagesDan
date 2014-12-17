@@ -12,7 +12,7 @@ public class Zombie extends AnimatedObject{
 		super(rx, ry, animationLayout);
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
 		this.radius=100;
-		setDestination(100,100);
+		setDestination(300,100);
 
 		// TODO Auto-generated constructor stub
 	}
@@ -22,8 +22,8 @@ public class Zombie extends AnimatedObject{
 
 
 	private void walk(){
-		animationFrames = animationLayout.roamLen;
-		animationStart = animationLayout.roamCol;
+		animationFrames = animationLayout.pursueLen;
+		animationStart = animationLayout.pursueCol;
 	}
 	public void update(Canvas canvas, Animation animation) {
 		walk();
