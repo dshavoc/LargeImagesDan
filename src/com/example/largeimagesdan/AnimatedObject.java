@@ -2,7 +2,6 @@ package com.example.largeimagesdan;
 import com.example.largeimagesdan.Animation.AnimationLayout;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -20,7 +19,7 @@ public class AnimatedObject {
 	RectF size = new RectF(); //used for drawing object
 	Rect frame = new Rect(); // used for drawing object
 	
-	int speed =15; // speed of object not speed of animation
+	int speed =8; // speed of object not speed of animation
 	int destinationX, destinationY;
 	
 	int animationCount = 0;
@@ -42,11 +41,9 @@ public class AnimatedObject {
 		int dx = (int) (newDestinationX-rx);
 		int dy = (int) (newDestinationY-ry);
 		double d = Math.pow(dx*dx+dy*dy, .5);
-		int ax,ay;
+		int ax;
 		ax = Math.abs(dx);
-		ay = Math.abs(dy);
 		double px = ax/(d);
-		double py = ay/(d);
 		if (dx>0 && dy >0)
 		{
 			direction = MoveDirection.southEast;

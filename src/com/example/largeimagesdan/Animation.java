@@ -6,12 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 import android.graphics.BitmapRegionDecoder;
-import android.R.anim;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.RectF;
-import android.view.View;
 
 enum AnimationModel{zombie};//add names to this in or
 

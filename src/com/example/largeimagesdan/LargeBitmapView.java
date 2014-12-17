@@ -1,17 +1,11 @@
 package com.example.largeimagesdan;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.view.View;
-import android.graphics.BitmapRegionDecoder;
 
 public class LargeBitmapView extends View{
 	int animationCount = 0;
@@ -30,7 +24,7 @@ public class LargeBitmapView extends View{
 		InputStream is = getResources().openRawResource(R.drawable.zombie);
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
 		System.out.println("Setup called.");
-		for (int i = 0; i <2000; i ++)
+		for (int i = 0; i <5; i ++)
 			animatedObjects.add(new Zombie(i*30, 100, zombieAnimation.animLayout));
 	}
 	private void drawZombies(Canvas canvas){
