@@ -36,23 +36,19 @@ public class Zombie extends AnimatedObject{
 		animationStart = animationLayout.roamCol;
 	}
 	public void update(Canvas canvas, Animation animation) {
-		if (rx == destinationX && ry == destinationY && !isAttacking)
-		{	
-			{
-				stand();
-			}
-			if (rx == destinationX && ry == destinationY && isAttacking)
-				if (attack())
-					isAttacking = false;
-		}
-		else {
+		boolean isAtDestination = false;
+		if (rx == destinationX && ry == destinationY) isAtDestination = true;
+		if (isAtDestination && !isAttacking)	
+			stand();
+		if (isAtDestination && isAttacking)
+			if (attack())
+				isAttacking = false;
+		if (!isAtDestination)
 			walk();
-		}
-
-
-		drawSelf(canvas, animation);
-		int r = rand.nextInt(10);
-		if (r == 9) setDestination(rand.nextInt(300)+100, rand.nextInt(700)+100);
-	}
+	
+	drawSelf(canvas, animation);
+	int r = rand.nextInt(10);
+	if (r == 9) setDestination(rand.nextInt(300)+100, rand.nextInt(700)+100);
+}
 
 }
