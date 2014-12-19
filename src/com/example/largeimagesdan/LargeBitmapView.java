@@ -5,6 +5,7 @@ import java.util.Vector;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class LargeBitmapView extends View{
@@ -34,6 +35,19 @@ public class LargeBitmapView extends View{
 			z.update(canvas, zombieAnimation);
 			
 		}
+	}
+	public boolean onTouchEvent(MotionEvent event) {
+		int eventaction = event.getAction();
+		switch (eventaction) {
+		case MotionEvent.ACTION_DOWN: 
+			// finger touches the screen
+			
+			break;
+
+		}
+
+		// tell the system that we handled the event and no further processing is required
+		return true; 
 	}
 	protected void onDraw(Canvas canvas)
 	{	
