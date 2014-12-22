@@ -18,8 +18,9 @@ public class TicTacView extends View{
 	public TicTacView(Context context) {
 		super(context);
 		loadBitmaps();
-		createNewGame();
 		ai = new TicTacAI('o');
+		createNewGame();
+	
 	}
 	private void loadBitmaps(){
 		x = BitmapFactory.decodeResource(getResources(), R.drawable.xsymbol);
@@ -27,6 +28,9 @@ public class TicTacView extends View{
 	}
 
 	private void createNewGame(){
+		ai.firstMove=10;
+		ai.playerFirstMove = 10;
+		ai.clearPotentials();
 		tiles.clear();
 		numberOfMoves = 0;
 		for (int i = 0; i <3; i++)
@@ -45,15 +49,17 @@ public class TicTacView extends View{
 				
 				if (tile.isClicked(event.getX(), event.getY()))
 				{
+				
 					if(tile.placeSymbol(ai.playerSymbol))
 					{
+						if (ai.playerFirstMove == 10) ai.playerFirstMove=i;
 						numberOfMoves++;
-						if(ai.checkWin(tiles,ai.playerSymbol)) 
+						if(ai.checkWin(tiles,ai.playerSymbol)>0) 
 							createNewGame();
 						aiDecision = ai.AIMove(tiles);
 						tiles.elementAt(aiDecision).placeSymbol(ai.cpuSymbol);
 						numberOfMoves++;
-						if(ai.checkWin(tiles,ai.cpuSymbol))
+						if(ai.checkWin(tiles,ai.cpuSymbol)>0)
 							createNewGame();
 						if (numberOfMoves>=9) 
 							createNewGame();
