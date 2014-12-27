@@ -12,7 +12,10 @@ public class TicTacView extends View{
 	Vector<Tile> tiles = new Vector<Tile>();
 	Bitmap x;
 	Bitmap o;
+	Bitmap catsGame, zombieWin;
+	Bitmap winDisplayBitmap;
 	TicTacAI ai;
+	boolean isWinDisplay=false;
 	int numberOfMoves;
 	
 	public TicTacView(Context context) {
@@ -25,6 +28,8 @@ public class TicTacView extends View{
 	private void loadBitmaps(){
 		x = BitmapFactory.decodeResource(getResources(), R.drawable.xsymbol);
 		o = BitmapFactory.decodeResource(getResources(), R.drawable.osymbol);
+		catsGame = BitmapFactory.decodeResource(getResources(), R.drawable.cody);
+		zombieWin = BitmapFactory.decodeResource(getResources(), R.drawable.zombiewin);
 	}
 
 	private void createNewGame(){
@@ -55,14 +60,30 @@ public class TicTacView extends View{
 						if (ai.playerFirstMove == 10) ai.playerFirstMove=i;
 						numberOfMoves++;
 						if(ai.checkWin(tiles,ai.playerSymbol)>0) 
+							{
+							if (ai.playerSymbol == 'x') 
+								winDisplayBitmap=x;
+							else 
+								winDisplayBitmap = o;
+							
+							isWinDisplay = true;
 							createNewGame();
+							
+							}
 						aiDecision = ai.AIMove(tiles);
 						tiles.elementAt(aiDecision).placeSymbol(ai.cpuSymbol);
 						numberOfMoves++;
 						if(ai.checkWin(tiles,ai.cpuSymbol)>0)
+							{
+							winDisplayBitmap=zombieWin;
+							isWinDisplay = true;
 							createNewGame();
-						if (numberOfMoves>=9) 
+							}
+						if (numberOfMoves>=9){
+							winDisplayBitmap=catsGame;
+							isWinDisplay = true;
 							createNewGame();
+						}
 					}
 				}
 				if (tile.symbol!=' ') System.out.println("Tile i = " + i + "is " + tile.symbol);
@@ -75,16 +96,25 @@ public class TicTacView extends View{
 		return true; 
 	}
 	protected void onDraw(Canvas canvas)
-	{	
-
+	{
+		if (isWinDisplay){
+			canvas.drawBitmap(winDisplayBitmap, 50, 50, null);
+			isWinDisplay = false;
+		try {  
+			Thread.sleep(700);   
+		} catch (InterruptedException e) { }      
+		invalidate();
+		}
+		else{
 		for (int i = 0; i < tiles.size(); i++){
 			tiles.elementAt(i).drawSelf(canvas,i);
 		}
 		try {  
-			Thread.sleep(100);   
+			Thread.sleep(50);   
 		} catch (InterruptedException e) { }      
 		invalidate();
+		}
+		
 	}
-
 }
 

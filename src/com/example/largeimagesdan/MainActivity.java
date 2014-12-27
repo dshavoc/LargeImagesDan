@@ -14,7 +14,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        //LargeBitmapView v = new LargeBitmapView(this);
+       // LargeBitmapView v = new LargeBitmapView(this);
         TicTacView v2 = new TicTacView(this);
         setContentView(v2);
 		//setContentView(R.layout.activity_main);

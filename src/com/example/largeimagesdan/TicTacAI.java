@@ -9,7 +9,7 @@ public class TicTacAI {
 	int [] playerPossibleWinsThatPassThrough = new int[9];
 	int [] cpuPossibleWinsThatPassThrough = new int[9];
 	int [] combinedPossibleWinsThatPassThrough = new int[9];
-
+	
 	char cpuSymbol;
 	char playerSymbol;
 	int firstMove=10;
@@ -77,10 +77,23 @@ public class TicTacAI {
 		
 		fillPotentials(tiles);
 		for (int i = 0; i < 9; i++){
-			if (combinedPossibleWinsThatPassThrough[i]>currentMax && tiles.elementAt(i).isEmpty()) ret = i;
+			if (combinedPossibleWinsThatPassThrough[i]>currentMax || (i == 4 && combinedPossibleWinsThatPassThrough[i]>currentMax) && tiles.elementAt(i).isEmpty()) ret = i;
 		}
 		return ret;
 
+	}
+	private int respondToFirstMove(Vector<Tile>tiles){
+		int ret = 10;
+		if (firstMove != 10) // player response to opponents first move
+		{
+			if (firstMove == 4){
+				//choose a random corner
+			}
+			if (firstMove == 0 || firstMove == 2 || firstMove == 6 || firstMove == 8){
+				
+			}
+		}
+		return ret;
 	}
 
 	private int fillEmptySpace(Vector<Tile>tiles){
@@ -124,7 +137,7 @@ public class TicTacAI {
 		char opponentSymbol;
 		if (symbol == 'x') opponentSymbol = 'o'; else opponentSymbol = 'x';
 		if (tiles.elementAt(0).symbol == symbol || tiles.elementAt(4).symbol == symbol || tiles.elementAt(8).symbol == symbol)
-			if (tiles.elementAt(0).symbol != opponentSymbol || tiles.elementAt(4).symbol != opponentSymbol || tiles.elementAt(8).symbol != opponentSymbol)
+			if (tiles.elementAt(0).symbol != opponentSymbol && tiles.elementAt(4).symbol != opponentSymbol && tiles.elementAt(8).symbol != opponentSymbol)
 			{
 				if (tiles.elementAt(0).isEmpty()){
 					if(playerSymbol == symbol) playerPossibleWinsThatPassThrough[0]++;  	
@@ -145,7 +158,7 @@ public class TicTacAI {
 
 
 		if (tiles.elementAt(2).symbol == symbol || tiles.elementAt(4).symbol == symbol || tiles.elementAt(6).symbol == symbol)
-			if (tiles.elementAt(2).symbol != opponentSymbol || tiles.elementAt(4).symbol != opponentSymbol || tiles.elementAt(6).symbol != opponentSymbol)
+			if (tiles.elementAt(2).symbol != opponentSymbol && tiles.elementAt(4).symbol != opponentSymbol && tiles.elementAt(6).symbol != opponentSymbol)
 			{
 				if (tiles.elementAt(2).isEmpty()){
 					if(playerSymbol == symbol) playerPossibleWinsThatPassThrough[2]++;  	
@@ -173,7 +186,7 @@ public class TicTacAI {
 			if (tiles.elementAt(i).isEmpty()){
 				for (int col = 0; col < 3; col++)
 					if (tiles.elementAt(col).symbol == symbol || tiles.elementAt(col+3).symbol == symbol || tiles.elementAt(col+6).symbol == symbol)
-						if (tiles.elementAt(col).symbol != opponentSymbol || tiles.elementAt(col+3).symbol != opponentSymbol || tiles.elementAt(col+6).symbol != opponentSymbol)				
+						if (tiles.elementAt(col).symbol != opponentSymbol && tiles.elementAt(col+3).symbol != opponentSymbol && tiles.elementAt(col+6).symbol != opponentSymbol)				
 						{
 							if(playerSymbol == symbol) playerPossibleWinsThatPassThrough[i]++;  	
 							if(cpuSymbol == symbol) cpuPossibleWinsThatPassThrough[i]++;  		
@@ -191,7 +204,7 @@ public class TicTacAI {
 				{
 					for (int row = 0; row < 3; row++)
 						if (tiles.elementAt(3*row).symbol == symbol || tiles.elementAt(3*row+1).symbol == symbol || tiles.elementAt(3*row+2).symbol == symbol)//invested horizontally
-							if (tiles.elementAt(3*row).symbol !=opponentSymbol || tiles.elementAt(3*row+1).symbol !=opponentSymbol || tiles.elementAt(3*row+2).symbol !=opponentSymbol)//invested horizontally
+							if (tiles.elementAt(3*row).symbol !=opponentSymbol && tiles.elementAt(3*row+1).symbol !=opponentSymbol && tiles.elementAt(3*row+2).symbol !=opponentSymbol)//invested horizontally
 							{
 								if(playerSymbol == symbol) playerPossibleWinsThatPassThrough[i]++;  	
 								if(cpuSymbol == symbol) cpuPossibleWinsThatPassThrough[i]++;  	
@@ -230,6 +243,7 @@ public class TicTacAI {
 			if(checkWin(tiles, symbol)>0)
 			{
 				ret = true;
+				
 				tile.clearTile();
 			}
 			else tile.clearTile();
@@ -257,7 +271,6 @@ public class TicTacAI {
 		{
 			ret ++;
 		}
-
 
 		return ret;
 	}
