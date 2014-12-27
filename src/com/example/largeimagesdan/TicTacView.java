@@ -14,14 +14,14 @@ public class TicTacView extends View{
 	Bitmap o;
 	Bitmap catsGame, zombieWin;
 	Bitmap winDisplayBitmap;
-	TicTacAI ai;
+	TicTacAI2 ai;
 	boolean isWinDisplay=false;
 	int numberOfMoves;
 	
 	public TicTacView(Context context) {
 		super(context);
 		loadBitmaps();
-		ai = new TicTacAI('o');
+		ai = new TicTacAI2('o');
 		createNewGame();
 	
 	}
@@ -34,8 +34,7 @@ public class TicTacView extends View{
 
 	private void createNewGame(){
 		ai.firstMove=10;
-		ai.playerFirstMove = 10;
-		ai.clearPotentials();
+		ai.firstMove = 10;
 		tiles.clear();
 		numberOfMoves = 0;
 		for (int i = 0; i <3; i++)
@@ -57,7 +56,7 @@ public class TicTacView extends View{
 				
 					if(tile.placeSymbol(ai.playerSymbol))
 					{
-						if (ai.playerFirstMove == 10) ai.playerFirstMove=i;
+						if (ai.firstMove == 10) ai.firstMove=i;
 						numberOfMoves++;
 						if(ai.checkWin(tiles,ai.playerSymbol)>0) 
 							{
@@ -71,7 +70,9 @@ public class TicTacView extends View{
 							
 							}
 						aiDecision = ai.AIMove(tiles);
-						tiles.elementAt(aiDecision).placeSymbol(ai.cpuSymbol);
+						if (aiDecision!=99)
+							tiles.elementAt(aiDecision).placeSymbol(ai.cpuSymbol);
+						
 						numberOfMoves++;
 						if(ai.checkWin(tiles,ai.cpuSymbol)>0)
 							{
@@ -101,7 +102,7 @@ public class TicTacView extends View{
 			canvas.drawBitmap(winDisplayBitmap, 50, 50, null);
 			isWinDisplay = false;
 		try {  
-			Thread.sleep(700);   
+			Thread.sleep(500);   
 		} catch (InterruptedException e) { }      
 		invalidate();
 		}
