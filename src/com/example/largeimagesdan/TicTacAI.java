@@ -61,8 +61,8 @@ public class TicTacAI {
 					if (ret == 10) ret = i;
 				}
 				if (ret == 10){
-					playerWinsMadePossible[i] =  calculateNumberOfPossibleWinsAfterMove(tile, tiles, playerSymbol);
-					cpuWinsMadePossible [i] =  calculateNumberOfPossibleWinsAfterMove(tile, tiles, playerSymbol);
+					playerWinsMadePossible[i] =  calculateNumberOfImminentWinsAfterMove(tile, tiles, playerSymbol);
+					cpuWinsMadePossible [i] =  calculateNumberOfImminentWinsAfterMove(tile, tiles, playerSymbol);
 				}
 			}
 		}
@@ -90,8 +90,12 @@ public class TicTacAI {
 				//choose a random corner
 			}
 			if (firstMove == 0 || firstMove == 2 || firstMove == 6 || firstMove == 8){
-				
+				//chose center
 			}
+			if (firstMove == 0 || firstMove == 2 || firstMove == 6 || firstMove == 8){
+				//chose center
+			}
+			
 		}
 		return ret;
 	}
@@ -212,7 +216,7 @@ public class TicTacAI {
 				}
 			}
 	}
-	private int calculateNumberOfPossibleWinsAfterMove(Tile tile, Vector<Tile>tiles, char symbol){
+	private int calculateNumberOfImminentWinsAfterMove(Tile tile, Vector<Tile>tiles, char symbol){
 		int ret = 0;
 
 		//fed tile is a hypothetical move
