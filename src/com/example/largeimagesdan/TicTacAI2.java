@@ -37,10 +37,84 @@ public class TicTacAI2 {
 
 		return ret;
 	}
+	
+	//Return a place for the AI to move that creates a fork for itself
 	int lookForFork(Vector<Tile> tiles){
 		int ret = invalidEntry;
 
+		//Method A: Count imminent wins before and after moving in the i-th space
+		//Method B: Return whether this space creates more than 1 imminent win
+		int[] imminentWins = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+		for(int i = 0; (i < 9) && (ret == invalidEntry); i++) {
+			if(tiles.elementAt(i).isEmpty()) {
+				//Play here and count resulting imminent wins
+				tiles.elementAt(i).placeSymbol(cpuSymbol);
+				
+				findImminentWins(tiles, imminentWins);
+				
+				//Look for 2+ imminent wins as a result of playing in this spot
+				for(int j=0; (j<9) && (ret == invalidEntry); j++) {
+					if(imminentWins[j] > 1) {
+						ret = j;
+					}
+				}
+				
+				//Unplay here
+				tiles.elementAt(i).clearTile();
+			}
+		}
 		return ret;
+	}
+	
+	void findImminentWins(Vector<Tile> tiles, int[] imminentWins) {
+		/* 0 1 2
+		 * 3 4 5
+		 * 6 7 8
+		 */
+		int r, c;
+		
+		//Clear imminentWins
+		for(int i=0; i<9; i++) imminentWins[i] = 0;
+		
+		for(int i = 0; i<9; i++) {
+			r = i/3;	//[0,2] starting from top
+			c = i%3;	//[0,2] starting from left
+			if(tiles.isEmpty()) {
+				//Horizontal win: If the other two in this row are mine, then increment this tile's imminent counter
+				if(		tiles.elementAt((c+1)%3 + 3*r).symbol == cpuSymbol &&
+						tiles.elementAt((c+2)%3 + 3*r).symbol == cpuSymbol)
+				{
+					imminentWins[i]++;
+				}
+				
+				//Vertical win: If the other two tiles in this column are mine, then increment this tile's imminent counter
+				if(		tiles.elementAt( c + 3*((r+1)%3) ).symbol == cpuSymbol &&
+						tiles.elementAt( c + 3*((r+1)%3) ).symbol == cpuSymbol)
+				{
+					imminentWins[i]++;
+				}
+				
+				//Left Diagonal:
+				if( i == 0 || i == 4 || i == 8 ) {
+					if( 	tiles.elementAt(( (i+1)%3 )*4).symbol == cpuSymbol &&
+							tiles.elementAt(( (i+2)%3 )*4).symbol == cpuSymbol)
+					{
+						imminentWins[i]++;
+					}
+				}
+				//Right Diagonal:
+				if( i == 2 || i == 4 || i == 6 ) {
+					if( 	tiles.elementAt(( (i+1)%3 )*2 + 2).symbol == cpuSymbol &&
+							tiles.elementAt(( (i+2)%3 )*2 + 2).symbol == cpuSymbol)
+					{
+						imminentWins[i]++;
+					}
+				}
+			}
+			else {
+				imminentWins[i] = 0;
+			}
+		}
 	}
 	
 	int playTowardWin(Vector<Tile> tiles){
