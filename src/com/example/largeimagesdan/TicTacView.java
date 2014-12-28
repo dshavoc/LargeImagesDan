@@ -17,23 +17,36 @@ public class TicTacView extends View{
 	TicTacAI2 ai;
 	boolean isWinDisplay=false;
 	int numberOfMoves;
-	
+	int screenWidth,screenHeight;
+	MainActivity main;
+	int losses;
+	long startTime;
+	int gamesCompleted;
 	public TicTacView(Context context) {
 		super(context);
+		main = (MainActivity)context;
 		loadBitmaps();
+		losses = 0;
+		gamesCompleted = 0;
+		startTime = System.currentTimeMillis();
 		ai = new TicTacAI2('o');
 		createNewGame();
-	
+		
+		screenHeight = main.screenHeight;
+		screenWidth = main.screenWidth;
 	}
 	private void loadBitmaps(){
 		x = BitmapFactory.decodeResource(getResources(), R.drawable.xsymbol);
 		o = BitmapFactory.decodeResource(getResources(), R.drawable.osymbol);
 		catsGame = BitmapFactory.decodeResource(getResources(), R.drawable.cody);
-		zombieWin = BitmapFactory.decodeResource(getResources(), R.drawable.zombiewin);
+		zombieWin = BitmapFactory.decodeResource(getResources(), R.drawable.zombiewin);	
 	}
 
 	private void createNewGame(){
 		ai.firstMove=10;
+		gamesCompleted++;
+		if (gamesCompleted>9)
+			wrapUpTest();
 		ai.firstMove = 10;
 		tiles.clear();
 		numberOfMoves = 0;
@@ -41,7 +54,13 @@ public class TicTacView extends View{
 			for (int j = 0; j < 3; j++)
 				tiles.add(new Tile(i,j,150f,x,o));
 	}
-
+	private void wrapUpTest(){
+		long testTime = System.currentTimeMillis()-startTime;
+		main.dbm.updateUser(main.u, (int)testTime, "TTTTIME");
+		main.dbm.updateUser(main.u, losses, "TTTFAILS");
+		System.out.println("tic test results: time = " + testTime + " fails = " + losses);
+		main.changeViews(ViewType.doors);
+	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
 		int aiDecision = 10;
@@ -77,6 +96,7 @@ public class TicTacView extends View{
 						if(ai.checkWin(tiles,ai.cpuSymbol)>0)
 							{
 							winDisplayBitmap=zombieWin;
+							losses++;
 							isWinDisplay = true;
 							createNewGame();
 							}

@@ -7,26 +7,67 @@ public class TicTacAI2 {
 	char cpuSymbol,playerSymbol;
 	boolean isSaying = true;
 	int invalidEntry = 99;
+	int aiStrategy = invalidEntry;
 	int firstMove = invalidEntry;
+	int [][] strategy = new int [10][2];
 	Random rand = new Random();
 	public TicTacAI2(char symbol){
 		cpuSymbol = symbol;
 		if (cpuSymbol == 'x') playerSymbol = 'o';
 		else playerSymbol = 'x';
+		fillStrategy();
+		aiStrategy = rand.nextInt(10);
 	}
 
 	public int AIMove(Vector<Tile> tiles){
+		//sayBoard(tiles);
 		int ret = invalidEntry;
 		ret = takeCPUWin(tiles);
 		if (ret == invalidEntry)
 			ret = blockOpponentWin(tiles);
+		if (ret == invalidEntry){
+			lookForFork(tiles);
+		}
 		if (ret == invalidEntry)
 			ret = respondToFirstMove(tiles);
+		if (ret == invalidEntry)
+			ret = followStrategy(tiles);
 		if (ret == invalidEntry)
 			ret = playTowardWin(tiles);
 		if (ret == invalidEntry)
 			ret = fillEmptySpace(tiles);
 		return ret;
+	}
+	private void fillStrategy(){
+		strategy[0][0] = 3;
+		strategy[0][1] = 2;
+		
+		strategy[1][0] = 3;
+		strategy[1][1] = 8;
+		
+		strategy[2][0] = 6;
+		strategy[2][1] = 2;
+		
+		strategy[3][0] = 3;
+		strategy[3][1] = 8;
+		
+		strategy[4][0] = 3;
+		strategy[4][1] = 7;
+		
+		strategy[5][0] = 1;
+		strategy[5][1] = 5;
+		
+		strategy[6][0] = 7;
+		strategy[6][1] = 5;
+		
+		strategy[7][0] = 0;
+		strategy[7][1] = 8;
+		
+		strategy[8][0] = 0;
+		strategy[8][1] = 5;
+		
+		strategy[9][0] = 4;
+		strategy[9][1] = 7;
 	}
 
 	int takeCPUWin(Vector<Tile> tiles){
@@ -53,7 +94,7 @@ public class TicTacAI2 {
 		if (ret!=invalidEntry)say("blockOpponentWin returns " + ret);
 		return ret;
 	}
-
+	
 	int respondToFirstMove(Vector<Tile> tiles){
 		int ret = invalidEntry;
 		if (firstMove != invalidEntry) // player response to opponents first move
@@ -81,22 +122,29 @@ public class TicTacAI2 {
 				//more thought may be added here.
 			}
 			if (firstMove == 1)
-				ret = 6;
-			else if (firstMove == 3)
-				ret = 8;
-			else if (firstMove == 5)
-				ret = 0;
-			else if (firstMove == 7)
 				ret = 2;
-			
-				//more thought may be added here
+			else if (firstMove == 3)
+				ret = 0;
+			else if (firstMove == 5)
+				ret = 8;
+			else if (firstMove == 7)
+				ret = 6;
+
+			//more thought may be added here
 		}
 		if(ret != invalidEntry)
 			if (!tiles.elementAt(ret).isEmpty()) ret = invalidEntry;
 		if (ret!=invalidEntry)say("respond to first move returns " + ret);
 		return ret;
 	}
-	
+	int followStrategy(Vector<Tile> tiles){
+		int ret = invalidEntry;
+			if(tiles.elementAt(strategy[aiStrategy][0]).isEmpty())
+				ret = strategy[aiStrategy][0];
+			if(tiles.elementAt(strategy[aiStrategy][1]).isEmpty()&& tiles.elementAt(strategy[aiStrategy][0]).symbol==cpuSymbol)
+				ret = strategy[aiStrategy][1];
+		return ret;
+	}
 	//Return a place for the AI to move that creates a fork for itself
 	int lookForFork(Vector<Tile> tiles){
 		int ret = invalidEntry;
@@ -108,51 +156,52 @@ public class TicTacAI2 {
 			if(tiles.elementAt(i).isEmpty()) {
 				//Play here and count resulting imminent wins
 				tiles.elementAt(i).placeSymbol(cpuSymbol);
-				
+
 				findImminentWins(tiles, imminentWins);
-				
+
 				//Look for 2+ imminent wins as a result of playing in this spot
 				for(int j=0; (j<9) && (ret == invalidEntry); j++) {
 					if(imminentWins[j] > 1) {
 						ret = j;
 					}
 				}
-				
+
 				//Unplay here
 				tiles.elementAt(i).clearTile();
 			}
 		}
+		if (ret!=invalidEntry)say("look for fork returns " + ret);
 		return ret;
 	}
-	
+
 	void findImminentWins(Vector<Tile> tiles, int[] imminentWins) {
 		/* 0 1 2
 		 * 3 4 5
 		 * 6 7 8
 		 */
 		int r, c;
-		
+
 		//Clear imminentWins
 		for(int i=0; i<9; i++) imminentWins[i] = 0;
-		
+
 		for(int i = 0; i<9; i++) {
 			r = i/3;	//[0,2] starting from top
 			c = i%3;	//[0,2] starting from left
-			if(tiles.isEmpty()) {
+			if(tiles.elementAt(i).isEmpty()) {
 				//Horizontal win: If the other two in this row are mine, then increment this tile's imminent counter
 				if(		tiles.elementAt((c+1)%3 + 3*r).symbol == cpuSymbol &&
 						tiles.elementAt((c+2)%3 + 3*r).symbol == cpuSymbol)
 				{
 					imminentWins[i]++;
 				}
-				
+
 				//Vertical win: If the other two tiles in this column are mine, then increment this tile's imminent counter
 				if(		tiles.elementAt( c + 3*((r+1)%3) ).symbol == cpuSymbol &&
-						tiles.elementAt( c + 3*((r+1)%3) ).symbol == cpuSymbol)
+						tiles.elementAt( c + 3*((r+2)%3) ).symbol == cpuSymbol)
 				{
 					imminentWins[i]++;
 				}
-				
+
 				//Left Diagonal:
 				if( i == 0 || i == 4 || i == 8 ) {
 					if( 	tiles.elementAt(( (i+1)%3 )*4).symbol == cpuSymbol &&
@@ -175,27 +224,46 @@ public class TicTacAI2 {
 			}
 		}
 	}
-	
-	//This may be superceded by lookForFork
+
+	//This may be superseded by lookForFork
 	int playTowardWin(Vector<Tile> tiles){
 		int ret = invalidEntry;
 		char symbol = cpuSymbol;
+		int currentMax = 0;
+		int winResult;
 		for (int i = 0; i < 9; i++){
-			Tile hypotheticalTile = tiles.elementAt(i);
-			if( hypotheticalTile.isEmpty()){
-				if (checkWin(tiles, symbol)>0)
-					ret = i;
-				hypotheticalTile.clearTile();
+			{
+				Tile hypotheticalTileA = tiles.elementAt(i);
+				if (hypotheticalTileA.isEmpty()){
+					for (int j = 0; j < 9; j++){
+						Tile hypotheticalTileB = tiles.elementAt(j);
+						if(hypotheticalTileB.isEmpty()){
+							hypotheticalTileA.placeSymbol(symbol);
+							hypotheticalTileB.placeSymbol(symbol);
+							winResult = checkWin(tiles, symbol);
+							if ((i == 1 || i == 3 || i == 5 || i == 7) && winResult >0) 
+								winResult +=1;
+							if (winResult>currentMax)
+							{
+								say("returns: i = " + i +  " j = " + j + " winResult = " + winResult);
+								ret = i;
+								currentMax = winResult;
+							}
+							hypotheticalTileA.clearTile();
+							hypotheticalTileB.clearTile();
+						}
+					}
+				}
 			}
 		}
 		if (ret!=invalidEntry)say("playTowardWin returns " + ret);
-		
+
 		return ret;
 	}
 
 	private int fillEmptySpace(Vector<Tile>tiles){
 		int ret = invalidEntry;
-		
+
 		if(tiles.elementAt(3).isEmpty()) return 3;
 		if(tiles.elementAt(5).isEmpty()) return 5;
 		if(tiles.elementAt(7).isEmpty()) return 7;
@@ -248,6 +316,12 @@ public class TicTacAI2 {
 		}
 
 		return ret;
+	}
+	private void sayBoard(Vector<Tile> tiles){
+		for (int i = 0; i < 3; i++)
+		{
+			say ("returns" + tiles.elementAt((i*3)).symbol+tiles.elementAt((i*3)+1).symbol+tiles.elementAt((i*3)+2).symbol+" ");
+		}
 	}
 	private void say(String s){
 		if (isSaying)System.out.println(s);
