@@ -1,23 +1,55 @@
 package com.example.largeimagesdan;
-
 import com.example.largeimagesdan.LargeBitmapView;
 
+import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 //import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
+enum ViewType {doors,ticTacToe,cowboy};
 public class MainActivity extends ActionBarActivity {
-	//changed code
+	public SQLiteDatabase mydb;
+	int screenHeight;
+	int screenWidth;
+	
+	TicTacView ticTacView;
+	FourSquareView fourSquaresView;
+	
+	User u;
+	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
+	DatabaseManager dbm;
 	@Override
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-       // LargeBitmapView v = new LargeBitmapView(this);
-        TicTacView v2 = new TicTacView(this);
-        setContentView(v2);
-		//setContentView(R.layout.activity_main);
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		
+		screenHeight = metrics.heightPixels;
+		screenWidth = metrics.widthPixels;
+		//System.out.println("checkItAll " + screenHeight);
+		//setContentView(R.layout.activity_b__main);
+		u = new User("DAN");
+		mydb = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
+		dbm = DatabaseManager.get(mydb);	//Initialize database manager
+		
+		dbm.establishUser(u);
+		ticTacView = new TicTacView(this);
+		fourSquaresView = new FourSquareView(this);
+		
+		changeViews(ViewType.ticTacToe);
+		
+		
+		//u.time = 60;
+		dbm.updateUser(u, 300, "TIMETTT");
+		//System.out.println("Say Call");
+		
 	}
 
 	@Override
@@ -37,5 +69,19 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	public void changeViews(ViewType viewType){
+		switch (viewType){
+		case cowboy:
+			break;
+		case doors:setContentView(fourSquaresView);
+			break;
+		case ticTacToe:setContentView(ticTacView);
+			break;
+		default:
+			break;
+		
+		}
+			
 	}
 }
