@@ -101,8 +101,6 @@ public class TicTacAI2 {
 	int lookForFork(Vector<Tile> tiles){
 		int ret = invalidEntry;
 
-		//Method A: Count imminent wins before and after moving in the i-th space
-		//Method B: Return whether this space creates more than 1 imminent win
 		int[] imminentWins = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 		for(int i = 0; (i < 9) && (ret == invalidEntry); i++) {
 			if(tiles.elementAt(i).isEmpty()) {
@@ -174,6 +172,136 @@ public class TicTacAI2 {
 				imminentWins[i] = 0;
 			}
 		}
+	}
+	
+//Used in setUpFork to index the possible win directions
+static int[][] directionsTable = {
+		{0, 1, 2},	//top row
+		{3, 4, 5},	//mid row
+		{6, 7, 8},	//bot row
+		{0, 3, 6},	//lt  col
+		{1, 4, 7},	//mid col
+		{2, 5, 8},	//rt  col
+		{0, 4, 8},	//lt  diag
+		{2, 4, 6}	//rt  diag
+};
+static int NUM_DIRECTIONS = 8;
+
+//Used in setUpFork to index all possible forks (pairs of directions, that are indices of directionsTable)
+static int[][] forksTable = {
+		//Intersections with top row
+		{0, 3},
+		{0, 4},
+		{0, 5},
+		{0, 6},
+		{0, 7},
+		//Intersections with middle row
+		{1, 3},
+		{1, 4},
+		{1, 5},
+		{1, 6},
+		{1, 7},
+		//Intersections with bottom row
+		{2, 3},
+		{2, 4},
+		{2, 5},
+		{2, 6},
+		{2, 7},
+		//Intersections of left column with the diagonals
+		{3, 6},
+		{3, 7},
+		//Intersections of middle column with the diagonals
+		{4, 6},
+		{4, 7},
+		//Intersections of right column with the diagonals
+		{5, 6},
+		{5, 7}
+};
+static int NUM_FORKS = 21;
+
+	//Returns a move position that will allow the next turn to create a fork
+	int setUpFork(Vector<Tile> tiles, char symbol) {
+		char opponentSymbol;
+		if(symbol == 'o') {
+			opponentSymbol = 'x';
+		}
+		else {
+			opponentSymbol = 'o';
+		}
+		/*	
+		Set up fork:
+		1. Identify the possible forks that have at least one of my pieces and no enemy pieces
+		1.1.	Identify all directions that contain exactly one of my pieces
+		1.2.	For each fork buddy of the directions (1.1), identify those that contains no enemies
+			e.g. 	my piece is on 6, opponent on 7. My intersecting directions are 7 and 3.
+				Fork buddies for 7 are: 0, 1, 2, 3, 4, 5
+				Fork buddies for 3 are: 0, 1, 2, 6, 7
+				Enemy on square 7 eliminates directions 2 and 4, leaving: 0, 1, 3, 5, 6, 7
+
+	 	*/
+		
+		int i, j;	//generic counters
+		
+		/*
+		 * Find primary direction (direction where I am invested and enemy is not)
+		 */
+		
+		//Assume for now that this is the second move of mine, and consider only the first piece found
+		int myTile = findOneOfMine(tiles, symbol);
+		if(myTile == invalidEntry) {
+			return invalidEntry;
+		}
+		
+		//Find directions that intersect my tile and do not intersect enemy tiles.
+		//1. Search the directionsTable for indices containing myTile
+		//2. Search those directions looking for 2 empty.
+		int numOwnedByMe, numOwnedByOther, numUnclaimed;
+		for(i = 0; i < NUM_DIRECTIONS; i++) {
+			//numOwnedByMe = 0;
+			//numOwnedByOther = 0;
+			numUnclaimed = 0;
+			if(directionsTable[i][0] == myTile || directionsTable[i][1] == myTile || directionsTable[i][2] == myTile) {
+				//Found a direction (i) my tile is in. Search this direction for two empty
+				numUnclaimed = numUnclaimedInDirection(tiles, i);
+				
+			}
+
+		}
+
+		
+		return 0;
+	}
+	
+	//Retuns the position of one of the Tiles belonging to symbol. Used in setUpFork()
+	int findOneOfMine(Vector<Tile> tiles, char symbol) {
+		for(int i = 0; i < 9; i++) {
+			if(tiles.elementAt(i).symbol == symbol) {
+				return i;
+			}
+		}
+		return invalidEntry;	//shouldn't get here
+	}
+	
+	//Checks the directionsTable for number of tiles owned by ownerSymbol in the given dir (index of directionsTable)
+	int numOwnedInDirection(Vector<Tile> tiles, char ownerSymbol, int dir) {
+		int count = 0;
+		for(int i = 0; i < 3; i++) {
+			if(tiles.elementAt(directionsTable[dir][i]).symbol == ownerSymbol ) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	//Checks the directionsTable for number of tiles that are empty in the given dir (index of directionsTable)
+	int numUnclaimedInDirection(Vector<Tile> tiles, int dir) {
+		int count = 0;
+		for(int i = 0; i < 3; i++) {
+			if(tiles.elementAt(directionsTable[dir][i]).isEmpty() ) {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	//This may be superceded by lookForFork
