@@ -1,7 +1,4 @@
 package com.example.largeimagesdan;
-
-import com.example.largeimagesdan.Animation.AnimationLayout;
-
 import android.graphics.Canvas;
 
 public class Cowboy extends AnimatedObject{
@@ -19,27 +16,31 @@ public class Cowboy extends AnimatedObject{
 
 	public void shoot(){
 	//	System.out.println("shot");
-		isShooting = true;
-		
 		animationFrames = 3;
 		animationStart = 10;
+		
 	}
 
 	private void walk(){
 		animationFrames = 9;
 		animationStart = 1;
+		move();
 	}
 
 	public void update(Canvas canvas, Animation animation){
+		if (isShooting){
+			shoot();
+			if (animation.animationCount==animationFrames)
+				isShooting = false;
+		}
+		else{
 		if (rx == destinationX && ry == destinationY){
 			stand();
 			//System.out.println("standing");
 		}
 		else walk();
-		move();
-		drawSelf(canvas, animation);
-		
-		
+		}
+		drawSelf(canvas, animation);	
 	}
 
 

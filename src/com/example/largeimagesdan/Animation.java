@@ -96,6 +96,30 @@ public class Animation {
 			animLayout.frameWidth = spriteSheetWidth/columns;
 			animLayout.frameHeight = spriteSheetHeight/rows;
 			break;
+		case cowboy:
+			spriteSheetHeight = 1017;
+			spriteSheetWidth = 1792;	
+			frames = 9; 
+			columns = 14; 
+			rows = 8;
+			startFrame = 1;
+			
+			
+			animLayout.westRow = 5;
+			animLayout.northWestRow = 4;
+			animLayout.northRow = 3;
+			animLayout.northEastRow = 2;
+			animLayout.eastRow = 1;
+			animLayout.southEastRow = 0;
+			animLayout.southRow = 7;
+			animLayout.southWestRow = 6;
+			
+			animLayout.frameWidth = spriteSheetWidth/columns;
+			animLayout.frameHeight = spriteSheetHeight/rows;
+			
+			break;
+		default:
+			break;
 		}
 	}
 }

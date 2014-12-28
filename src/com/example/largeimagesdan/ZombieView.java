@@ -24,7 +24,7 @@ public class ZombieView extends View{
 	Animation zombieAnimation;
 	Animation cowboyAnimation;
 	Animation zombieStandAnimation;
-	//Cowboy player;
+	Cowboy player;
 	long lastClickTime = System.currentTimeMillis()-300;
 
 	public ZombieView(Context context) {
@@ -40,11 +40,12 @@ public class ZombieView extends View{
 		case MotionEvent.ACTION_DOWN:         
 			if(isDoubleClick())
 			{
-				//player.shoot();
+				System.out.println("shot");
+				player.shoot();
 				//DrawnObject bullet = new DrawnObject(10,10,)
 			}
 			else {
-				//player.setDestination((int)event.getX(), (int)event.getY());
+				player.setDestination((int)event.getX(), (int)event.getY());
 				lastClickTime = System.currentTimeMillis();
 			}
 			//if(newDestination)
@@ -60,19 +61,17 @@ public class ZombieView extends View{
 		return ret;
 	}
 	private void setup(){
-		BitmapFactory.Options o=new BitmapFactory.Options();
-		o.inSampleSize = 4;
 		InputStream is = getResources().openRawResource(R.drawable.zombie);
-		zombieBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.zombie);
-		//cowboyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cowboy);
-		//cowboyAnimation = new Animation(AnimationModel.cowboy, is);
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
+		
+		InputStream is2= getResources().openRawResource(R.drawable.cowboy);
+		cowboyAnimation = new Animation(AnimationModel.cowboy, is2);
+		
 		for (int i = 0; i < 3; i ++){
 			zombies.add(new Zombie(200,200));
 		}
-		//player = new Cowboy(100,100);
-		decodeResource();
-	}
+		player = new Cowboy(100,100);
+		}
 
 	private void updateZombies(Canvas canvas){
 		int n = zombies.size();
@@ -113,8 +112,7 @@ public class ZombieView extends View{
 	protected void onDraw(Canvas canvas)
 	{	
 		canvas.drawBitmap(zombieAnimation.animationFrames.elementAt(3),20,20,null);
-		
-		//player.update(canvas,cowboyAnimation);
+		player.update(canvas,cowboyAnimation);
 		updateZombies(canvas);
 		//drawGuys(canvas);
 		try {  
