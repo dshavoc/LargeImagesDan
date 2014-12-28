@@ -9,7 +9,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
-enum AnimationModel{zombie};//add names to this in or
+enum AnimationModel{zombie,cowboy};//add names to this in or
 
 public class Animation {
 	/* ASSUMPTIONS about spritesheet:
@@ -18,22 +18,17 @@ public class Animation {
 	 * Each sequence can have configurable number of frames that are same for all orientations/rows.
 	 */
 	int columns, rows;
-
 	int spriteSheetWidth, spriteSheetHeight; 
 
 	int frames;
 	int startFrame;
 	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
 	
-	//What is this, Ian?? Does this assume each sequence is of length 3? Not the case in Zombie spritesheet. (DGK)
-	int animationCount=1; // number of frames in a single animation, if a NSEW 3x4 animation count = 3 because three images make the animation in each of the 4 directions.
-	
+	int animationCount=1; 
 	//This class is just an organized data blob
 	class AnimationLayout {
 		int frameWidth, frameHeight;
 		public int northRow, northEastRow, eastRow, southEastRow, southRow, southWestRow, westRow, northWestRow;	//The row (in sprite-heights, zero-based) containing all animations pertaining to given direction
-		public int roamCol, pursueCol, attackCol, deathCol, headshotCol;		//The column (in sprite-widths, zero-based) where the given animation begins
-		public int roamLen, pursueLen, attackLen, deathLen, headshotLen;		//The number of columns in the given sequence
 	};
 	AnimationLayout animLayout = new AnimationLayout();
 	
@@ -97,15 +92,6 @@ public class Animation {
 			animLayout.southEastRow = 5;
 			animLayout.southRow = 6;
 			animLayout.southWestRow = 7;
-			
-			//Map columns to sequence boundaries
-			
-			//mostly works... check these points one is wrong... I am out of time. 
-			animLayout.roamCol = 0;			animLayout.roamLen = 4;
-			animLayout.pursueCol = 3;		animLayout.pursueLen = 8;
-			animLayout.attackCol = 11;		animLayout.attackLen = 10;
-			animLayout.deathCol = 23;		animLayout.deathLen = 6;
-			animLayout.headshotCol = 27;	animLayout.headshotLen = 8;
 			
 			animLayout.frameWidth = spriteSheetWidth/columns;
 			animLayout.frameHeight = spriteSheetHeight/rows;

@@ -19,6 +19,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	TicTacView ticTacView;
 	FourSquareView fourSquaresView;
+	ZombieView zombieView;
 	
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
@@ -42,8 +43,8 @@ public class MainActivity extends ActionBarActivity {
 		dbm.establishUser(u);
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
-		
-		changeViews(ViewType.ticTacToe);
+		zombieView = new ZombieView(this);
+		changeViews(ViewType.cowboy);
 		
 		
 		//u.time = 60;
@@ -72,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 	public void changeViews(ViewType viewType){
 		switch (viewType){
-		case cowboy:
+		case cowboy:setContentView(zombieView);
 			break;
 		case doors:setContentView(fourSquaresView);
 			break;

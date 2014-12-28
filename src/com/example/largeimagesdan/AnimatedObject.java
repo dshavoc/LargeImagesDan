@@ -26,10 +26,9 @@ public class AnimatedObject {
 	int animationStart = 0;
 	int animationFrames = 0;
 	
-	public AnimatedObject(float rx, float ry, AnimationLayout al){
+	public AnimatedObject(float rx, float ry){
 		this.rx = rx;
 		this.ry = ry;
-		animationLayout = al;
 		destinationX = (int)rx;
 		destinationY = (int)ry;
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
@@ -100,21 +99,21 @@ public class AnimatedObject {
 	public void drawSelf(Canvas canvas, Animation animation){
 		int animationFrame=0;
 		switch(direction){
-		case east: animationFrame = animationLayout.eastRow*animation.columns + animationCount + animationStart;
+		case east: animationFrame = animation.animLayout.eastRow*animation.columns + animationCount + animationStart;
 			break;
-		case north: animationFrame = animationLayout.northRow*animation.columns + animationCount + animationStart;
+		case north: animationFrame =  animation.animLayout.northRow*animation.columns + animationCount + animationStart;
 			break;
-		case northEast:animationFrame = animationLayout.northEastRow*animation.columns + animationCount + animationStart;
+		case northEast:animationFrame = animation.animLayout.northEastRow*animation.columns + animationCount + animationStart;
 			break;
-		case northWest:animationFrame = animationLayout.northWestRow*animation.columns + animationCount + animationStart;
+		case northWest:animationFrame = animation.animLayout.northWestRow*animation.columns + animationCount + animationStart;
 			break;
-		case south:animationFrame = animationLayout.southRow*animation.columns + animationCount + animationStart;
+		case south:animationFrame =  animation.animLayout.southRow*animation.columns + animationCount + animationStart;
 			break;
-		case southEast:animationFrame = animationLayout.southEastRow*animation.columns + animationCount + animationStart;
+		case southEast:animationFrame =  animation.animLayout.southEastRow*animation.columns + animationCount + animationStart;
 			break;
-		case southWest:animationFrame = animationLayout.southWestRow*animation.columns + animationCount + animationStart;
+		case southWest:animationFrame =  animation.animLayout.southWestRow*animation.columns + animationCount + animationStart;
 			break;
-		case west:animationFrame = animationLayout.westRow*animation.columns + animationCount + animationStart;
+		case west:animationFrame =  animation.animLayout.westRow*animation.columns + animationCount + animationStart;
 			break;
 		default:
 			break;

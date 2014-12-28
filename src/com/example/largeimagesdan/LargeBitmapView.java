@@ -26,7 +26,7 @@ public class LargeBitmapView extends View{
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
 		System.out.println("Setup called.");
 		for (int i = 0; i <5; i ++)
-			animatedObjects.add(new Zombie(i*30, 100, zombieAnimation.animLayout));
+			animatedObjects.add(new Zombie(i*30, 100));
 	}
 	private void drawZombies(Canvas canvas){
 		for (int i = 0; i < animatedObjects.size(); i++)
