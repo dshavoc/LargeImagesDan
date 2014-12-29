@@ -38,10 +38,16 @@ public class ZombieView extends View{
 
 		switch (eventAction) {
 		case MotionEvent.ACTION_DOWN:         
+			Zombie zombie;
 			if(isDoubleClick())
 			{
 				System.out.println("shot");
 				player.shoot();
+				for (int i = 0; i < zombies.size(); i++){
+					zombie = zombies.elementAt(i);
+					if (zombie.isClicked(event.getX(), event.getY()))
+					zombie.killed();	
+				}	
 				//DrawnObject bullet = new DrawnObject(10,10,)
 			}
 			else {
@@ -66,17 +72,20 @@ public class ZombieView extends View{
 		
 		InputStream is2= getResources().openRawResource(R.drawable.cowboy);
 		cowboyAnimation = new Animation(AnimationModel.cowboy, is2);
+		player = new Cowboy(0,500);
 		
-		for (int i = 0; i < 3; i ++){
-			zombies.add(new Zombie(200,200));
+		for (int i = 0; i < 8; i ++){
+			zombies.add(new Zombie(i*100,200));
+			zombies.elementAt(i).player = player;
 		}
-		player = new Cowboy(100,100);
+		
 		}
 
 	private void updateZombies(Canvas canvas){
 		int n = zombies.size();
 		for (int i = 0; i < n; i ++){
 			zombies.elementAt(i).update(canvas, zombieAnimation);
+			
 		}
 	}
 
@@ -111,7 +120,6 @@ public class ZombieView extends View{
 	}
 	protected void onDraw(Canvas canvas)
 	{	
-		canvas.drawBitmap(zombieAnimation.animationFrames.elementAt(3),20,20,null);
 		player.update(canvas,cowboyAnimation);
 		updateZombies(canvas);
 		//drawGuys(canvas);

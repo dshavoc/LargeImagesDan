@@ -5,6 +5,7 @@ public class Cowboy extends AnimatedObject{
 	boolean isShooting = false;
 	public Cowboy(float rx, float ry) {
 		super(rx, ry);
+		radius = 20;
 		// TODO Auto-generated constructor stub
 		
 	}
@@ -16,8 +17,10 @@ public class Cowboy extends AnimatedObject{
 
 	public void shoot(){
 	//	System.out.println("shot");
+		if(!isShooting) isShooting = true;
 		animationFrames = 3;
 		animationStart = 10;
+		animationCount = 0;
 		
 	}
 
@@ -29,8 +32,7 @@ public class Cowboy extends AnimatedObject{
 
 	public void update(Canvas canvas, Animation animation){
 		if (isShooting){
-			shoot();
-			if (animation.animationCount==animationFrames)
+			if(animationCount==animationFrames-1) 
 				isShooting = false;
 		}
 		else{

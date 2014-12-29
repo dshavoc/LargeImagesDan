@@ -24,7 +24,7 @@ public class Animation {
 	int startFrame;
 	Vector<Bitmap> animationFrames = new Vector<Bitmap>();
 	
-	int animationCount=1; 
+	
 	//This class is just an organized data blob
 	class AnimationLayout {
 		int frameWidth, frameHeight;
