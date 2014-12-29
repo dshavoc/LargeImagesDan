@@ -1,0 +1,53 @@
+Board:
+0 1 2
+3 4 5
+6 7 8
+
+
+Horizontal wins, index:
+0 1 2	0
+3 4 5	1
+6 7 8	2
+Vertical wins, index:
+0 3 6	3
+1 4 7	4
+2 5 8	5
+Diagonal wins, index:
+0 4 8	6
+2 4 6	7
+
+
+Possible forks:
+(Any two win conditions selected from different directions)
+0 3	0
+0 4	1
+0 5	2
+0 6	3
+0 7	4
+1 3	5
+1 4	6
+1 5	7
+1 6	8
+1 7	9
+2 3	10
+2 4	11
+2 5	12
+2 6	13
+2 7	14
+3 6	15
+3 7	16
+4 6	17
+4 7	18
+5 6	19
+5 7	20
+
+
+Set up fork:
+1. Identify the possible forks that have at least one of my pieces and no enemy pieces
+1.1.	Identify all directions that contain exactly one of my pieces
+1.2.	For each fork buddy of the directions (1.1), identify those that contains no enemies
+	e.g. 	my piece is on 6, opponent on 7. My intersecting directions are 7 and 3.
+		Fork buddies for 7 are: 0, 1, 2, 3, 4, 5
+		Fork buddies for 3 are: 0, 1, 2, 6, 7
+		Enemy on square 7 eliminates directions 2 and 4, leaving: 0, 1, 3, 5, 6, 7
+2. Choose a tile that is in the fork buddy but not primary direction

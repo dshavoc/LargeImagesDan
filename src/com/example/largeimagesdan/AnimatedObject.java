@@ -19,25 +19,27 @@ public class AnimatedObject {
 	RectF size = new RectF(); //used for drawing object
 	Rect frame = new Rect(); // used for drawing object
 	int animationFrame =0;
-	int speed =8; // speed of object not speed of animation
+
+	int speed = 8; // speed of object not speed of animation
+	int destinationX, destinationY;
 	
 	float speedX;
 	float speedY;
 	
-	int destinationX, destinationY;
-
-	int animationCount = 0;
-	int animationStart = 0;
-	int animationFrames = 0;
-
+	int animationCount = 0;		//Which sprite in the animation is currently being rendered
+	int animationStart = 0;		//Where in the current row (accounted for in drawSelf with animLaout) the current animation starts
+	int animationFrames = 0;	//Number of frames of the current animation within the sprite sheet
+	
+	
+	//Constructor takes origin
 	public AnimatedObject(float rx, float ry){
 		this.rx = rx;
 		this.ry = ry;
 		destinationX = (int)rx;
 		destinationY = (int)ry;
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
-
 	}
+	
 	public void setDestination(int newDestinationX, int newDestinationY){
 		destinationX = newDestinationX;
 		destinationY = newDestinationY;
