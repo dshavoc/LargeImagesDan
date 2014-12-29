@@ -9,7 +9,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
-enum AnimationModel{zombie,cowboy};//add names to this in or
+enum AnimationModel{zombie,cowboy,lander};//add names to this in or
 
 public class Animation {
 	/* ASSUMPTIONS about spritesheet:
@@ -118,6 +118,26 @@ public class Animation {
 			animLayout.frameHeight = spriteSheetHeight/rows;
 			
 			break;
+		case lander:
+			spriteSheetHeight = 256;
+			spriteSheetWidth = 164;	
+			frames = 1; 
+			columns = 2; 
+			rows = 1;
+			startFrame = 0;
+			
+			
+			animLayout.westRow = 0;
+			animLayout.northWestRow = 0;
+			animLayout.northRow = 0;
+			animLayout.northEastRow = 0;
+			animLayout.eastRow = 0;
+			animLayout.southEastRow = 0;
+			animLayout.southRow = 0;
+			animLayout.southWestRow = 0;
+			
+			animLayout.frameWidth = spriteSheetWidth/columns;
+			animLayout.frameHeight = spriteSheetHeight/rows;
 		default:
 			break;
 		}

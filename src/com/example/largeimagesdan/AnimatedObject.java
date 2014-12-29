@@ -23,6 +23,8 @@ public class AnimatedObject {
 	int speed = 8; // speed of object not speed of animation
 	int destinationX, destinationY;
 	
+	float accelerationX;
+	float accelerationY;
 	float speedX;
 	float speedY;
 	
@@ -72,6 +74,12 @@ public class AnimatedObject {
 			if (px>.7)direction = MoveDirection.west;
 			if (px<.3)direction = MoveDirection.south;
 		}
+	}
+	public void movePhysics(){
+		speedX+=accelerationX;
+		speedY+=accelerationY;
+		rx +=speedX;
+		ry +=speedY;
 	}
 	public boolean isClicked(float clickX, float clickY){
 		boolean ret = false;

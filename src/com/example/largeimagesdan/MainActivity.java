@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
-enum ViewType {doors,ticTacToe,cowboy};
+enum ViewType {doors,ticTacToe,cowboy,lander};
 public class MainActivity extends ActionBarActivity {
 	public SQLiteDatabase mydb;
 	int screenHeight;
@@ -20,6 +20,7 @@ public class MainActivity extends ActionBarActivity {
 	TicTacView ticTacView;
 	FourSquareView fourSquaresView;
 	ZombieView zombieView;
+	LanderView landerView;
 	
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
@@ -43,8 +44,10 @@ public class MainActivity extends ActionBarActivity {
 		dbm.establishUser(u);
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
-		zombieView = new ZombieView(this);
-		changeViews(ViewType.cowboy);
+		//zombieView = new ZombieView(this);
+		landerView = new LanderView(this);
+		
+		changeViews(ViewType.lander);
 		
 		//u.time = 60;
 		dbm.updateUser(u, 300, "TIMETTT");
@@ -78,6 +81,9 @@ public class MainActivity extends ActionBarActivity {
 			break;
 		case ticTacToe:setContentView(ticTacView);
 			break;
+		case lander:setContentView(landerView);
+		break;
+		
 		default:
 			break;
 		
