@@ -116,6 +116,7 @@ public class TicTacView extends View{
 		// tell the system that we handled the event and no further processing is required
 		return true; 
 	}
+	
 	protected void onDraw(Canvas canvas)
 	{
 		if (isWinDisplay){

@@ -46,7 +46,6 @@ public class MainActivity extends ActionBarActivity {
 		zombieView = new ZombieView(this);
 		changeViews(ViewType.cowboy);
 		
-		
 		//u.time = 60;
 		dbm.updateUser(u, 300, "TIMETTT");
 		//System.out.println("Say Call");
