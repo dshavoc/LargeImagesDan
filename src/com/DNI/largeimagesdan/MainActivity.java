@@ -1,5 +1,6 @@
 package com.DNI.largeimagesdan;
 import com.DNI.largeimagesdan.LargeBitmapView;
+import com.DNI.multitask.MultiTaskView;
 import com.example.largeimagesdan.R;
 
 import android.content.Context;
@@ -12,17 +13,17 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
-enum ViewType {doors,ticTacToe,cowboy,lander};
+enum ViewType {doors,ticTacToe,cowboy,lander,multitask};
 public class MainActivity extends ActionBarActivity {
 	public SQLiteDatabase mydb;
-	int screenHeight;
-	int screenWidth;
+	public int screenHeight;
+	public int screenWidth;
 	
 	TicTacView ticTacView;
 	FourSquareView fourSquaresView;
 	ZombieView zombieView;
 	LanderView landerView;
-	
+	MultiTaskView multiTaskView;
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
 	DatabaseManager dbm;
@@ -46,9 +47,10 @@ public class MainActivity extends ActionBarActivity {
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
 		//zombieView = new ZombieView(this);
+		multiTaskView =new MultiTaskView(this);
 		landerView = new LanderView(this);
 		
-		changeViews(ViewType.lander);
+		changeViews(ViewType.multitask);
 		
 		//u.time = 60;
 		dbm.updateUser(u, 300, "TTTTIME");
@@ -84,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
 			break;
 		case lander:setContentView(landerView);
 		break;
-		
+		case multitask:setContentView(multiTaskView);
 		default:
 			break;
 		

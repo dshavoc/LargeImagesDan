@@ -1,132 +1,161 @@
 package com.DNI.multitask;
 
+import java.util.Random;
 import java.util.Vector;
-
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
+enum PanelPosition{LEFT, CENTER, RIGHT};
+enum PanelType{TARGET,COLOR,TEST};
 
 public class MovePane {
-
 	Rect bounds;
-	Vector<NumberBubble> numbers; 
-	Paint numberPaint;
+	int currentNumber;
+	int targetColor = Color.BLACK; // the color of the targeting indicator
+	Bitmap targetBitmap;
+	int backGroundOfTest; 
+	int difficultyNumber;
+	Vector<PanelPosition> allPanelPositions = new Vector<PanelPosition>();
+	Vector<PanelPosition> currentPanelPositions = new Vector<PanelPosition>();
+	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
+	Random rand = new Random();
+	MovePanel targetPanel, colorPanel, testPanel;
 	
-	public MovePane(Rect bounds) {
+	public MovePane(Rect bounds, Vector<Bitmap> zombieBitmaps, int difficultyNumber){
 		this.bounds = bounds;
-		numbers = new Vector<NumberBubble>();
+		this.zombieBitmaps = zombieBitmaps;
+		this.difficultyNumber = difficultyNumber;
+		shufflePanels();
+	}
+	private void setRandomPanelOrder(){
+		resetAllPanelPositions();
+		int originalSize = allPanelPositions.size();
+		int selectedPanelNumber = 0;
+		for (int i = 0; i < originalSize; i++){
+			selectedPanelNumber = rand.nextInt(allPanelPositions.size());
+			currentPanelPositions.add(allPanelPositions.elementAt(selectedPanelNumber));
+			allPanelPositions.remove(allPanelPositions.elementAt(selectedPanelNumber));
+		}
 	}
 	
-	private void drawSelf(Canvas canvas) {
-		
-		//Draw background
-		
-		//Draw floating numbers
-		for(int i=0; i<numbers.size(); i++) {
-			numbers.elementAt(i).drawSelf(canvas);
-		}
-		
+	private void resetAllPanelPositions(){
+		allPanelPositions.clear();
+		currentPanelPositions.clear();
+		allPanelPositions.add(PanelPosition.LEFT);
+		allPanelPositions.add(PanelPosition.CENTER);
+		allPanelPositions.add(PanelPosition.RIGHT);
 	}
 	
-	public void update(Canvas canvas) {
-		
-		drawSelf(canvas);
+	public void shufflePanels(){
+		setRandomPanelOrder();
+		targetPanel = new MovePanel(PanelType.TARGET, currentPanelPositions.elementAt(0));
+		colorPanel = new MovePanel(PanelType.COLOR, currentPanelPositions.elementAt(1));
+		testPanel = new MovePanel(PanelType.TEST, currentPanelPositions.elementAt(2));			
 	}
 	
+	public void updatePane(Canvas canvas){
+		targetPanel.update(canvas);
+		colorPanel.update(canvas);
+		testPanel.update(canvas);
+	}
 	
-	class NumberBubble {
-		public int radius;
-		public PointF loc;
-		private PointF velocity;
-		int number;
-		private static final int SHADOW_OFFSET = 3;
-		private boolean isUpdated;
-		
-		Paint shadowPaint, numberPaint, circlePaint;
-		
-		public NumberBubble(Point p, int radius) {
-			this.radius = radius;
-			loc = new PointF(p);
-			velocity = new PointF(0f, 0f);
-			
-			shadowPaint = new Paint();
-			shadowPaint.setColor(Color.DKGRAY);
-			
-			circlePaint = new Paint();
-			circlePaint.setColor(Color.CYAN);
-			
-			numberPaint = new Paint();
-			numberPaint.setColor(Color.BLACK);
-			numberPaint.setTextSize((float) (radius * 1.6));
-		}
-		
-		public void setNumber(int num) {
-			number = num;
-		}
-		
-		public void detectAndHandleCollisionWith(NumberBubble other) {
-			PointF normal;
-			float distance = PointF.length(other.loc.x - loc.x, other.loc.y - loc.y);
-			float myVelocityNorm;
-			float otherVelocityNorm;
-			
-			//Detect collision
-			if(distance <= radius + other.radius) {
-				//Find normal vector towards target
-				normal = new PointF(other.loc.x - loc.x, other.loc.y - loc.y);
-				float normalMag = normal.length();
-				normal.set(normal.x/normalMag, normal.y/normalMag);		//normalize
-				
-				//Update my velocity
-				myVelocityNorm = dotProduct(velocity, normal);
-				velocity.offset( -myVelocityNorm * normal.x, -myVelocityNorm * normal.y);
-				
-				//Update other velocity
-				otherVelocityNorm = dotProduct(other.velocity, normal);	//this normal is opposite
-				other.velocity.offset(									//so this delta is, too, to compensat
-					otherVelocityNorm * normal.x,
-					otherVelocityNorm * normal.y
-				);		
-			}
-		}
-		
-		public void detectAndHandleCollisionWithBoundary(Rect bound) {
-			
-			//Collision with horizontal wall
-			if(loc.x <= 0 || loc.x + 2*radius >= bound.right) {
-				velocity.x = -velocity.x;
-			}
-			if(loc.y <= 0 || loc.y + 2*radius >= bound.bottom) {
-				velocity.y = -velocity.y;
-			}
-		}
-		
-		private float dotProduct(PointF a, PointF b) {
-			return a.x * b.x + a.y * b.y;
-		}
-		
-		public void updatePhysics() {
-			detectAndHandleCollisionsWith
-		}
-		
-		public void drawSelf(Canvas canvas) {
-			RectF circleRect = new RectF(loc.x, loc.y, loc.x + 2*radius, loc.y + 2*radius);
-			RectF shadowRect = new RectF(circleRect);
-			shadowRect.offset(SHADOW_OFFSET, SHADOW_OFFSET);
+	public boolean processClick(int clickX, int clickY){
+		boolean ret = false;
+		ret = testPanel.processClick(clickX, clickY);
+		return ret;
+	}
 
-			//Draw shadow
-			canvas.drawOval(shadowRect, shadowPaint);
+
+	class MovePanel{
+		PanelPosition panelPosition;
+		PanelType panelType;
+		Bitmap bitmap;
+		Rect panelBounds = new Rect();
+		boolean isTarget;
+		Paint paint;
+		private MovePanel(PanelType panelType, PanelPosition panelPosition){
+			paint = new Paint();
+			this.panelType = panelType;
+			int third = (bounds.right-bounds.left)/3;
+			switch (panelPosition){
+			case CENTER:
+				panelBounds.set(third, bounds.top, 2*third, bounds.bottom);
+				break;
+			case LEFT:
+				panelBounds.set(bounds.left, bounds.top, third, bounds.bottom);
+				break;
+			case RIGHT:
+				panelBounds.set(2*third, bounds.top, bounds.right, bounds.bottom);
+				break;
+			default:
+				break;
 			
-			//Draw circle
-			canvas.drawOval(circleRect, circlePaint);
+			}
+			switch(panelType){
+			case COLOR:
+				targetColor = chooseRandomColor();
+				currentNumber = rand.nextInt(10)+4;
+				isTarget = false;
+				break;
+			case TEST:
+				backGroundOfTest = targetColor;
+				
+				if (rand.nextInt(difficultyNumber*2+1)==1){ //is a good target
+					 isTarget = true;
+					 bitmap = targetBitmap;
+				}
+				else 
+					while(backGroundOfTest == targetColor){
+						backGroundOfTest = chooseRandomColor();
+						bitmap = zombieBitmaps.elementAt(rand.nextInt(zombieBitmaps.size()));
+					}
+				
+				break;
+			case TARGET:
+				targetBitmap = zombieBitmaps.elementAt(rand.nextInt(zombieBitmaps.size()));
+				break;
+			default:
+				break;
 			
-			//Draw number
-			canvas.drawText(String.valueOf(number), circleRect.left, circleRect.top, numberPaint);
+			}
+		}
+		private int chooseRandomColor(){
+			int ret = Color.BLUE; 
+			int r = rand.nextInt(5);
+			if (r == 0) ret = Color.BLUE;
+			if (r == 1) ret = Color.RED;
+			if (r == 2) ret = Color.GREEN;
+			if (r == 3) ret = Color.YELLOW;
+			if (r == 4) ret = Color.CYAN;
+			return ret;
+		}
+		public void update(Canvas canvas){
+			switch(panelType){
+			case COLOR:
+				paint.setColor(targetColor);
+				paint.setTextSize((float) (bounds.height()*.5));
+				canvas.drawText(currentNumber+" ", panelBounds.centerX()-bounds.height()*.2f, panelBounds.centerY(), paint);
+				break;
+			case TARGET:
+				canvas.drawBitmap(targetBitmap, null, panelBounds, paint);
+				break;
+			case TEST:
+				paint.setColor(backGroundOfTest);
+				canvas.drawRect(panelBounds, paint);
+				canvas.drawBitmap(bitmap, null, panelBounds, paint);
+				break;
+			default:
+				break;
+			
+			}
+		}
+		public boolean processClick(int clickX, int clickY){
+			boolean ret = false;
+			if (panelBounds.contains(clickX, clickY)&&isTarget);
+				ret = true;
+			return ret;
 		}
 	}
-	
 }
