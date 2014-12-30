@@ -16,7 +16,7 @@ public class Zombie extends AnimatedObject{
 	public Zombie(float rx, float ry) {
 		super(rx, ry);
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
-		radius = 20;
+		radius = 50;
 		speed = 7;
 		currentZombieAction = ZombieAction.stand;
 		// TODO Auto-generated constructor stub
@@ -56,7 +56,7 @@ public class Zombie extends AnimatedObject{
 	}
 	private void checkForAttackOpportunity(){
 		int distance = distanceTo(player);
-		int spacer = (int) (radius + player.radius);
+		int spacer = (int) (radius*.3 + player.radius*.3);
 		if (distance < spacer)
 				attack();
 	}
@@ -138,7 +138,7 @@ public class Zombie extends AnimatedObject{
 				int newDestinationY = (int) (speedY*t+ry);
 				setDestination(newDestinationX, newDestinationY);
 			}
-			else System.out.println ("no solution present");
+			else setDestination((int)player.rx, (int)player.ry);
 		}
 	}
 	

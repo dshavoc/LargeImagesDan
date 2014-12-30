@@ -83,7 +83,7 @@ public class AnimatedObject {
 	}
 	public boolean isClicked(float clickX, float clickY){
 		boolean ret = false;
-			if (clickX>rx-radius  && clickX<rx+radius && clickY>ry-radius && clickY < ry+ radius)
+			if (clickX>rx-radius*.8  && clickX<rx+radius*.2 && clickY>ry-radius*.8 && clickY < ry+ radius*.8)
 				ret = true;
 		return ret;
 	}
@@ -121,7 +121,19 @@ public class AnimatedObject {
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
 		//System.out.println(rx + " " + ry);
 	}
-
+	public void detectCollision(AnimatedObject animatedObject){
+		int targetPositionX = (int)animatedObject.rx;
+		int targetPositionY = (int)animatedObject.ry;
+		if (!animatedObject.equals(this))
+			{
+			float myRx = rx;
+			float myRy = ry;
+			if (isClicked(animatedObject.rx,animatedObject.ry)){
+				setDestination((int)rx, (int)ry); //stop
+			}
+		}
+			
+	}
 	public void drawSelf(Canvas canvas, Animation animation){
 		if (isAnimated){
 			
@@ -155,6 +167,8 @@ public class AnimatedObject {
 		if (animationFrame < animation.animationFrames.size())
 			{
 			b = animation.animationFrames.elementAt(animationFrame);
+			
+			b = Bitmap.createScaledBitmap(b, (int)(2*radius), (int)(2*radius), false);
 			canvas.drawBitmap(b, rx-radius, ry-radius, null);
 			}
 		else {

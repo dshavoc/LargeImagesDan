@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,16 +23,22 @@ public class LanderView extends View {
 	boolean explosionCreated = false;
 	MainActivity main;
 	RectF backGroundFrame;
+	RectF landingPad;
+	
+	Paint paint;
+	int finishY;
 	public LanderView(Context context) {
 		super(context);
+		paint = new Paint();
 		main = (MainActivity) context;
 		int startY = (int) (main.screenHeight*.1);
 		int startX = (int) (main.screenWidth*.5);
-		int finishY = (int) (main.screenHeight*.6);
+		finishY = (int) (main.screenHeight*.8);
 		loadBitmaps();
 		backGroundFrame = new RectF(0,0,main.screenWidth,main.screenHeight);
-		
 		lander = new LunarLander( startX,  startY, finishY);
+		landingPad = new RectF(lander.rx-main.screenWidth*.12f,finishY+main.screenHeight*.01f, lander.rx+main.screenWidth*.12f,finishY+.03f*main.screenHeight);
+		lander.radius = main.screenHeight*.08f;
 	}
 	
 	private void loadBitmaps(){
@@ -61,10 +69,14 @@ public class LanderView extends View {
 	}
 	
 	protected void onDraw(Canvas canvas) {
-		
+		paint.setTextSize((float) (main.screenHeight*.05));
+		paint.setColor(Color.WHITE);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
+		paint.setColor(Color.DKGRAY);
+		canvas.drawOval(landingPad, paint);
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		
+		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
 		try {  
 			Thread.sleep(30);   
 		} catch (InterruptedException e) { }      

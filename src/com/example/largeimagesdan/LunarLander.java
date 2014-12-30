@@ -17,7 +17,7 @@ public class LunarLander extends AnimatedObject {
 	private double accel;
 	private double landerSpeed;
 	private double groundLevelY;
-	private int fuelRemaining;
+	public int fuelRemaining;
 	private boolean isFiringThruster;
 	SingleAnimationObject explosion;
 
@@ -61,7 +61,7 @@ public class LunarLander extends AnimatedObject {
 		updatePhysicsIan();
 		handleAnimations();
 		checkWinCondition();
-		if (isFiringThruster) fuelRemaining --;
+		if (isFiringThruster && fuelRemaining >0) fuelRemaining --;
 		if (landerState != LanderState.Crashed) drawSelf(canvas, flightAnimation);
 		else if (explosion == null){
 			explosion = new SingleAnimationObject(explosionAnimation, rx, ry);

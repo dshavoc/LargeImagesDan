@@ -5,7 +5,7 @@ public class Cowboy extends AnimatedObject{
 	boolean isShooting = false;
 	public Cowboy(float rx, float ry) {
 		super(rx, ry);
-		radius = 20;
+		radius = 50;
 		// TODO Auto-generated constructor stub
 		
 	}

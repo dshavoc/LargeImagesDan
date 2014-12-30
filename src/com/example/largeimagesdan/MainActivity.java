@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
 		changeViews(ViewType.lander);
 		
 		//u.time = 60;
-		dbm.updateUser(u, 300, "TIMETTT");
+		dbm.updateUser(u, 300, "TTTTIME");
 		//System.out.println("Say Call");
 		
 	}
