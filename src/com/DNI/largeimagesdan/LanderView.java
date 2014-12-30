@@ -56,11 +56,9 @@ public class LanderView extends View {
 		int eventaction = event.getAction();
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 			// finger touches the screen
-			//TODO: Detect whether the Thrust button has been pressed
 			lander.fireThrusters();
 			break;
 		case MotionEvent.ACTION_UP:
-			//TODO: Detect whether the Thrust button has been released
 			lander.stopThrusters();
 			break;
 		}
