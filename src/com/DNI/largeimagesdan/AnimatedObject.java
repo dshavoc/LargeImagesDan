@@ -1,5 +1,5 @@
-package com.example.largeimagesdan;
-import com.example.largeimagesdan.Animation.AnimationLayout;
+package com.DNI.largeimagesdan;
+import com.DNI.largeimagesdan.Animation.AnimationLayout;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

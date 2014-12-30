@@ -1,4 +1,4 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 
 import java.io.IOException;
 import java.io.InputStream;

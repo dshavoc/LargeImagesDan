@@ -1,10 +1,12 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
+
+import com.example.largeimagesdan.R;
 
 
 import android.content.Context;

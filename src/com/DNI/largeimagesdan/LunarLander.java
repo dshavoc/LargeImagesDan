@@ -1,4 +1,4 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 
 import android.graphics.Canvas;
 

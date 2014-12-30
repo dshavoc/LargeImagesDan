@@ -1,5 +1,7 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 import java.util.Vector;
+
+import com.example.largeimagesdan.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

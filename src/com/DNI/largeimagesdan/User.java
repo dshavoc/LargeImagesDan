@@ -1,4 +1,4 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 public class User {
 	String initials;
 	int time;

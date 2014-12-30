@@ -1,8 +1,9 @@
-package com.example.largeimagesdan;
+package com.DNI.largeimagesdan;
 
 import java.io.InputStream;
 
-import com.example.largeimagesdan.LunarLander.LanderState;
+import com.DNI.largeimagesdan.LunarLander.LanderState;
+import com.example.largeimagesdan.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -75,7 +76,7 @@ public class LanderView extends View {
 		paint.setColor(Color.DKGRAY);
 		canvas.drawOval(landingPad, paint);
 		lander.update(canvas, landerAnimation, explosionAnimation);
-		
+		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
 		try {  
 			Thread.sleep(30);   

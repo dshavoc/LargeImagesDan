@@ -1,5 +1,6 @@
-package com.example.largeimagesdan;
-import com.example.largeimagesdan.LargeBitmapView;
+package com.DNI.largeimagesdan;
+import com.DNI.largeimagesdan.LargeBitmapView;
+import com.example.largeimagesdan.R;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
