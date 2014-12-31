@@ -151,7 +151,7 @@ public class MovePane {
 				
 				canvas.drawText(currentSelectedNumbersSum+"", panelBounds.centerX(), panelBounds.centerY(), paint);
 				canvas.drawText(currentNumber+"", panelBounds.centerX(), panelBounds.centerY()+panelBounds.height()*.4f, paint);
-				
+				// a nominal new years submit.
 				break;
 			case TARGET:
 				canvas.drawBitmap(targetBitmap, null, panelBounds, paint);
