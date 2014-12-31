@@ -19,6 +19,7 @@ public class MultiTaskView extends View{
 	MainActivity main;
 	MovePane movePane;
 	FirePane firePane;
+	ReloadPane reloadPane;
 	CinematicPane cinematicPane;
 	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
 	Vector<Bitmap> humanBitmaps = new Vector<Bitmap>();
@@ -31,8 +32,9 @@ public class MultiTaskView extends View{
 		// will create 4 pane
 		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.2),main.screenWidth,(int)(main.screenHeight*.4)),zombieBitmaps,difficultyLevel);
 		firePane = new FirePane(new Rect(0,(int)(main.screenHeight*.4),main.screenWidth,(int)(main.screenHeight*.6)),zombieBitmaps,humanBitmaps,shotgunShell,difficultyLevel);
+		reloadPane = new ReloadPane(new Rect(0,(int)(main.screenHeight*.6),main.screenWidth,(int)(main.screenHeight*.8)), difficultyLevel);
 		cinematicPane = new CinematicPane(new Rect(0,0,main.screenWidth,(int)(main.screenHeight*.2)), cowboyAnimation, zombieAnimation, difficultyLevel);
-				
+		
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -61,7 +63,10 @@ public class MultiTaskView extends View{
 			}
 			if (firePane.processClick(clickX, clickY)) 
 				cinematicPane.shootZombie();
-			
+			int reloadNumberClicked = reloadPane.processClick(clickX,clickY);
+			if(reloadNumberClicked > 0) {
+				movePane.submitReloadNumber(reloadNumberClicked);
+			}
 			break;
 		}
 		
@@ -72,6 +77,8 @@ public class MultiTaskView extends View{
 		movePane.updatePane(canvas);
 		firePane.update(canvas);
 		cinematicPane.update(canvas);
+		reloadPane.updateAndRender(canvas);
+		
 		try {  
 			Thread.sleep(30);   
 		} catch (InterruptedException e) { }      

@@ -14,7 +14,7 @@ enum PanelType{TARGET,COLOR,TEST};
 public class MovePane {
 	Rect bounds;
 	int currentNumber;
-	int currentSelectedNumbersSum;
+	private int currentSelectedNumbersSum;
 	int targetColor = Color.BLACK; // the color of the targeting indicator
 	Bitmap targetBitmap;
 	int backGroundOfTest; 
@@ -41,6 +41,11 @@ public class MovePane {
 			currentPanelPositions.add(allPanelPositions.elementAt(selectedPanelNumber));
 			allPanelPositions.remove(allPanelPositions.elementAt(selectedPanelNumber));
 		}
+	}
+	
+	public void submitReloadNumber(int num) {
+		//TODO: Add the number passed in to currentSelectedNumbersSum in a valid manner.
+		
 	}
 	
 	private void resetAllPanelPositions(){
