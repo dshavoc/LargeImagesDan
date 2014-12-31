@@ -51,8 +51,10 @@ public class MultiTaskView extends View{
 	
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
+		performClick();
 		switch (eventaction) {
-		case MotionEvent.ACTION_DOWN: 			
+		case MotionEvent.ACTION_DOWN: 		
+			
 			//TODO: check if touch mattered
 			int clickX = (int) event.getX();
 			int clickY = (int) event.getY();

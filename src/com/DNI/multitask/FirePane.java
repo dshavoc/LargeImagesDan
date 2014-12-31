@@ -3,8 +3,6 @@ package com.DNI.multitask;
 import java.util.Random;
 import java.util.Vector;
 
-import com.DNI.multitask.MovePane.MovePanel;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 

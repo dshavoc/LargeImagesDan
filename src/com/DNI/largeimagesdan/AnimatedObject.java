@@ -125,14 +125,14 @@ public class AnimatedObject {
 		//System.out.println(rx + " " + ry);
 	}
 	public void detectCollision(AnimatedObject animatedObject){
-		int targetPositionX = (int)animatedObject.rx;
-		int targetPositionY = (int)animatedObject.ry;
+		int originalSpeed = speed;
 		if (!animatedObject.equals(this))
 			{
-			float myRx = rx;
-			float myRy = ry;
 			if (isClicked(animatedObject.rx,animatedObject.ry)){
-				setDestination((int)rx, (int)ry); //stop
+				setDestination(-destinationX, -destinationY); //move in opposite direction
+				speed = (int)(speed*.5);
+				move();
+				speed = originalSpeed;
 			}
 		}
 			

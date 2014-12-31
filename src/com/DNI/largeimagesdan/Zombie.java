@@ -1,9 +1,6 @@
 package com.DNI.largeimagesdan;
 
 import java.util.Random;
-
-import com.DNI.largeimagesdan.Animation.AnimationLayout;
-
 import android.graphics.Canvas;
 enum ZombieAction{dying,headShot,stand,attack,shuffle}
 
