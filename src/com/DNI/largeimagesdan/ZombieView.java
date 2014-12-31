@@ -28,12 +28,14 @@ public class ZombieView extends View{
 	Animation zombieStandAnimation;
 	
 	Cowboy player;
+	int unitRadius;
 	MainActivity main;
 	long lastClickTime = System.currentTimeMillis()-300;
 
 	public ZombieView(Context context) {
 		super(context);
 		main = (MainActivity) context;
+		unitRadius = (int) (main.screenHeight*.07);
 		setup();
 		reset();
 		// TODO Auto-generated constructor stub
@@ -75,16 +77,21 @@ public class ZombieView extends View{
 		if (ret) System.out.println("double detected");
 		return ret;
 	}
+	private void createZombieWave(float percentageFromLeft, float percentageFromTop, int n){
+		int spacer = (int) (main.screenWidth*.05);
+		int verticalAdjust;
+		for (int i = 0; i < n; i ++){
+			verticalAdjust = (int)(i/7)*unitRadius;
+			zombies.add(new Zombie(percentageFromLeft*main.screenWidth+spacer*(i%7),main.screenHeight*percentageFromTop + verticalAdjust,player,zombieAnimation));
+		}
+	}
 	private void reset(){
 		zombies.clear();
-
-		int unitRadius = (int) (main.screenHeight*.07);	
-
 		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
+		createZombieWave(.2f, .2f, 35);
 		player.radius = unitRadius*.8f;
 
-		for (int i = 0; i < 8; i ++){
-			zombies.add(new Zombie(i*main.screenWidth*.1f,main.screenHeight*.2f,player,zombieAnimation));
+		for (int i = 0; i < zombies.size(); i ++){
 			zombies.elementAt(i).radius = unitRadius*1.5f;
 		}
 	}
@@ -98,36 +105,33 @@ public class ZombieView extends View{
 		backGroundBmp = BitmapFactory.decodeResource(getResources(), R.drawable.zombiebackground);
 		backGroundBmp = Bitmap.createScaledBitmap(backGroundBmp, main.screenWidth, main.screenHeight, false);
 	}
-
-	
-	private void decodeResource(){
-		//		BitmapRegionDecoder decoder = null;
-		//		try{
-		//			decoder = BitmapRegionDecoder.newInstance("res/drawable/zombie.png", false);
-		//			aZombieBitmap = decoder.decodeRegion(new Rect(30,30, (20),(20)), null);
-		//		} 
-		//		catch (IOException e) {
-		//			System.out.println("fucked");
-		//			e.printStackTrace();
-		//		}
-		try {
-			FileInputStream in = new FileInputStream("res/drawable/zombie.png");
-			BufferedInputStream buf = new BufferedInputStream(in);
-			byte[] bMapArray= new byte[buf.available()];
-			buf.read(bMapArray);
-			//        aZombieBitmap = BitmapFactory.decodeByteArray(bMapArray, 0, 40);
-
-			if (in != null) {
-				in.close();
-			}
-			if (buf != null) {
-				buf.close();
-			}
-		} catch (Exception e) {
-			Log.e("Error reading file", e.toString());
-		}
-
-
+	private void bounceOffWalls(AnimatedObject bouncable){
+		//specific data from source image
+		
+		
+		float upperLeftX = 60;
+		float lowerLeftX = 120;
+		float lowerRightX = 406;
+		
+		float originWidth = 463;
+		float originHeight = 606;
+		//have to scale from image to drawn (drawn is stretched)
+		float originXPos = bouncable.rx*originWidth/main.screenWidth;
+		float originYPos = bouncable.ry*originHeight/main.screenHeight;
+		
+		
+		
+		//find slope for X given x = my
+		double slope = (upperLeftX-lowerLeftX)/(originHeight);
+		
+				
+		//adjustment based on y
+		float adjustment = (float) (originYPos*slope);
+		
+		float distanceFromRightEdge = originWidth-originXPos; 
+		if (originXPos<lowerLeftX+adjustment || distanceFromRightEdge<lowerLeftX+adjustment*1.1)
+			bouncable.setDestination((int)(main.screenWidth*.5), (int)bouncable.ry);
+		
 	}
 	private void detectColisions(){
 		Zombie zombie, otherZombie;
@@ -137,6 +141,7 @@ public class ZombieView extends View{
 				for (int otherZombieI = zombieI; otherZombieI < zombies.size(); otherZombieI++){
 					otherZombie = zombies.elementAt(otherZombieI);
 					zombie.detectCollision(otherZombie);
+					bounceOffWalls(zombie);
 				}
 			}
 		}
@@ -146,14 +151,18 @@ public class ZombieView extends View{
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
 			zombie = zombies.elementAt(i);
+			bounceOffWalls(zombie);
 			if (zombie.ry<=player.ry)
 				zombie.update(canvas);
+
 		}
 	}
+	
 	private void updateZombiesBelowPlayer(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
 			zombie = zombies.elementAt(i);
+			bounceOffWalls(zombie);
 			if (zombie.ry>player.ry)
 				zombie.update(canvas);
 		}
@@ -172,7 +181,9 @@ public class ZombieView extends View{
 		detectColisions();
 		updateDeadZombies(canvas);
 		updateZombiesAbovePlayer(canvas);
+		bounceOffWalls(player);
 		player.update(canvas);
+		
 		updateZombiesBelowPlayer(canvas);
 		detectColisions();
 		//drawGuys(canvas);
@@ -181,5 +192,6 @@ public class ZombieView extends View{
 		} catch (InterruptedException e) { }      
 		invalidate();
 	}
+	
 
 }
