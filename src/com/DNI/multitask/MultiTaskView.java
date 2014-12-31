@@ -2,6 +2,7 @@ package com.DNI.multitask;
 
 import java.util.Vector;
 
+import com.DNI.largeimagesdan.Animation;
 import com.DNI.largeimagesdan.MainActivity;
 
 import com.example.largeimagesdan.R;
@@ -17,13 +18,21 @@ import android.view.View;
 public class MultiTaskView extends View{
 	MainActivity main;
 	MovePane movePane;
+	FirePane firePane;
+	CinematicPane cinematicPane;
 	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
-	public MultiTaskView(Context context) {
+	Vector<Bitmap> humanBitmaps = new Vector<Bitmap>();
+	Bitmap shotgunShell;
+	int difficultyLevel =1;
+	public MultiTaskView(Context context, Animation cowboyAnimation, Animation zombieAnimation) {
 		super(context);
 		main = (MainActivity) context;
 		loadBitmaps();
 		// will create 4 pane
-		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.25),main.screenWidth,(int)(main.screenHeight*.5)),zombieBitmaps,1);
+		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.2),main.screenWidth,(int)(main.screenHeight*.4)),zombieBitmaps,difficultyLevel);
+		firePane = new FirePane(new Rect(0,(int)(main.screenHeight*.4),main.screenWidth,(int)(main.screenHeight*.6)),zombieBitmaps,humanBitmaps,shotgunShell,difficultyLevel);
+		cinematicPane = new CinematicPane(new Rect(0,0,main.screenWidth,(int)(main.screenHeight*.2)), cowboyAnimation, zombieAnimation, difficultyLevel);
+				
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -33,17 +42,26 @@ public class MultiTaskView extends View{
 		zombieBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.zombie3));
 		zombieBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.zombie4));
 		zombieBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.zombie5));
+		humanBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.human1));
+		humanBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.human2));
+		shotgunShell = BitmapFactory.decodeResource(getResources(), R.drawable.shotgunshell);
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
 		switch (eventaction) {
-		case MotionEvent.ACTION_DOWN: 			// finger touches the screen
+		case MotionEvent.ACTION_DOWN: 			
 			//TODO: check if touch mattered
 			int clickX = (int) event.getX();
 			int clickY = (int) event.getY();
-			if (movePane.processClick(clickX, clickY)) movePane.shufflePanels();
-			else movePane.shufflePanels();
+			if (movePane.processClick(clickX, clickY)) {
+				movePane.shufflePanels();
+				firePane.reloadShotgun();
+				cinematicPane.run();
+			}
+			if (firePane.processClick(clickX, clickY)) 
+				cinematicPane.shootZombie();
+			
 			break;
 		}
 		
@@ -52,6 +70,8 @@ public class MultiTaskView extends View{
 	}
 	protected void onDraw(Canvas canvas) {
 		movePane.updatePane(canvas);
+		firePane.update(canvas);
+		cinematicPane.update(canvas);
 		try {  
 			Thread.sleep(30);   
 		} catch (InterruptedException e) { }      

@@ -7,16 +7,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.Layout.Alignment;
 enum PanelPosition{LEFT, CENTER, RIGHT};
 enum PanelType{TARGET,COLOR,TEST};
 
 public class MovePane {
 	Rect bounds;
 	int currentNumber;
+	int currentSelectedNumbersSum;
 	int targetColor = Color.BLACK; // the color of the targeting indicator
 	Bitmap targetBitmap;
 	int backGroundOfTest; 
 	int difficultyNumber;
+	long timeLastShuffle;
 	Vector<PanelPosition> allPanelPositions = new Vector<PanelPosition>();
 	Vector<PanelPosition> currentPanelPositions = new Vector<PanelPosition>();
 	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
@@ -50,6 +53,7 @@ public class MovePane {
 	
 	public void shufflePanels(){
 		setRandomPanelOrder();
+		timeLastShuffle = System.currentTimeMillis();
 		targetPanel = new MovePanel(PanelType.TARGET, currentPanelPositions.elementAt(0));
 		colorPanel = new MovePanel(PanelType.COLOR, currentPanelPositions.elementAt(1));
 		testPanel = new MovePanel(PanelType.TEST, currentPanelPositions.elementAt(2));			
@@ -59,6 +63,9 @@ public class MovePane {
 		targetPanel.update(canvas);
 		colorPanel.update(canvas);
 		testPanel.update(canvas);
+		if (System.currentTimeMillis()-timeLastShuffle>1000)
+			if (rand.nextBoolean()) shufflePanels();
+			else timeLastShuffle = System.currentTimeMillis();
 	}
 	
 	public boolean processClick(int clickX, int clickY){
@@ -136,7 +143,11 @@ public class MovePane {
 			case COLOR:
 				paint.setColor(targetColor);
 				paint.setTextSize((float) (bounds.height()*.5));
-				canvas.drawText(currentNumber+" ", panelBounds.centerX()-bounds.height()*.2f, panelBounds.centerY(), paint);
+				paint.setTextAlign(Paint.Align.CENTER);
+				
+				canvas.drawText(currentSelectedNumbersSum+"", panelBounds.centerX(), panelBounds.centerY(), paint);
+				canvas.drawText(currentNumber+"", panelBounds.centerX(), panelBounds.centerY()+panelBounds.height()*.4f, paint);
+				
 				break;
 			case TARGET:
 				canvas.drawBitmap(targetBitmap, null, panelBounds, paint);
@@ -153,7 +164,7 @@ public class MovePane {
 		}
 		public boolean processClick(int clickX, int clickY){
 			boolean ret = false;
-			if (panelBounds.contains(clickX, clickY)&&isTarget);
+			if (panelBounds.contains(clickX, clickY)&&isTarget)
 				ret = true;
 			return ret;
 		}

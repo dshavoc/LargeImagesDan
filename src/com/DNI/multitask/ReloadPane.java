@@ -110,7 +110,7 @@ public class ReloadPane {
 		}
 		
 		public void updatePhysics() {
-			detectAndHandleCollisionsWith
+			
 		}
 		
 		public void drawSelf(Canvas canvas) {

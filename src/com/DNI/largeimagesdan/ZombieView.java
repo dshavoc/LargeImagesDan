@@ -80,12 +80,11 @@ public class ZombieView extends View{
 
 		int unitRadius = (int) (main.screenHeight*.07);	
 
-		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f);
+		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
 		player.radius = unitRadius*.8f;
 
 		for (int i = 0; i < 8; i ++){
-			zombies.add(new Zombie(i*main.screenWidth*.1f,main.screenHeight*.2f));
-			zombies.elementAt(i).player = player;
+			zombies.add(new Zombie(i*main.screenWidth*.1f,main.screenHeight*.2f,player,zombieAnimation));
 			zombies.elementAt(i).radius = unitRadius*1.5f;
 		}
 	}
@@ -143,38 +142,38 @@ public class ZombieView extends View{
 		}
 	}
 	
-	private void updateZombiesAbovePlayer(Canvas canvas, Animation animation){
+	private void updateZombiesAbovePlayer(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
 			zombie = zombies.elementAt(i);
 			if (zombie.ry<=player.ry)
-				zombie.update(canvas, animation);
+				zombie.update(canvas);
 		}
 	}
-	private void updateZombiesBelowPlayer(Canvas canvas, Animation animation){
+	private void updateZombiesBelowPlayer(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
 			zombie = zombies.elementAt(i);
 			if (zombie.ry>player.ry)
-				zombie.update(canvas, animation);
+				zombie.update(canvas);
 		}
 	}
-	private void updateDeadZombies(Canvas canvas, Animation animation){
+	private void updateDeadZombies(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
 			zombie = zombies.elementAt(i);
 			if (!zombie.isAnimated)
-				zombie.update(canvas, animation);
+				zombie.update(canvas);
 		}
 	}
 	protected void onDraw(Canvas canvas)
 	{	
 		canvas.drawBitmap(backGroundBmp,0,0,null);
 		detectColisions();
-		updateDeadZombies(canvas, zombieAnimation);
-		updateZombiesAbovePlayer(canvas, zombieAnimation);
-		player.update(canvas,cowboyAnimation);
-		updateZombiesBelowPlayer(canvas, zombieAnimation);
+		updateDeadZombies(canvas);
+		updateZombiesAbovePlayer(canvas);
+		player.update(canvas);
+		updateZombiesBelowPlayer(canvas);
 		detectColisions();
 		//drawGuys(canvas);
 		try {  

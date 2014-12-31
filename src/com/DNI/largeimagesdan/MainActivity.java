@@ -1,5 +1,4 @@
 package com.DNI.largeimagesdan;
-import com.DNI.largeimagesdan.LargeBitmapView;
 import com.DNI.multitask.MultiTaskView;
 import com.example.largeimagesdan.R;
 
@@ -46,8 +45,8 @@ public class MainActivity extends ActionBarActivity {
 		dbm.establishUser(u);
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
-		//zombieView = new ZombieView(this);
-		multiTaskView =new MultiTaskView(this);
+		zombieView = new ZombieView(this);
+		multiTaskView =new MultiTaskView(this,zombieView.cowboyAnimation,zombieView.zombieAnimation);
 		landerView = new LanderView(this);
 		
 		changeViews(ViewType.multitask);

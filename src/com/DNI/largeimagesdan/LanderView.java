@@ -37,7 +37,7 @@ public class LanderView extends View {
 		finishY = (int) (main.screenHeight*.8);
 		loadBitmaps();
 		backGroundFrame = new RectF(0,0,main.screenWidth,main.screenHeight);
-		lander = new LunarLander( startX,  startY, finishY);
+		lander = new LunarLander( startX,  startY, finishY, landerAnimation);
 		landingPad = new RectF(lander.rx-main.screenWidth*.12f,finishY+main.screenHeight*.01f, lander.rx+main.screenWidth*.12f,finishY+.03f*main.screenHeight);
 		lander.radius = main.screenHeight*.08f;
 	}

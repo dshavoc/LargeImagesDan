@@ -11,16 +11,17 @@ public class Zombie extends AnimatedObject{
 	Random rand = new Random();
 	ZombieAction currentZombieAction;
 	AnimatedObject player;
-	
+	public boolean isDying;
 	
 	//is animated is stored in animated object and decides whether or not an animated object is still being animated.
 
-	public Zombie(float rx, float ry) {
-		super(rx, ry);
+	public Zombie(float rx, float ry, Cowboy player, Animation animation) {
+		super(rx, ry, animation);
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
 		radius = 50;
 		speed = 7;
 		currentZombieAction = ZombieAction.stand;
+		this.player = player;
 		// TODO Auto-generated constructor stub
 	}
 	private void attack(){
@@ -41,12 +42,14 @@ public class Zombie extends AnimatedObject{
 		animationCount = 0;
 		animationFrames = 6;
 		animationStart = 22;
+		isDying = true;
 	}
 	public void headShotted(){
 		currentZombieAction = ZombieAction.headShot;
 		animationCount = 0;
 		animationFrames = 6;
 		animationStart = 28;
+		isDying = true;
 	}
 	private void stand(){
 		currentZombieAction = ZombieAction.stand;
@@ -144,7 +147,7 @@ public class Zombie extends AnimatedObject{
 		}
 	}
 	
-	public void update(Canvas canvas, Animation animation) {
+	public void update(Canvas canvas) {
 		if (isAnimated) manageAnimations();
 		drawSelf(canvas, animation);	
 	}

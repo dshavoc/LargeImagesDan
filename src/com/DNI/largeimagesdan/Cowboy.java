@@ -2,9 +2,9 @@ package com.DNI.largeimagesdan;
 import android.graphics.Canvas;
 
 public class Cowboy extends AnimatedObject{
-	boolean isShooting = false;
-	public Cowboy(float rx, float ry) {
-		super(rx, ry);
+	public boolean isShooting = false;
+	public Cowboy(float rx, float ry, Animation animation) {
+		super(rx, ry, animation);
 		radius = 50;
 		// TODO Auto-generated constructor stub
 		
@@ -30,7 +30,7 @@ public class Cowboy extends AnimatedObject{
 		move();
 	}
 
-	public void update(Canvas canvas, Animation animation){
+	public void update(Canvas canvas){
 		if (isShooting){
 			if(animationCount==animationFrames-1) 
 				isShooting = false;

@@ -9,10 +9,10 @@ enum MoveDirection{north, northEast, east, southEast, south, southWest, west, no
 
 public class AnimatedObject {
 
-	MoveDirection direction = MoveDirection.north;
+	MoveDirection direction = MoveDirection.east;
 	AnimationLayout animationLayout;
-	boolean isAnimated = true;
-
+	public boolean isAnimated = true;
+	Animation animation;
 
 	float radius=20; // radius of object
 	float rx=50,ry=50; //position of object on x and y axis
@@ -34,14 +34,17 @@ public class AnimatedObject {
 	
 	
 	//Constructor takes origin
-	public AnimatedObject(float rx, float ry){
+	public AnimatedObject(float rx, float ry, Animation animation){
 		this.rx = rx;
 		this.ry = ry;
 		destinationX = (int)rx;
 		destinationY = (int)ry;
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
+		this.animation = animation;
 	}
-	
+	public void setSpeed(int speed){
+		this.speed = speed;
+	}
 	public void setDestination(int newDestinationX, int newDestinationY){
 		destinationX = newDestinationX;
 		destinationY = newDestinationY;
@@ -52,7 +55,7 @@ public class AnimatedObject {
 		int ax;
 		ax = Math.abs(dx);
 		double px = ax/(d);
-		if (dx>0 && dy >0)
+		if (dx>=0 && dy >=0)
 		{
 			direction = MoveDirection.southEast;
 			if (px>.7)direction = MoveDirection.east;
@@ -64,12 +67,12 @@ public class AnimatedObject {
 			if (px<.3)direction = MoveDirection.north;
 		}
 
-		if (dx>0 && dy <0){
+		if (dx>=0 && dy <0){
 			direction = MoveDirection.northEast;
 			if (px>.7)direction = MoveDirection.east;
 			if (px<.3)direction = MoveDirection.north;
 		}
-		if(dx <0 && dy >0){
+		if(dx <0 && dy >=0){
 			direction = MoveDirection.southWest;
 			if (px>.7)direction = MoveDirection.west;
 			if (px<.3)direction = MoveDirection.south;
@@ -133,6 +136,13 @@ public class AnimatedObject {
 			}
 		}
 			
+	}
+	public void drawStill(Canvas canvas){
+		Bitmap b;
+		b = animation.animationFrames.elementAt(animationFrame);		
+		b = Bitmap.createScaledBitmap(b, (int)(2*radius), (int)(2*radius), false);
+		canvas.drawBitmap(b, rx-radius, ry-radius, null);
+	
 	}
 	public void drawSelf(Canvas canvas, Animation animation){
 		if (isAnimated){

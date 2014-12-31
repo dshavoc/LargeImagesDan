@@ -27,8 +27,8 @@ public class LunarLander extends AnimatedObject {
 	private long timeLastUpdate;
 	
 	
-	public LunarLander(int startX, int startY, int finishY) {
-		super(startX, startY);
+	public LunarLander(int startX, int startY, int finishY, Animation animation) {
+		super(startX, startY, animation);
 		landerState = LanderState.Airborne;
 		this.startY = (double)startY;
 		groundLevelY = (double)finishY;
