@@ -50,12 +50,15 @@ public class ReloadPane {
 	
 	public void addNumber(int number) {
 		int radius = (int)(bounds.width() * 0.04);
-		Point startLocation = new Point(
-			rand.nextInt( (int)(bounds.width()-2*radius) ),
+		Point startLocation = new Point(//eventually check for if a ball is already here...
+			rand.nextInt( (int)(bounds.width()-2*radius) ), 
 			rand.nextInt( (int)(bounds.height()-2*radius) )
 		);
+		float angle = rand.nextFloat();
 		
-		numbers.add(new NumberBubble(startLocation, number, radius, ballSpeed));
+		
+		//Point location, float angle, int radius, float speed, int number
+		numbers.add(new NumberBubble(startLocation, angle, radius, ballSpeed,number));
 	}
 
 	//Returns the value of the number clicked, or zero if no number clicked
@@ -72,10 +75,9 @@ public class ReloadPane {
 					//Capture the value
 					valueClicked = numbers.elementAt(i).number;
 					
-					//Remove the number
-					numbers.removeElementAt(i);
-					
-					break;
+					//Remove the number					
+					numbers.removeElementAt(i); //without your and clause above this would produce an error... 
+				break;
 				}
 			}
 		}
@@ -88,12 +90,12 @@ public class ReloadPane {
 		
 		//Draw floating numbers
 		for(int i=0; i<numbers.size(); i++) {
-			numbers.elementAt(i).drawSelf(canvas);
+			numbers.elementAt(i).update(canvas);
 		}
 	}
 	
 	//Update the physics and render the canvas
-	public void updateAndRender(Canvas canvas) {
+	public void update(Canvas canvas) {
 		int i, j;
 		
 		//Update physics for all pairs of bubbles. This will mark them updated.
@@ -116,7 +118,6 @@ public class ReloadPane {
 		public int radius;
 		public PointF loc;
 		private PointF velocity;
-		private float speed;
 		int number;
 		private static final int SHADOW_OFFSET = 3;
 		
@@ -129,9 +130,9 @@ public class ReloadPane {
 		Paint shadowPaint, numberPaint, circlePaint;
 		
 		//Location in pixels, angle in range [0, 1+], radius and speed in px
-		public NumberBubble(Point location, float angle, int radius, float speed) {
+		public NumberBubble(Point location, float angle, int radius, float speed, int number) { //balls speeds do not change once created...
 			this.radius = radius;
-			this.speed = speed;
+			this.number = number;
 			
 			loc = new PointF(location);
 			
@@ -140,7 +141,6 @@ public class ReloadPane {
 				(float)(speed * Math.cos(angle*2*Math.PI)),
 				(float)(speed * Math.sin(angle*2*Math.PI))
 			);
-
 			
 			shadowPaint = new Paint();
 			shadowPaint.setColor(Color.DKGRAY);
@@ -152,10 +152,6 @@ public class ReloadPane {
 			numberPaint.setColor(Color.BLACK);
 			numberPaint.setTextSize((float) (1.4*radius));
 			numberPaint.setTextAlign(Paint.Align.CENTER);
-		}
-		
-		public void setNumber(int num) {
-			number = num;
 		}
 		
 		public boolean containsPoint(int x, int y) {
@@ -212,8 +208,12 @@ public class ReloadPane {
 		private float dotProduct(PointF a, PointF b) {
 			return a.x * b.x + a.y * b.y;
 		}
+		private void move(){
+			loc.x+=velocity.x;
+			loc.y+=velocity.y;
+		}
 		
-		public void drawSelf(Canvas canvas) {
+		private void drawSelf(Canvas canvas) {
 			RectF circleRect = new RectF(loc.x, loc.y, loc.x + 2*radius, loc.y + 2*radius);
 			RectF shadowRect = new RectF(circleRect);
 			shadowRect.offset(SHADOW_OFFSET, SHADOW_OFFSET);
@@ -230,6 +230,10 @@ public class ReloadPane {
 				circleRect.top+(float)(radius*1.4),
 				numberPaint
 			);
+		}
+		private void update(Canvas canvas){
+			move();
+			drawSelf(canvas);
 		}
 	}
 	

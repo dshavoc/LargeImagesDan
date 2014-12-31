@@ -79,7 +79,7 @@ public class MultiTaskView extends View{
 		movePane.updatePane(canvas);
 		firePane.update(canvas);
 		cinematicPane.update(canvas);
-		reloadPane.updateAndRender(canvas);
+		reloadPane.update(canvas);
 		
 		try {  
 			Thread.sleep(30);   

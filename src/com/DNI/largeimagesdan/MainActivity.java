@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
 		multiTaskView =new MultiTaskView(this,zombieView.cowboyAnimation,zombieView.zombieAnimation);
 		landerView = new LanderView(this);
 		
-		changeViews(ViewType.cowboy);
+		changeViews(ViewType.multitask);
 		
 		//u.time = 60;
 		dbm.updateUser(u, 300, "TTTTIME");
