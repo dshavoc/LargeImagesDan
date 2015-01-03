@@ -36,8 +36,8 @@ public class ZombieView extends View{
 		super(context);
 		main = (MainActivity) context;
 		unitRadius = (int) (main.screenHeight*.07);
-		setup();
-		reset();
+		//setup();
+		
 		// TODO Auto-generated constructor stub
 	}
 	public boolean onTouchEvent(MotionEvent event) {
@@ -87,15 +87,18 @@ public class ZombieView extends View{
 	}
 	private void reset(){
 		zombies.clear();
-		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
-		createZombieWave(.2f, .2f, 35);
+		
+		if(main.zombiesLoaded){
+			player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
+			createZombieWave(.2f, .2f, 7);
+		}
 		player.radius = unitRadius*.8f;
 
 		for (int i = 0; i < zombies.size(); i ++){
 			zombies.elementAt(i).radius = unitRadius*1.5f;
 		}
 	}
-	private void setup(){
+	public void setup(){
 		InputStream is = getResources().openRawResource(R.drawable.zombie);
 		zombieAnimation = new Animation(AnimationModel.zombie,is);
 
@@ -104,6 +107,8 @@ public class ZombieView extends View{
 		
 		backGroundBmp = BitmapFactory.decodeResource(getResources(), R.drawable.zombiebackground);
 		backGroundBmp = Bitmap.createScaledBitmap(backGroundBmp, main.screenWidth, main.screenHeight, false);
+		
+		createZombieWave(main.screenWidth*.3f, main.screenHeight*.2f, 10);
 	}
 	private void bounceOffWalls(AnimatedObject bouncable){
 		//specific data from source image
@@ -177,6 +182,7 @@ public class ZombieView extends View{
 	}
 	protected void onDraw(Canvas canvas)
 	{	
+		if (main.zombiesLoaded){
 		canvas.drawBitmap(backGroundBmp,0,0,null);
 		detectColisions();
 		updateDeadZombies(canvas);
@@ -186,6 +192,7 @@ public class ZombieView extends View{
 		
 		updateZombiesBelowPlayer(canvas);
 		detectColisions();
+		}
 		//drawGuys(canvas);
 		try {  
 			Thread.sleep(100);   

@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
+enum gameState{LAUNCHING, LANDING}
 
 public class LanderView extends View {
 
@@ -25,21 +26,19 @@ public class LanderView extends View {
 	MainActivity main;
 	RectF backGroundFrame;
 	RectF landingPad;
-	
+	int startX, startY;
 	Paint paint;
 	int finishY;
 	public LanderView(Context context) {
 		super(context);
 		paint = new Paint();
 		main = (MainActivity) context;
-		int startY = (int) (main.screenHeight*.1);
-		int startX = (int) (main.screenWidth*.5);
+		startY = (int) (main.screenHeight*.1);
+		startX = (int) (main.screenWidth*.5);
 		finishY = (int) (main.screenHeight*.8);
 		loadBitmaps();
 		backGroundFrame = new RectF(0,0,main.screenWidth,main.screenHeight);
-		lander = new LunarLander( startX,  startY, finishY, landerAnimation);
-		landingPad = new RectF(lander.rx-main.screenWidth*.12f,finishY+main.screenHeight*.01f, lander.rx+main.screenWidth*.12f,finishY+.03f*main.screenHeight);
-		lander.radius = main.screenHeight*.08f;
+		reset();
 	}
 	
 	private void loadBitmaps(){
@@ -51,7 +50,11 @@ public class LanderView extends View {
 		InputStream is2 = getResources().openRawResource(R.drawable.explosion);
 		explosionAnimation = new SingleAnimation(SingleAnimationModel.explosion,is2);
 	}
-	
+	private void reset(){
+		lander = new LunarLander( startX,  startY, finishY, landerAnimation);
+		landingPad = new RectF(lander.rx-main.screenWidth*.12f,finishY+main.screenHeight*.01f, lander.rx+main.screenWidth*.12f,finishY+.03f*main.screenHeight);
+		lander.radius = main.screenHeight*.08f;
+	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
 		switch (eventaction) {
@@ -74,6 +77,13 @@ public class LanderView extends View {
 		paint.setColor(Color.DKGRAY);
 		canvas.drawOval(landingPad, paint);
 		lander.update(canvas, landerAnimation, explosionAnimation);
+		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
+			{
+			if (main.zombiesLoaded) 
+				main.changeViews(ViewType.cowboy);
+			else reset();
+			}
+		
 		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
 		try {  

@@ -8,7 +8,7 @@ import android.graphics.RectF;
 enum MoveDirection{north, northEast, east, southEast, south, southWest, west, northWest};
 
 public class AnimatedObject {
-
+	
 	MoveDirection direction = MoveDirection.east;
 	AnimationLayout animationLayout;
 	public boolean isAnimated = true;

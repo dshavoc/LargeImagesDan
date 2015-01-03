@@ -29,6 +29,7 @@ public class MovePane {
 		this.bounds = bounds;
 		this.zombieBitmaps = zombieBitmaps;
 		this.difficultyNumber = difficultyNumber;
+		currentNumber = 19;
 		shufflePanels();
 	}
 	private void setRandomPanelOrder(){
@@ -42,9 +43,22 @@ public class MovePane {
 		}
 	}
 	
-	public void submitReloadNumber(int num) {
+	public boolean adjustReloadNumber(int num) {
 		//TODO: Add the number passed in to currentSelectedNumbersSum in a valid manner.
-		
+		boolean ret = false;
+		currentSelectedNumbersSum += num;
+		if (currentNumber == currentSelectedNumbersSum){
+			ret = true;
+			currentSelectedNumbersSum = 0;
+			currentNumber = 19;
+			
+		}
+		if (currentSelectedNumbersSum>currentNumber){
+			//reset current Number and bad stuff
+			currentSelectedNumbersSum = 0;
+			currentNumber = rand.nextInt(14)+5;
+		}
+		return ret;
 	}
 	
 	private void resetAllPanelPositions(){
@@ -107,7 +121,7 @@ public class MovePane {
 			switch(panelType){
 			case COLOR:
 				targetColor = chooseRandomColor();
-				currentNumber = rand.nextInt(10)+4;
+				//currentNumber = rand.nextInt(10)+4;
 				isTarget = false;
 				break;
 			case TEST:
@@ -148,7 +162,6 @@ public class MovePane {
 				paint.setColor(targetColor);
 				paint.setTextSize((float) (bounds.height()*.5));
 				paint.setTextAlign(Paint.Align.CENTER);
-				
 				canvas.drawText(currentSelectedNumbersSum+"", panelBounds.centerX(), panelBounds.centerY(), paint);
 				canvas.drawText(currentNumber+"", panelBounds.centerX(), panelBounds.centerY()+panelBounds.height()*.4f, paint);
 				// a nominal new years submit.

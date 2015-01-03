@@ -5,7 +5,6 @@ import com.example.largeimagesdan.R;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -23,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
 	ZombieView zombieView;
 	LanderView landerView;
 	MultiTaskView multiTaskView;
+	public boolean zombiesLoaded = false; 
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
 	DatabaseManager dbm;
@@ -43,12 +43,25 @@ public class MainActivity extends ActionBarActivity {
 		dbm = DatabaseManager.get(mydb);	//Initialize database manager
 		
 		dbm.establishUser(u);
+		
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
-		zombieView = new ZombieView(this);
-		multiTaskView =new MultiTaskView(this,zombieView.cowboyAnimation,zombieView.zombieAnimation);
 		landerView = new LanderView(this);
-		
+		zombieView = new ZombieView(this);
+		multiTaskView = new MultiTaskView(this);
+		zombieView.setup();
+		multiTaskView.setup(zombieView.cowboyAnimation, zombieView.zombieAnimation);
+		/*new Thread(new Runnable() {// load zombies ... (it takes 25 ish seconds.... bad bad bad us)
+			@Override
+			public void run() {
+				long startTime =  System.currentTimeMillis();
+				System.out.println("Start Load Phase");
+				zombieView.setup();
+				multiTaskView.setup(zombieView.cowboyAnimation, zombieView.zombieAnimation);
+				zombiesLoaded = true;
+				System.out.println("Finish Load Phase. Load took " + (System.currentTimeMillis()-startTime) );
+			}
+		}).start(); */
 		changeViews(ViewType.multitask);
 		
 		//u.time = 60;
@@ -75,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	public void changeViews(ViewType viewType){
+	public synchronized void changeViews(ViewType viewType){
 		switch (viewType){
 		case cowboy:setContentView(zombieView);
 			break;

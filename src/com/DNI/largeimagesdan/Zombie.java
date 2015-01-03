@@ -17,6 +17,7 @@ public class Zombie extends AnimatedObject{
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
 		radius = 50;
 		speed = 7;
+		this.animation = animation;
 		currentZombieAction = ZombieAction.stand;
 		this.player = player;
 		// TODO Auto-generated constructor stub
