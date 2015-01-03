@@ -2,7 +2,10 @@ package com.DNI.largeimagesdan;
 import com.DNI.largeimagesdan.Animation.AnimationLayout;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 enum MoveDirection{north, northEast, east, southEast, south, southWest, west, northWest};
@@ -12,10 +15,11 @@ public class AnimatedObject {
 	MoveDirection direction = MoveDirection.east;
 	AnimationLayout animationLayout;
 	public boolean isAnimated = true;
-	Animation animation;
+	public Animation animation;
 
-	float radius=20; // radius of object
-	float rx=50,ry=50; //position of object on x and y axis
+	public float radius=20; // radius of object
+	public float rx=50; //position of object on x and y axis
+	public float ry=50;
 	RectF size = new RectF(); //used for drawing object
 	Rect frame = new Rect(); // used for drawing object
 	int animationFrame =0;
@@ -23,20 +27,21 @@ public class AnimatedObject {
 	int speed = 8; // speed of object not speed of animation
 	int destinationX, destinationY;
 	
-	float accelerationX;
-	float accelerationY;
-	float speedX;
-	float speedY;
+	public float accelerationX;
+	public float accelerationY;
+	public float speedX;
+	public float speedY;
 	
-	int animationCount = 0;		//Which sprite in the animation is currently being rendered
-	int animationStart = 0;		//Where in the current row (accounted for in drawSelf with animLaout) the current animation starts
-	int animationFrames = 0;	//Number of frames of the current animation within the sprite sheet
+	protected int animationCount = 0;		//Which sprite in the animation is currently being rendered
+	protected int animationStart = 0;		//Where in the current row (accounted for in drawSelf with animLaout) the current animation starts
+	protected int animationFrames = 0;	//Number of frames of the current animation within the sprite sheet
 	
-	
+	public float mRotation;
 	//Constructor takes origin
 	public AnimatedObject(float rx, float ry, Animation animation){
 		this.rx = rx;
 		this.ry = ry;
+		mRotation = 0;
 		destinationX = (int)rx;
 		destinationY = (int)ry;
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
@@ -84,6 +89,7 @@ public class AnimatedObject {
 		rx +=speedX;
 		ry +=speedY;
 	}
+
 	public boolean isClicked(float clickX, float clickY){
 		boolean ret = false;
 			if (clickX>rx-radius*.8  && clickX<rx+radius*.2 && clickY>ry-radius*.8 && clickY < ry+ radius*.8)
@@ -96,6 +102,12 @@ public class AnimatedObject {
 		double dy = (double) (target.ry - ry);
 		ret = (int) Math.hypot(dx,dy);
 		return ret;
+	}
+	public void rotateByRadians(float radians){
+		mRotation += radians;
+	}
+	public void setRotationToRadians(float radians){
+		mRotation = radians;
 	}
 	public void move(){
 		int dx=0,dy=0,d=0;
@@ -144,6 +156,15 @@ public class AnimatedObject {
 		canvas.drawBitmap(b, rx-radius, ry-radius, null);
 	
 	}
+	private Bitmap rotateBitmap(Bitmap source, float angle)
+	{
+	      Matrix matrix = new Matrix();
+	      matrix.postRotate(angle);
+	      return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	}
+	public void setRadius(float radius){
+		this.radius = radius;
+	}
 	public void drawSelf(Canvas canvas, Animation animation){
 		if (isAnimated){
 			
@@ -177,9 +198,17 @@ public class AnimatedObject {
 		if (animationFrame < animation.animationFrames.size())
 			{
 			b = animation.animationFrames.elementAt(animationFrame);
-			
+		
 			b = Bitmap.createScaledBitmap(b, (int)(2*radius), (int)(2*radius), false);
-			canvas.drawBitmap(b, rx-radius, ry-radius, null);
+			b = rotateBitmap(b,mRotation);
+			Matrix matrix = new Matrix();
+			matrix.reset();
+			//matrix.setTranslate(-b.getWidth()/2, -b.getHeight()/2);
+			matrix.setRotate((int)(mRotation*180/Math.PI),b.getWidth()/2, b.getHeight()/2);
+			matrix.postTranslate(rx-b.getWidth()/2, ry-b.getHeight()/2);
+			canvas.drawBitmap(b, matrix, new Paint());
+		
+			//canvas.drawBitmap(b, rx-radius, ry-radius, null); //could need this again if the world blows up...
 			}
 		else {
 			System.out.println("draw error: called a frame outside the size of animationFrames. Animation direction = " + direction + " animation count = " + animationCount);

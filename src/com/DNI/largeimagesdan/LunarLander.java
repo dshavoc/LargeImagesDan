@@ -82,33 +82,7 @@ public class LunarLander extends AnimatedObject {
 			animationStart = 1;
 		}
 	}
-	private void updatePhysics() {
-		if(landerState == LanderState.Airborne) {
-			//Find time since last physics update
-			long timeNow = System.currentTimeMillis();							//milliseconds
-			double deltaTime = (double)(timeNow - timeLastUpdate) / 1000;		//seconds
-			timeLastUpdate = timeNow;
-			
-			//Calculate acceleration
-			accel = ACCEL_GRAVITY;
-			if(fuelRemaining>0)
-				{
-				if(isFiringThruster)	accel -= ACCEL_THRUST;
-				}
-			else 
-				isFiringThruster = false;
-			
-			//Update position
-			posY += landerSpeed * deltaTime + 0.5 * accel * deltaTime * deltaTime;
-			
-			//update velocity
-			landerSpeed += accel * deltaTime;
-			
-			//Copy the lander position into AnimatedObject space
-			ry = (float) posY;
-			
-		}
-	}
+	
 	private void updatePhysicsIan () {
 		if(landerState == LanderState.Airborne) {
 			//Calculate acceleration
@@ -118,7 +92,6 @@ public class LunarLander extends AnimatedObject {
 			speedY+=ACCEL_GRAVITY;			
 			movePhysics();
 		}
-		
 	}
 	
 	private void checkWinCondition() {

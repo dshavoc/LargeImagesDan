@@ -1,4 +1,5 @@
 package com.DNI.largeimagesdan;
+import com.DNI.PlanetHop.PlanetHopView;
 import com.DNI.multitask.MultiTaskView;
 import com.DNI.largeimagesdan.R;
 
@@ -11,7 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
-enum ViewType {doors,ticTacToe,cowboy,lander,multitask};
+enum ViewType {doors,ticTacToe,cowboy,lander,multitask,planetHop};
 public class MainActivity extends ActionBarActivity {
 	public SQLiteDatabase mydb;
 	public int screenHeight;
@@ -22,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
 	ZombieView zombieView;
 	LanderView landerView;
 	MultiTaskView multiTaskView;
+	PlanetHopView planetHopView;
 	public boolean zombiesLoaded = false; 
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
@@ -47,10 +49,11 @@ public class MainActivity extends ActionBarActivity {
 		ticTacView = new TicTacView(this);
 		fourSquaresView = new FourSquareView(this);
 		landerView = new LanderView(this);
-		zombieView = new ZombieView(this);
-		multiTaskView = new MultiTaskView(this);
-		zombieView.setup();
-		multiTaskView.setup(zombieView.cowboyAnimation, zombieView.zombieAnimation);
+		planetHopView = new PlanetHopView(this, landerView.landerAnimation, landerView.explosionAnimation);
+		//zombieView = new ZombieView(this);
+		//multiTaskView = new MultiTaskView(this);
+		//zombieView.setup();
+		//multiTaskView.setup(zombieView.cowboyAnimation, zombieView.zombieAnimation);
 		/*new Thread(new Runnable() {// load zombies ... (it takes 25 ish seconds.... bad bad bad us)
 			@Override
 			public void run() {
@@ -62,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 				System.out.println("Finish Load Phase. Load took " + (System.currentTimeMillis()-startTime) );
 			}
 		}).start(); */
-		changeViews(ViewType.multitask);
+		changeViews(ViewType.planetHop);
 		
 		//u.time = 60;
 		dbm.updateUser(u, 300, "TTTTIME");
@@ -105,9 +108,11 @@ public class MainActivity extends ActionBarActivity {
 		case multitask:
 			setContentView(multiTaskView);
 			break;
-		
+		case planetHop:
+			setContentView(planetHopView);
+			break;
 		default:
-
+			break;
 		}
 			
 	}
