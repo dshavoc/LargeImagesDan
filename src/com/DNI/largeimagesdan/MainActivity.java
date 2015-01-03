@@ -1,6 +1,6 @@
 package com.DNI.largeimagesdan;
 import com.DNI.multitask.MultiTaskView;
-import com.example.largeimagesdan.R;
+import com.DNI.largeimagesdan.R;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -26,8 +26,8 @@ public class MainActivity extends ActionBarActivity {
 	User u;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
 	DatabaseManager dbm;
-	@Override
 	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
@@ -90,18 +90,24 @@ public class MainActivity extends ActionBarActivity {
 	}
 	public synchronized void changeViews(ViewType viewType){
 		switch (viewType){
-		case cowboy:setContentView(zombieView);
+		case cowboy:
+			setContentView(zombieView);
 			break;
-		case doors:setContentView(fourSquaresView);
+		case doors:
+			setContentView(fourSquaresView);
 			break;
-		case ticTacToe:setContentView(ticTacView);
+		case ticTacToe:
+			setContentView(ticTacView);
 			break;
-		case lander:setContentView(landerView);
-		break;
-		case multitask:setContentView(multiTaskView);
-		default:
+		case lander:
+			setContentView(landerView);
+			break;
+		case multitask:
+			setContentView(multiTaskView);
 			break;
 		
+		default:
+
 		}
 			
 	}

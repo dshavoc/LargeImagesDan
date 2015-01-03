@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import com.example.largeimagesdan.R;
+import com.DNI.largeimagesdan.R;
 
 
 import android.content.Context;
