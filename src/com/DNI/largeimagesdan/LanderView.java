@@ -83,7 +83,7 @@ public class LanderView extends View {
 				main.changeViews(ViewType.cowboy);
 			else reset();
 			}
-		
+		lander.rotateByRadians(.1f);
 		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
 		try {  

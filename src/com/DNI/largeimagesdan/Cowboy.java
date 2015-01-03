@@ -28,6 +28,7 @@ public class Cowboy extends AnimatedObject{
 		animationFrames = 9;
 		animationStart = 1;
 		move();
+		accelerationX = 5;
 	}
 
 	public void update(Canvas canvas){
