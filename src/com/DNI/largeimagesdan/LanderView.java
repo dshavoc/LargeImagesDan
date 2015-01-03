@@ -79,9 +79,7 @@ public class LanderView extends View {
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
 			{
-			if (main.zombiesLoaded) 
-				main.changeViews(ViewType.cowboy);
-			else reset();
+			 reset();//hacked
 			}
 		lander.rotateByRadians(.1f);
 		paint.setColor(Color.WHITE);

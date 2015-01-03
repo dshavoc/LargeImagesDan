@@ -26,7 +26,7 @@ public class ZombieView extends View{
 	Animation zombieAnimation;
 	Animation cowboyAnimation;
 	Animation zombieStandAnimation;
-	
+
 	Cowboy player;
 	int unitRadius;
 	MainActivity main;
@@ -37,7 +37,7 @@ public class ZombieView extends View{
 		main = (MainActivity) context;
 		unitRadius = (int) (main.screenHeight*.07);
 		//setup();
-		
+
 		// TODO Auto-generated constructor stub
 	}
 	public boolean onTouchEvent(MotionEvent event) {
@@ -87,11 +87,10 @@ public class ZombieView extends View{
 	}
 	private void reset(){
 		zombies.clear();
-		
-		if(main.zombiesLoaded){
-			player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
-			createZombieWave(.2f, .2f, 7);
-		}
+
+		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
+		createZombieWave(.2f, .2f, 7);
+
 		player.radius = unitRadius*.8f;
 
 		for (int i = 0; i < zombies.size(); i ++){
@@ -104,39 +103,39 @@ public class ZombieView extends View{
 
 		InputStream is2= getResources().openRawResource(R.drawable.cowboy);
 		cowboyAnimation = new Animation(AnimationModel.cowboy, is2);
-		
+
 		backGroundBmp = BitmapFactory.decodeResource(getResources(), R.drawable.zombiebackground);
 		backGroundBmp = Bitmap.createScaledBitmap(backGroundBmp, main.screenWidth, main.screenHeight, false);
-		
+
 		createZombieWave(main.screenWidth*.3f, main.screenHeight*.2f, 10);
 	}
 	private void bounceOffWalls(AnimatedObject bouncable){
 		//specific data from source image
-		
-		
+
+
 		float upperLeftX = 60;
 		float lowerLeftX = 120;
 		float lowerRightX = 406;
-		
+
 		float originWidth = 463;
 		float originHeight = 606;
 		//have to scale from image to drawn (drawn is stretched)
 		float originXPos = bouncable.rx*originWidth/main.screenWidth;
 		float originYPos = bouncable.ry*originHeight/main.screenHeight;
-		
-		
-		
+
+
+
 		//find slope for X given x = my
 		double slope = (upperLeftX-lowerLeftX)/(originHeight);
-		
-				
+
+
 		//adjustment based on y
 		float adjustment = (float) (originYPos*slope);
-		
+
 		float distanceFromRightEdge = originWidth-originXPos; 
 		if (originXPos<lowerLeftX+adjustment || distanceFromRightEdge<lowerLeftX+adjustment*1.1)
 			bouncable.setDestination((int)(main.screenWidth*.5), (int)bouncable.ry);
-		
+
 	}
 	private void detectColisions(){
 		Zombie zombie, otherZombie;
@@ -151,7 +150,7 @@ public class ZombieView extends View{
 			}
 		}
 	}
-	
+
 	private void updateZombiesAbovePlayer(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
@@ -162,7 +161,7 @@ public class ZombieView extends View{
 
 		}
 	}
-	
+
 	private void updateZombiesBelowPlayer(Canvas canvas){
 		Zombie zombie;
 		for (int i = 0; i < zombies.size(); i++){
@@ -182,23 +181,23 @@ public class ZombieView extends View{
 	}
 	protected void onDraw(Canvas canvas)
 	{	
-		if (main.zombiesLoaded){
-		canvas.drawBitmap(backGroundBmp,0,0,null);
-		detectColisions();
-		updateDeadZombies(canvas);
-		updateZombiesAbovePlayer(canvas);
-		bounceOffWalls(player);
-		player.update(canvas);
-		
-		updateZombiesBelowPlayer(canvas);
-		detectColisions();
-		}
+
+			canvas.drawBitmap(backGroundBmp,0,0,null);
+			detectColisions();
+			updateDeadZombies(canvas);
+			updateZombiesAbovePlayer(canvas);
+			bounceOffWalls(player);
+			player.update(canvas);
+
+			updateZombiesBelowPlayer(canvas);
+			detectColisions();
+
 		//drawGuys(canvas);
 		try {  
 			Thread.sleep(100);   
 		} catch (InterruptedException e) { }      
 		invalidate();
 	}
-	
+
 
 }

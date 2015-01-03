@@ -58,10 +58,8 @@ public class TicTacView extends View{
 	}
 	private void wrapUpTest(){
 		long testTime = System.currentTimeMillis()-startTime;
-		main.dbm.updateUser(main.u, (int)testTime, "TTTTIME");
-		main.dbm.updateUser(main.u, losses, "TTTFAILS");
+		
 		System.out.println("tic test results: time = " + testTime + " fails = " + losses);
-		main.changeViews(ViewType.doors);
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
