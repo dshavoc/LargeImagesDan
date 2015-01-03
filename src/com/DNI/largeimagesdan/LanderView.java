@@ -3,7 +3,7 @@ package com.DNI.largeimagesdan;
 import java.io.InputStream;
 
 import com.DNI.largeimagesdan.LunarLander.LanderState;
-import com.example.largeimagesdan.R;
+import com.DNI.largeimagesdan.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

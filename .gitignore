@@ -24,3 +24,6 @@ proguard/
 
 # Log Files
 *.log
+
+#App compat
+libs/android-support-v4.jar

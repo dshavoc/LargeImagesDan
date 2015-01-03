@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import com.DNI.largeimagesdan.Animation;
 import com.DNI.largeimagesdan.MainActivity;
-import com.example.largeimagesdan.R;
+import com.DNI.largeimagesdan.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
