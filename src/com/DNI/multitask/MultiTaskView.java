@@ -5,6 +5,8 @@ import java.util.Vector;
 import com.DNI.largeimagesdan.Animation;
 import com.DNI.largeimagesdan.MainActivity;
 import com.DNI.largeimagesdan.R;
+import com.DNI.largeimagesdan.ViewType;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +23,10 @@ public class MultiTaskView extends View{
 	CinematicPane cinematicPane;
 	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
 	Vector<Bitmap> humanBitmaps = new Vector<Bitmap>();
+	long startTime = 0;
+	public int testTime;
 	Bitmap shotgunShell;
+	public int failures=0;
 	int difficultyLevel =1;
 	public MultiTaskView(Context context) {
 		super(context);
@@ -54,20 +59,23 @@ public class MultiTaskView extends View{
 		performClick();
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 		
-			
+			if (startTime == 0) startTime = System.currentTimeMillis();
 			int clickX = (int) event.getX();
 			int clickY = (int) event.getY();
 			if (movePane.processClick(clickX, clickY)) {
 				movePane.shufflePanels();
-				firePane.reloadShotgun();
 				cinematicPane.run();
 			}
+			else failures++;
 			if (firePane.processClick(clickX, clickY)) 
 				cinematicPane.shootZombie();
+			else failures++;
+			
 			int reloadNumberClicked = reloadPane.processClick(clickX,clickY);
 			if(reloadNumberClicked > 0) {
 				if(movePane.adjustReloadNumber(reloadNumberClicked))
 					firePane.reloadShotgun();
+				else failures++; /// this may cause failure with every click no on ball
 			}
 			break;
 		}
@@ -75,11 +83,16 @@ public class MultiTaskView extends View{
 		// tell the system that we handled the event and no further processing is required
 		return true; 
 	}
+	private void exit(){
+		failures+=cinematicPane.failures;
+		testTime = (int) (System.currentTimeMillis()-startTime);
+		main.resourceController.processEndOfView(ViewType.multitask);
+	}
 	protected void onDraw(Canvas canvas) {
 		
 		movePane.updatePane(canvas);
 		firePane.update(canvas);
-		cinematicPane.update(canvas);
+		if(cinematicPane.update(canvas))exit();
 		reloadPane.update(canvas);
 		try {  
 			Thread.sleep(30);   

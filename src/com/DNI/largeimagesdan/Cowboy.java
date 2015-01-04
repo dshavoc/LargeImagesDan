@@ -3,6 +3,7 @@ import android.graphics.Canvas;
 
 public class Cowboy extends AnimatedObject{
 	public boolean isShooting = false;
+	public boolean isAtDestination = false;
 	public Cowboy(float rx, float ry, Animation animation) {
 		super(rx, ry, animation);
 		radius = 50;
@@ -11,6 +12,7 @@ public class Cowboy extends AnimatedObject{
 	}
 
 	private void stand(){
+		isAtDestination = true;
 		animationFrames = 1;
 		animationStart = 0;
 	}
@@ -32,6 +34,7 @@ public class Cowboy extends AnimatedObject{
 	}
 
 	public void update(Canvas canvas){
+		isAtDestination = false;
 		if (isShooting){
 			if(animationCount==animationFrames-1) 
 				isShooting = false;

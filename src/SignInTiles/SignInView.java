@@ -17,6 +17,7 @@ import android.view.View;
 
 public class SignInView extends View {
 	public String initials;
+	private final String startingText = "INITIALS";
 	Paint paint;
 	long timeAtFirstLetter;
 	public int timeForCompletion;
@@ -31,7 +32,7 @@ public class SignInView extends View {
 		main = (MainActivity) context;
 		screenWidth = main.screenWidth;
 		screenHeight = main.screenHeight;
-		initials = "";
+		initials = startingText;
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		// TODO Auto-generated constructor stub
@@ -68,9 +69,13 @@ public class SignInView extends View {
 					numberOfClears++;
 					break;
 				case LETTER:
-					if (initials == "")
+					if (initials == startingText)
+						{
 						timeAtFirstLetter = System.currentTimeMillis();
-					initials = initials + tile.symbol;
+						initials = tile.symbol+"";
+						}
+					else 
+						initials += tile.symbol;
 					
 					break;
 				case SUBMIT:

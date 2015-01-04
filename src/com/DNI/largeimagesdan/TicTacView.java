@@ -22,8 +22,9 @@ public class TicTacView extends View{
 	int screenWidth,screenHeight;
 	MainActivity main;
 	int losses;
-	long startTime;
 	int gamesCompleted;
+	long startTime = 0;
+	public int testTime;
 	public TicTacView(Context context) {
 		super(context);
 		main = (MainActivity)context;
@@ -45,6 +46,8 @@ public class TicTacView extends View{
 	}
 
 	private void createNewGame(){
+		if (gamesCompleted-losses>10) exit();
+		else{
 		ai.firstMove=10;
 		gamesCompleted++;
 		if (gamesCompleted>9)
@@ -55,6 +58,7 @@ public class TicTacView extends View{
 		for (int i = 0; i <3; i++)
 			for (int j = 0; j < 3; j++)
 				tiles.add(new Tile(i,j,150f,x,o));
+		}
 	}
 	private void wrapUpTest(){
 		long testTime = System.currentTimeMillis()-startTime;
@@ -67,6 +71,8 @@ public class TicTacView extends View{
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 
 			// finger touches the screen
+			if(startTime == 0)
+				startTime = System.currentTimeMillis();
 			for (int i = 0; i < 9; i ++){
 				Tile tile = tiles.elementAt(i);
 				
@@ -115,6 +121,10 @@ public class TicTacView extends View{
 
 		// tell the system that we handled the event and no further processing is required
 		return true; 
+	}
+	private void exit(){
+		testTime = (int) (startTime-System.currentTimeMillis());
+		main.resourceController.processEndOfView(ViewType.ticTacToe);
 	}
 	
 	protected void onDraw(Canvas canvas)

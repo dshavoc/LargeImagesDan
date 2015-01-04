@@ -1,19 +1,14 @@
 package com.DNI.largeimagesdan;
-import com.DNI.PlanetHop.PlanetHopView;
-import com.DNI.multitask.MultiTaskView;
 import com.DNI.largeimagesdan.R;
 
-import SignInTiles.SignInView;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
 public class MainActivity extends ActionBarActivity {
 	public SQLiteDatabase mydb;

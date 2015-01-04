@@ -28,7 +28,7 @@ public class FourSquareView extends View {
 	Vector<DrawnObject> drawnObjects = new Vector<DrawnObject>();
 	enum StateType {WaitForInput};
 	StateType state = StateType.WaitForInput;
-
+	//this is pathetic and will be scratched but for the moment it is here. 
 	enum Quadrant {UPPER_LEFT, UPPER_RIGHT, LOWER_LEFT, LOWER_RIGHT};
 
 	public FourSquareView(Context context) {
