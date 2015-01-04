@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 public class DatabaseManager extends Activity{
 
 	SQLiteDatabase mydb;
-	private static String TABLE = "GARRAM";     
+	private static String CALIBRATIONTABLE = "Calibration";
+	private static String TESTTABLE = "Testing";
 	private static DatabaseManager instance;
 	
 	public static DatabaseManager get(SQLiteDatabase mydb) {
@@ -29,23 +30,44 @@ public class DatabaseManager extends Activity{
 	private DatabaseManager(SQLiteDatabase db){
 		mydb=db;
 		//dropTable();
-		createTable();
+		createTable(TESTTABLE);
+		createTable(CALIBRATIONTABLE);
 	}
 
-	private void dropTable(){
-		mydb.execSQL("DROP TABLE " + TABLE);
+	private void dropTables(){
+		mydb.execSQL("DROP TABLE " + CALIBRATIONTABLE);
+		mydb.execSQL("DROP TABLE " + TESTTABLE);
 	}
-	private void createTable(){
+	
+	private void createTable(String table){
 		try{
-			mydb.execSQL("CREATE TABLE IF NOT EXISTS  "+ TABLE+" (PID INTEGER PRIMARY KEY, INITIALS TEXT, DOORSTIME INT,DOORSFAIL INT, TTTTIME INT, TTTFAILS INT);");
+			String exec = ("CREATE TABLE IF NOT EXISTS  "+ table+" (" +
+					"PID INTEGER PRIMARY KEY," +
+					"INITIALS TEXT, " +
+					"SAMPLESIZE INT," +
+					"LOGINTIME INT, " +
+					"DOORTIME INT, " +
+					"TICTACTIME INT," +
+					"MULTITASKTIME INT," +
+					"PLANETHOPTIME INT,"+
+					"LANDERTIME INT" +
+					");");
+			mydb.execSQL(exec);
 			//mydb.close();
 		}catch(Exception e){
-			say ("error creating table");
+			say ("error creating " + table);
 		}
 	}
 
 	private void insertUser(User u ){ // this is private because establish will insert if user does not already exist.
-		String exec =  "INSERT INTO " + TABLE + "(INITIALS, TIMETTT) VALUES('"+u.initials + "','" + u.time +"')";
+		String exec =  "INSERT INTO " + TESTTABLE + "(INITIALS) VALUES('"+u.initials +"')";
+		try{
+			mydb.execSQL(exec);
+		}		
+		catch(Exception e){
+			say ("insert error");
+		}
+		exec =  "INSERT INTO " + CALIBRATIONTABLE + "(INITIALS) VALUES('"+u.initials +"')";
 		try{
 			mydb.execSQL(exec);
 		}		
@@ -53,21 +75,27 @@ public class DatabaseManager extends Activity{
 			say ("insert error");
 		}
 	}
-	public void updateUser(User u, int value, String variableName){ //confirmed functional
+	public void updateUser(User u, int value, DBItem variable, boolean calibration){ //confirmed functional
 		establishUser(u);
-		String exec =   "UPDATE " + TABLE + " SET " + variableName + "= '" 	+ 	value 	+"'  WHERE INITIALS = '" + u.initials + "';";
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
+		String exec =   "UPDATE " + TABLE + " SET " + variable.toString() + "= '" 	+ 	value 	+"'  WHERE INITIALS = '" + u.initials + "';";
 		try{
 			mydb.execSQL(exec);
-			sayValue(variableName,u.initials);
+			sayValue(variable,u.initials,calibration);
 		}		
 		catch(Exception e){
-			say ("update user error for variable named " + variableName + " and a value of " + value + ".");
+			say ("update user error for variable named " + variable.toString() + " and a value of " + value + ".");
 		}
 		
 	}
-	public String returnValue(String variableName, String initials){ //confirmed functional
+	public String returnValue(String initials, DBItem variable, boolean calibration){ //confirmed functional
 		String ret = "";
-		String exec = "SELECT (" + variableName + ")  FROM " + TABLE + " WHERE INITIALS = '" + initials + "';";  
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
+		String exec = "SELECT (" + variable.toString() + ")  FROM " + TABLE + " WHERE INITIALS = '" + initials + "';";  
 		Cursor allrows = mydb.rawQuery(exec, null);
 		if(allrows.moveToFirst()){
 			do{
@@ -77,9 +105,13 @@ public class DatabaseManager extends Activity{
 		}
 		return ret;	
 	}
-	public void sayValue(String variableName, String initials){ //confirmed functional
-		String exec = "SELECT (" + variableName + ")  FROM " + TABLE + " WHERE INITIALS = '" + initials + "';";  
+	
+	public void sayValue(DBItem variable, String initials, boolean calibration){ //confirmed functional
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
 
+		String exec = "SELECT (" + variable.toString() + ")  FROM " + TABLE + " WHERE INITIALS = '" + initials + "';";  
 		Cursor allrows = mydb.rawQuery(exec, null);
 		if(allrows.moveToFirst()){
 			do{
@@ -95,7 +127,20 @@ public class DatabaseManager extends Activity{
 
 	public void establishUser(User u){
 		try{
-			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  TABLE + " WHERE INITIALS = '" + u.initials + "'", null); 
+			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  TESTTABLE + " WHERE INITIALS = '" + u.initials + "'", null); 
+			if(allrows.moveToFirst()){
+
+			}
+			else{
+				say ("new user");
+				insertUser(u);
+			}
+		}
+		catch(Exception e){ 
+		}
+		
+		try{
+			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  CALIBRATIONTABLE + " WHERE INITIALS = '" + u.initials + "'", null); 
 			if(allrows.moveToFirst()){
 
 			}

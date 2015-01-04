@@ -47,12 +47,6 @@ public class Tile {
 
 
 	}
-	public boolean isClicked(HorizontalAlignment h, VerticalAlignment v){
-		boolean ret = false;
-		if (h == horizontalAlignment && v == verticalAlignment )
-			ret = true;
-		return ret;
-	}
 
 	public boolean isClicked(float clickedX, float clickedY){
 		boolean ret = false;

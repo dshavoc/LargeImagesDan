@@ -213,8 +213,6 @@ public class FourSquareView extends View {
 			Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
 			finished = true;
 			System.out.println("here");
-			main.dbm.updateUser(main.u, tpc, "DOORSTIME");
-			main.dbm.sayValue("DOORSTIME", main.u.initials);
 		}
 	}
 		public void onDraw(Canvas canvas) {
