@@ -3,6 +3,8 @@ package com.DNI.largeimagesdan;
 import com.DNI.PlanetHop.PlanetHopView;
 import com.DNI.multitask.MultiTaskView;
 
+import doors.DoorView;
+
 import android.content.Context;
 import SignInTiles.SignInView;
 
@@ -10,13 +12,14 @@ public class ResourceController {
 	private static ResourceController instance = null;
 	public SignInView signInView;
 	public TicTacView ticTacView;
-	public FourSquareView fourSquaresView;
+	public DoorView doorView;
 	public ZombieView zombieView;
 	public LanderView landerView;
 	public MultiTaskView multiTaskView;
 	public PlanetHopView planetHopView;
+	boolean calibration = true; //needs to be updated later.
 	boolean quickLoad = false;
-	boolean slowLoad = false;
+	public boolean slowLoad = false;
 	long loadStart, quickLoadSpeed, slowLoadSpeed;
 	MainActivity main;
 	DatabaseManager dbm;
@@ -29,8 +32,8 @@ public class ResourceController {
 		loadSlowShit();
 		signInView = new SignInView(main);
 		ticTacView = new TicTacView(main);
-		fourSquaresView = new FourSquareView(main);
 		landerView = new LanderView(main);
+		doorView = new DoorView(main);
 		planetHopView = new PlanetHopView(main, landerView.landerAnimation, landerView.explosionAnimation);
 		quickLoad = true;
 		dbm = DatabaseManager.get(main.mydb);	//Initialize database manager
@@ -60,21 +63,27 @@ public class ResourceController {
 		case cowboy:
 			break;
 		case doors:
+			dbm.updateUser(user, doorView.testTime, DBItem.DOORTIME, calibration);
+			changeViews(ViewType.multitask);
 			break;
 		case lander:
 			break;
 		case multitask:
+			dbm.updateUser(user, multiTaskView.testTime, DBItem.MULTITASKTIME, calibration);
+			changeViews(ViewType.ticTacToe);
 			break;
 		case planetHop:
 			break;
 		case signIn:
 			user = new User(signInView.initials);
 			dbm.establishUser(user);
-			dbm.updateUser(user, signInView.timeForCompletion, DBItem.LOGINTIME, true);
+			dbm.updateUser(user, signInView.timeForCompletion, DBItem.LOGINTIME, calibration);
 			dbm.sayValue(DBItem.LOGINTIME, user.initials, true);
 			changeViews(ViewType.doors);
 			break;
 		case ticTacToe:
+			dbm.updateUser(user, ticTacView.testTime, DBItem.TICTACTIME, calibration);
+			changeViews(ViewType.planetHop);
 			break;
 		default:
 			break;
@@ -87,7 +96,7 @@ public class ResourceController {
 			main.setContentView(zombieView);
 			break;
 		case doors:
-			main.setContentView(fourSquaresView);
+			main.setContentView(doorView);
 			break;
 		case ticTacToe:
 			main.setContentView(ticTacView);

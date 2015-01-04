@@ -21,6 +21,7 @@ public class CinematicPane {
 	Cowboy player;
 	long timeLastUpdate;
 	int difficultyLevel;
+	int failures=0;
 	public CinematicPane(Rect bounds, Animation cowboyAnimation, Animation zombieAnimation, int difficultyLevel){
 		this.bounds = bounds;
 		this.cowboyAnimation = cowboyAnimation;
@@ -61,6 +62,10 @@ public class CinematicPane {
 		timeLastUpdate = System.currentTimeMillis();
 		for (int i = 0; i < zombies.size(); i++){
 			zombies.elementAt(i).update(canvas);
+			if (zombies.elementAt(i).isAttacking){
+				failures++;
+				player.move();
+			}
 		}
 	}
 	private void drawStills(Canvas canvas){
@@ -69,7 +74,8 @@ public class CinematicPane {
 		}
 		player.drawStill(canvas);
 	}
-	public void update(Canvas canvas){
+	public boolean update(Canvas canvas){
+		boolean ret = false;
 		if (running){
 			if (rand.nextBoolean()) running = false;
 			player.update(canvas);
@@ -89,7 +95,8 @@ public class CinematicPane {
 			updateZombies(canvas);
 			}
 		drawStills(canvas);
-		
+		if(player.isAtDestination)ret = true;
+		return ret;
 	}
 	
 }

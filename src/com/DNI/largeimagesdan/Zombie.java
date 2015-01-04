@@ -6,10 +6,10 @@ enum ZombieAction{dying,headShot,stand,attack,shuffle}
 
 public class Zombie extends AnimatedObject{
 	Random rand = new Random();
-	ZombieAction currentZombieAction;
+	public ZombieAction currentZombieAction;
 	AnimatedObject player;
 	public boolean isDying;
-	
+	public boolean isAttacking = false;
 	//is animated is stored in animated object and decides whether or not an animated object is still being animated.
 
 	public Zombie(float rx, float ry, Cowboy player, Animation animation) {
@@ -27,10 +27,9 @@ public class Zombie extends AnimatedObject{
 		animationCount = 0;
 		animationFrames = 10;
 		animationStart = 12;
-		player.speed = 0;
 	}
 	private void shuffle(){
-		currentZombieAction = ZombieAction.shuffle;
+		//currentZombieAction = ZombieAction.shuffle;
 		animationFrames = 8;
 		animationStart = 4;
 		checkForAttackOpportunity();
@@ -64,8 +63,10 @@ public class Zombie extends AnimatedObject{
 				attack();
 	}
 	private void manageAnimations(){
+		isAttacking = false;
 		switch(currentZombieAction){
 		case attack:
+			isAttacking = true;
 			if (animationCount == animationFrames-1)
 				stand();
 			break;
