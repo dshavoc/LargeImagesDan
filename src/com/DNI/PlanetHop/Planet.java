@@ -13,15 +13,16 @@ public class Planet {
 	int massByG;
 	public float rx;
 	public float ry;
-	private float radius = 15;
-	public Planet(float rx, float ry) {
+	public float radius;
+	
+	public float SAFE_ENTRY_SPEED = 2;		//TODO: Futz with this 
+	
+	public Planet(float rx, float ry, float radius) {
 		this.rx = rx;
 		this.ry = ry;
-		
-		massByG = 100; // to be modified and considered at a laterDate;
-		// TODO Auto-generated constructor stub
+		this.radius = radius;
+		massByG = 1400; // to be modified and considered at a laterDate;
 	}
-	
 	
 	private void enactGravity(Rocket rocket){
 		float dx = rx-rocket.rx;
@@ -34,15 +35,27 @@ public class Planet {
 		rocket.speedX+=accelerationX;
 		rocket.speedY+=accelerationY;
 	}
-	private void detectCollision(Rocket rocket){
-		if (rocket.rx+rocket.radius>rx-radius && rocket.rx-rocket.radius <rx+radius && rocket.ry+rocket.radius>ry-radius && rocket.ry-rocket.radius <ry+radius&& rocket.rocketState != RocketState.Landed)
-			rocket.rocketState = RocketState.Crashed;
+	private void detectCollision(Rocket rocket) {
+		if( /*rocket.rx+rocket.radius>rx-radius &&
+			rocket.rx-rocket.radius <rx+radius &&
+			rocket.ry+rocket.radius>ry-radius &&
+			rocket.ry-rocket.radius <ry+radius &&
+			rocket.rocketState*/
+			Math.hypot((rocket.rx - rx), (rocket.ry - ry)) < (radius)	&&
+			rocket.rocketState == RocketState.Airborne)
+		{
+			if(Math.hypot(rocket.speedX, rocket.speedY) <= SAFE_ENTRY_SPEED) {
+				rocket.rocketState = RocketState.Landed;
+			} else {
+				rocket.rocketState = RocketState.Crashed;
+			}
+		}
 	}
 	
 	private void drawSelf(Canvas canvas){
 		Paint paint = new Paint();
 		paint.setColor(Color.BLUE);
-		canvas.drawCircle(rx, ry, 2*radius, paint);
+		canvas.drawCircle(rx, ry, radius, paint);
 	}
 	
 	public void update(Canvas canvas, Rocket rocket){
@@ -50,7 +63,7 @@ public class Planet {
 		{
 			enactGravity(rocket);
 			detectCollision(rocket);
-			}
+		}
 		drawSelf(canvas);
 	}
 }
