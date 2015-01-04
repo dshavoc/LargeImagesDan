@@ -24,6 +24,10 @@ public class AnimatedObject {
 	Rect frame = new Rect(); // used for drawing object
 	int animationFrame =0;
 
+	//Center of sprite, in range [0, 1]
+	private float centerX;
+	private float centerY;
+	
 	int speed = 8; // speed of object not speed of animation
 	int destinationX, destinationY;
 	
@@ -37,6 +41,7 @@ public class AnimatedObject {
 	protected int animationFrames = 0;	//Number of frames of the current animation within the sprite sheet
 	
 	public float mRotation;
+	
 	//Constructor takes origin
 	public AnimatedObject(float rx, float ry, Animation animation){
 		this.rx = rx;
@@ -46,10 +51,32 @@ public class AnimatedObject {
 		destinationY = (int)ry;
 		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
 		this.animation = animation;
+		centerX = 0.5f;
+		centerY = 0.5f;
 	}
+	
+	public AnimatedObject(float rx, float ry, float radius, Animation animation){
+		this.rx = rx;
+		this.ry = ry;
+		this.radius = radius;
+		mRotation = 0;
+		destinationX = (int)rx;
+		destinationY = (int)ry;
+		size.set(rx-radius, ry-radius, rx+radius, ry+radius);
+		this.animation = animation;
+		centerX = 0.5f;
+		centerY = 0.5f;
+	}
+	
+	public void setCenter(float proportionX, float proportionY) {
+		centerX = proportionX;
+		centerY = proportionY;
+	}
+	
 	public void setSpeed(int speed){
 		this.speed = speed;
 	}
+	
 	public void setDestination(int newDestinationX, int newDestinationY){
 		destinationX = newDestinationX;
 		destinationY = newDestinationY;
@@ -192,11 +219,11 @@ public class AnimatedObject {
 			animationCount++;
 			if(animationCount>=animationFrames && isAnimated)
 				animationCount = 0;
-
 		}
+		
 		Bitmap b;
 		if (animationFrame < animation.animationFrames.size())
-			{
+		{
 			b = animation.animationFrames.elementAt(animationFrame);
 		
 			b = Bitmap.createScaledBitmap(b, (int)(2*radius), (int)(2*radius), false);
@@ -204,12 +231,12 @@ public class AnimatedObject {
 			Matrix matrix = new Matrix();
 			matrix.reset();
 			//matrix.setTranslate(-b.getWidth()/2, -b.getHeight()/2);
-			matrix.setRotate((int)(mRotation*180/Math.PI),b.getWidth()/2, b.getHeight()/2);
-			matrix.postTranslate(rx-b.getWidth()/2, ry-b.getHeight()/2);
+			matrix.setRotate((int)(mRotation*180/Math.PI),b.getWidth()*centerX, b.getHeight()*centerY);
+			matrix.postTranslate(rx-b.getWidth()*centerX, ry-b.getHeight()*centerY);
 			canvas.drawBitmap(b, matrix, new Paint());
 		
 			//canvas.drawBitmap(b, rx-radius, ry-radius, null); //could need this again if the world blows up...
-			}
+		}
 		else {
 			System.out.println("draw error: called a frame outside the size of animationFrames. Animation direction = " + direction + " animation count = " + animationCount);
 			animationFrame = 0;

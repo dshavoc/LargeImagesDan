@@ -6,7 +6,7 @@ import android.graphics.RectF;
 
 public class SingleAnimationObject {
 	int animationCount;
-	boolean isFinished;
+	public boolean isFinished;
 	float xPos, yPos;
 	int width = 300;
 	int height = 300;
@@ -25,7 +25,7 @@ public class SingleAnimationObject {
 		canvas.drawBitmap(b, xPos-.5f*width, yPos-.5f*height, null);
 	}
 	public void update(Canvas canvas){
-		if (animationCount < singleAnimation.animationFrames.size())
+		if (animationCount < singleAnimation.animationFrames.size()-1)
 			animationCount++;
 		else isFinished = true;
 		drawSelf(canvas);

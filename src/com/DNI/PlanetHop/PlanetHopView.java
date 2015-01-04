@@ -16,14 +16,14 @@ public class PlanetHopView extends View {
 	Animation rocketAnimation;
 	SingleAnimation explosionAnimation;
 	MainActivity main;
+	
 	public PlanetHopView(Context context, Animation rocketAnimation, SingleAnimation explosionAnimation) {
 		super(context);
 		main = (MainActivity) context;
 		this.rocketAnimation = rocketAnimation;
 		this.explosionAnimation = explosionAnimation;
-		createPlanets();
+		createPlanets();	//create planets before rocket
 		createRocket();
-		// TODO Auto-generated constructor stub
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
@@ -46,14 +46,14 @@ public class PlanetHopView extends View {
 		// tell the system that we handled the event and no further processing is required
 		return true; 
 	}
+	
 	private void createPlanets(){
-		home = new Planet(main.screenWidth*.2f,main.screenHeight*.23f);
-		destination = new Planet(main.screenWidth*.8f,main.screenHeight*.75f);
+		home = new Planet(main.screenWidth*.2f, main.screenHeight*.23f, main.screenWidth*.06f);
+		destination = new Planet(main.screenWidth*.8f, main.screenHeight*.75f, main.screenWidth*.06f);
 	}
 	
 	private void createRocket(){
-		rocket = new Rocket(main.screenWidth*.2f,main.screenHeight*.20f,rocketAnimation);
-		rocket.setRadius(main.screenWidth*.05f);
+		rocket = new Rocket(home, main.screenWidth*0.04f, rocketAnimation, explosionAnimation);
 	}
 	
 	private void updateWorldPhysics(Canvas canvas){
@@ -61,12 +61,44 @@ public class PlanetHopView extends View {
 		destination.update(canvas, rocket);
 		rocket.update(canvas);
 	}
+	
+	
+	//Throttling not working :( (Dan 1/3/15)
+	//float targetFps = 30;
+	//long timeLastUpdate = 0, timeNow = 0;
 	protected void onDraw(Canvas canvas) {
-		updateWorldPhysics(canvas);
+		//timeNow = System.currentTimeMillis();
+		//if(timeNow - timeLastUpdate > 1000/targetFps) {
+		//	timeLastUpdate = System.currentTimeMillis();
+			
+			updateWorldPhysics(canvas);
+			if( checkExitCondition() )
+				exit();
+			invalidate();   
+		//}
 		try {  
-			Thread.sleep(30);   
-		} catch (InterruptedException e) { }      
-		invalidate();
+			Thread.sleep(30);	//Max fps = 100, throttled down to targetFps   
+		} catch (InterruptedException e) {
+			System.err.println("PlanetHopView.onDraw error");
+		}  
+	}
+	
+	private boolean checkExitCondition() {
+		boolean rtn = false;
+		if( rocket.rocketState == RocketState.Crashed ) {
+			if( rocket.explosion != null ) {
+				if( rocket.explosion.isFinished ) {
+					rtn = true;
+				}
+			}
+		} else if( rocket.rocketState == RocketState.Landed ) {
+			rtn = true;
+		}
+		return rtn;
+	}
+	
+	private void exit() {
+		//TODO: In different git commit exists a ResourceController handle that this function must call
 	}
 
 }
