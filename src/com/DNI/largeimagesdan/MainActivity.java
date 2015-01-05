@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 		mydb = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		
 		resourceController = ResourceController.getInstance(this);
-		resourceController.changeViews(ViewType.signIn);
+		resourceController.changeViews(ViewType.planetHop);
 		
 		
 	}

@@ -75,6 +75,15 @@ public class ResourceController {
 			changeViews(ViewType.ticTacToe);
 			break;
 		case planetHop:
+			if (planetHopView.failures <3) // completedTest
+				{
+				dbm.updateUser(user, planetHopView.testTime, DBItem.PLANETHOPTIME, calibration);
+				changeViews(ViewType.lander);
+				}
+			else // failed test
+				System.out.println("failed test");
+				
+				
 			break;
 		case signIn:
 			user = new User(signInView.initials);

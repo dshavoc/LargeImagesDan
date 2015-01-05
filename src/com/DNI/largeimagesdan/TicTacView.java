@@ -46,7 +46,7 @@ public class TicTacView extends View{
 	}
 
 	private void createNewGame(){
-		if (gamesCompleted-losses>10) exit();
+		if (gamesCompleted-losses>5) exit();
 		else{
 		ai.firstMove=10;
 		gamesCompleted++;

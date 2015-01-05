@@ -21,7 +21,7 @@ public class Planet {
 		this.rx = rx;
 		this.ry = ry;
 		this.radius = radius;
-		massByG = 1400; // to be modified and considered at a laterDate;
+		massByG = (int) (radius*75); // to be modified and considered at a laterDate;
 	}
 	
 	private void enactGravity(Rocket rocket){

@@ -65,7 +65,6 @@ public class CinematicPane {
 			zombies.elementAt(i).update(canvas);
 			if (zombies.elementAt(i).isAttacking){
 				failures++;
-				player.move();
 			}
 		}
 	}

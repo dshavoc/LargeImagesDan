@@ -4,6 +4,7 @@ import com.DNI.PlanetHop.Rocket.RocketState;
 import com.DNI.largeimagesdan.Animation;
 import com.DNI.largeimagesdan.MainActivity;
 import com.DNI.largeimagesdan.SingleAnimation;
+import com.DNI.largeimagesdan.ViewType;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,6 +17,10 @@ public class PlanetHopView extends View {
 	Animation rocketAnimation;
 	SingleAnimation explosionAnimation;
 	MainActivity main;
+	long startTime = 0;
+	public int testTime;
+	public int failures;
+	
 	
 	public PlanetHopView(Context context, Animation rocketAnimation, SingleAnimation explosionAnimation) {
 		super(context);
@@ -23,9 +28,10 @@ public class PlanetHopView extends View {
 		this.rocketAnimation = rocketAnimation;
 		this.explosionAnimation = explosionAnimation;
 		createPlanets();	//create planets before rocket
-		createRocket();
+		reset();
 	}
 	public boolean onTouchEvent(MotionEvent event) {
+		if (startTime == 0) startTime = System.currentTimeMillis();
 		int eventaction = event.getAction();
 		float third = main.screenWidth/3;
 		switch (eventaction) {
@@ -45,6 +51,10 @@ public class PlanetHopView extends View {
 		
 		// tell the system that we handled the event and no further processing is required
 		return true; 
+	}
+	private void reset(){
+		startTime=0;
+		createRocket();
 	}
 	
 	private void createPlanets(){
@@ -88,7 +98,13 @@ public class PlanetHopView extends View {
 		if( rocket.rocketState == RocketState.Crashed ) {
 			if( rocket.explosion != null ) {
 				if( rocket.explosion.isFinished ) {
-					rtn = true;
+					reset();
+					failures++;
+					if (failures == 3)
+						{
+						rtn = true;
+						testTime = -1;
+						}
 				}
 			}
 		} else if( rocket.rocketState == RocketState.Landed ) {
@@ -98,7 +114,8 @@ public class PlanetHopView extends View {
 	}
 	
 	private void exit() {
-		//TODO: In different git commit exists a ResourceController handle that this function must call
+		main.resourceController.processEndOfView(ViewType.planetHop);
+		
 	}
 
 }
