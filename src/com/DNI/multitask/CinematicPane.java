@@ -30,6 +30,7 @@ public class CinematicPane {
 		rand = new Random();
 		player = new Cowboy(bounds.left+bounds.width()*.2f,bounds.centerY(),cowboyAnimation);
 		player.setDestination(bounds.right, bounds.centerY());
+		player.setSpeed((int) (bounds.width()*.05));
 		addZombie();
 	}
 	
@@ -90,7 +91,7 @@ public class CinematicPane {
 		}
 		else player.setDestination(bounds.right, bounds.centerY());
 			
-		if (System.currentTimeMillis()-timeLastUpdate>(5-difficultyLevel)*500)
+		if (System.currentTimeMillis()-timeLastUpdate>(5-difficultyLevel)*200)
 			{
 			updateZombies(canvas);
 			}

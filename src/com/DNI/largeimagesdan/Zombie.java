@@ -32,6 +32,7 @@ public class Zombie extends AnimatedObject{
 		//currentZombieAction = ZombieAction.shuffle;
 		animationFrames = 8;
 		animationStart = 4;
+		move();
 		checkForAttackOpportunity();
 	}
 	public void killed(){

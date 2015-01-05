@@ -40,6 +40,12 @@ public class ResourceController {
 		quickLoadSpeed = System.currentTimeMillis()-loadStart;
 		System.out.println ("val: quick load time = " + quickLoadSpeed);
 	}
+	public static ResourceController getInstance(Context context){
+		if (instance == null)
+			instance = new ResourceController(context);
+		return instance;
+	}
+	
 	private void loadSlowShit(){
 		new Thread(new Runnable() {
 			public void run() {	
@@ -53,11 +59,7 @@ public class ResourceController {
 			}
 		}).start();
 	}
-	public static ResourceController getInstance(Context context){
-		if (instance == null)
-			instance = new ResourceController(context);
-		return instance;
-	}
+	
 	public void processEndOfView(ViewType viewType){
 		switch (viewType){//view calls its own end process and therefore has updated all local variables to exit state.
 		case cowboy:
