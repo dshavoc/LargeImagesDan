@@ -31,7 +31,6 @@ public class MainActivity extends ActionBarActivity {
 		resourceController = ResourceController.getInstance(this);
 		resourceController.changeViews(ViewType.lander);
 		
-		
 	}
 
 	@Override

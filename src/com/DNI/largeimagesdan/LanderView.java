@@ -72,6 +72,7 @@ public class LanderView extends View {
 		// tell the system that we handled the event and no further processing is required
 		return true; 
 	}
+	
 	private boolean checkExitCondition() {
 		boolean rtn = false;
 		if( lander.landerState == LanderState.Crashed ) {
@@ -83,7 +84,28 @@ public class LanderView extends View {
 			testTime = (int) (System.currentTimeMillis()-startTime);
 			main.resourceController.processEndOfView(ViewType.lander);
 	}
+
+	
+	float targetFps = 30;
+	float targetMsPerFrame = 1000/targetFps;
+	long timeLastUpdate = 0, timeNow = 0;
+	
 	protected void onDraw(Canvas canvas) {
+		
+		timeNow = System.currentTimeMillis();
+		//Wait until the proper time has passed to render the next frame
+		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
+			System.out.println("timeNow - timeLastUpdate = " + (timeNow - timeLastUpdate));
+			try {  
+				Thread.sleep(1);	//Max fps = 100, throttled down to targetFps   
+			} catch (InterruptedException e) {
+				System.err.println("PlanetHopView.onDraw error");
+			}
+			timeNow = System.currentTimeMillis();
+		}
+		timeLastUpdate = timeNow;
+		
+		//Draw here
 		paint.setTextSize((float) (main.screenHeight*.05));
 		paint.setColor(Color.WHITE);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
