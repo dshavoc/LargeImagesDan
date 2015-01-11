@@ -94,7 +94,6 @@ public class PlanetHopView extends View {
 		timeNow = System.currentTimeMillis();
 		//Wait until the proper time has passed to render the next frame
 		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
-			System.out.println("timeNow - timeLastUpdate = " + (timeNow - timeLastUpdate));
 			try {  
 				Thread.sleep(1);	//Max fps = 100, throttled down to targetFps   
 			} catch (InterruptedException e) {

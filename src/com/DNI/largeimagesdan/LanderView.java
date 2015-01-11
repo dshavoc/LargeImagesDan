@@ -116,15 +116,12 @@ public class LanderView extends View {
 		invalidate();   
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
-			{
-			 if (lander.landerState == LanderState.Crashed) failures++;
-			 reset();
-			}
+		{
+			if (lander.landerState == LanderState.Crashed) failures++;
+				reset();
+		}
 		paint.setColor(Color.WHITE);
-		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
-		try {  
-			Thread.sleep(30);   
-		} catch (InterruptedException e) { }      
+		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);     
 		invalidate();
 	}
 }
