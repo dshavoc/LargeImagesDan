@@ -70,7 +70,27 @@ public class LanderView extends View {
 		return true; 
 	}
 	
+	
+	float targetFps = 30;
+	float targetMsPerFrame = 1000/targetFps;
+	long timeLastUpdate = 0, timeNow = 0;
+	
 	protected void onDraw(Canvas canvas) {
+		
+		timeNow = System.currentTimeMillis();
+		//Wait until the proper time has passed to render the next frame
+		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
+			System.out.println("timeNow - timeLastUpdate = " + (timeNow - timeLastUpdate));
+			try {  
+				Thread.sleep(1);	//Max fps = 100, throttled down to targetFps   
+			} catch (InterruptedException e) {
+				System.err.println("PlanetHopView.onDraw error");
+			}
+			timeNow = System.currentTimeMillis();
+		}
+		timeLastUpdate = timeNow;
+		
+		//Draw here
 		paint.setTextSize((float) (main.screenHeight*.05));
 		paint.setColor(Color.WHITE);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
@@ -78,9 +98,9 @@ public class LanderView extends View {
 		canvas.drawOval(landingPad, paint);
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
-			{
+		{
 			 reset();//hacked
-			}
+		}
 		lander.rotateByRadians(.1f);
 		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);

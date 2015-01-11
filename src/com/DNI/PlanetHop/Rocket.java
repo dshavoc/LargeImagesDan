@@ -108,6 +108,7 @@ public class Rocket extends AnimatedObject{
 					 explosion = new SingleAnimationObject(explosionAnimation, rx, ry);
 				}				
 				explosion.update(canvas);
+				//When explosion is completed, PlanetHopView.checkExitCondition resets the level
 			}
 		}
 		if(rocketState != RocketState.Crashed) {

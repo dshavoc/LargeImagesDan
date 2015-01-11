@@ -85,25 +85,32 @@ public class PlanetHopView extends View {
 		rocket.update(canvas);
 	}
 	
-	
-	//Throttling not working :( (Dan 1/3/15)
-	//float targetFps = 30;
-	//long timeLastUpdate = 0, timeNow = 0;
+
+	float targetFps = 30;
+	float targetMsPerFrame = 1000/targetFps;
+	long timeLastUpdate = 0, timeNow = 0;
 	protected void onDraw(Canvas canvas) {
-		//timeNow = System.currentTimeMillis();
-		//if(timeNow - timeLastUpdate > 1000/targetFps) {
-		//	timeLastUpdate = System.currentTimeMillis();
-			canvas.drawBitmap(background, null, bounds, null);
-			updateWorldPhysics(canvas);
-			if( checkExitCondition() )
-				exit();
-			invalidate();   
-		//}
-		try {  
-			Thread.sleep(30);	//Max fps = 100, throttled down to targetFps   
-		} catch (InterruptedException e) {
-			System.err.println("PlanetHopView.onDraw error");
-		}  
+	
+		timeNow = System.currentTimeMillis();
+		//Wait until the proper time has passed to render the next frame
+		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
+			System.out.println("timeNow - timeLastUpdate = " + (timeNow - timeLastUpdate));
+			try {  
+				Thread.sleep(1);	//Max fps = 100, throttled down to targetFps   
+			} catch (InterruptedException e) {
+				System.err.println("PlanetHopView.onDraw error");
+			}
+			timeNow = System.currentTimeMillis();
+		}
+		timeLastUpdate = timeNow;
+		
+		//Draw here
+		canvas.drawBitmap(background, null, bounds, null);
+		updateWorldPhysics(canvas);
+		if( checkExitCondition() )
+			exit();
+		invalidate();   
+
 	}
 	
 	private boolean checkExitCondition() {
