@@ -26,6 +26,9 @@ public class LanderView extends View {
 	MainActivity main;
 	RectF backGroundFrame;
 	RectF landingPad;
+	long startTime = 0;
+	public int testTime;
+	public int failures;
 	int startX, startY;
 	Paint paint;
 	int finishY;
@@ -57,6 +60,7 @@ public class LanderView extends View {
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
+		if (startTime == 0) startTime = System.currentTimeMillis();
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 			// finger touches the screen
 			lander.fireThrusters();
@@ -65,23 +69,35 @@ public class LanderView extends View {
 			lander.stopThrusters();
 			break;
 		}
-		
 		// tell the system that we handled the event and no further processing is required
 		return true; 
 	}
-	
+	private boolean checkExitCondition() {
+		boolean rtn = false;
+		if( lander.landerState == LanderState.Crashed ) {
+			rtn = true;
+		}
+		return rtn;
+	}
+	private void exit(){
+			testTime = (int) (System.currentTimeMillis()-startTime);
+			main.resourceController.processEndOfView(ViewType.lander);
+	}
 	protected void onDraw(Canvas canvas) {
 		paint.setTextSize((float) (main.screenHeight*.05));
 		paint.setColor(Color.WHITE);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
 		paint.setColor(Color.DKGRAY);
 		canvas.drawOval(landingPad, paint);
+		if( checkExitCondition() )
+			exit();
+		invalidate();   
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
 			{
-			 reset();//hacked
+			 if (lander.landerState == LanderState.Crashed) failures++;
+			 reset();
 			}
-		lander.rotateByRadians(.1f);
 		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
 		try {  
