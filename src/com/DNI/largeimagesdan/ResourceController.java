@@ -60,6 +60,18 @@ public class ResourceController {
 		}).start();
 	}
 	
+	private void giveReport(){
+		say (" sign in time = " + signInView.timeForCompletion);
+		say (" doors time = " + doorView.testTime);
+		say (" doors errors = " + doorView.wrongDoors);
+		say (" tic tac time = " + ticTacView.testTime);
+		say (" tic tac losses = " + ticTacView.losses);
+		say (" multitask time = " + multiTaskView.testTime);
+		say (" multitask fails = " + multiTaskView.failures);
+		say (" planet hop time = " + planetHopView.testTime);
+		say (" planet hop fails = " + planetHopView.failures);
+		say (" lander time = " + landerView.testTime);
+	}
 	public void processEndOfView(ViewType viewType){
 		switch (viewType){//view calls its own end process and therefore has updated all local variables to exit state.
 		case cowboy:
@@ -69,6 +81,8 @@ public class ResourceController {
 			changeViews(ViewType.multitask);
 			break;
 		case lander:
+			dbm.updateUser(user, landerView.testTime,DBItem.LANDERTIME,calibration);
+			giveReport();
 			break;
 		case multitask:
 			dbm.updateUser(user, multiTaskView.testTime, DBItem.MULTITASKTIME, calibration);
@@ -82,8 +96,6 @@ public class ResourceController {
 				}
 			else // failed test
 				System.out.println("failed test");
-				
-				
 			break;
 		case signIn:
 			user = new User(signInView.initials);
@@ -128,9 +140,8 @@ public class ResourceController {
 		}
 			
 	}
-	
-	public void loadNextView(){
-		
+	private void say(String s){
+		System.out.println("Report: "+ s);
 	}
 	
 }

@@ -32,6 +32,7 @@ public class LunarLander extends AnimatedObject {
 		landerState = LanderState.Airborne;
 		this.startY = (double)startY;
 		groundLevelY = (double)finishY;
+		
 		reset();
 	}
 	
@@ -63,8 +64,11 @@ public class LunarLander extends AnimatedObject {
 		checkWinCondition();
 		if (isFiringThruster && fuelRemaining >0) fuelRemaining --;
 		if (landerState != LanderState.Crashed) drawSelf(canvas, flightAnimation);
-		else if (explosion == null){
-			explosion = new SingleAnimationObject(explosionAnimation, rx, ry);
+		if(landerState == LanderState.Crashed) {
+			if(explosion == null) {
+				//Explosion is beginning. Create the explosion here.
+				 explosion = new SingleAnimationObject(explosionAnimation, rx, ry);
+			}				
 			explosion.update(canvas);
 		}
 	}
