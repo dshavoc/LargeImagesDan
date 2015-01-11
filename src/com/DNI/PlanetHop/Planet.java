@@ -4,9 +4,11 @@ import java.util.Random;
 
 import com.DNI.PlanetHop.Rocket.RocketState;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 public class Planet {
 	Random rand = new Random();
@@ -14,18 +16,22 @@ public class Planet {
 	public float rx;
 	public float ry;
 	public float radius;
-	
+	RectF bounds;
+	Bitmap graphic;
 	public float SAFE_ENTRY_SPEED = 2;		//TODO: Futz with this 
 	
-	public Planet(float rx, float ry, float radius) {
+	public Planet(float rx, float ry, float radius, Bitmap planetImage) {
 		this.rx = rx;
 		this.ry = ry;
 		this.radius = radius;
-		massByG = (int) (radius*75); // to be modified and considered at a laterDate;
+		graphic = planetImage;
+		bounds = new RectF(rx-radius, ry-radius,rx+radius, ry+radius);
+		//massByG = (int) (radius*75); // to be modified and considered at a laterDate;
+		setMassByG();
 		//cMBG/cR^2 = mbg/r^2
 	}
 	private void setMassByG(){
-		int massByGravityConstant = 75;
+		float massByGravityConstant = 0.2f;
 		//let CR^2 = 1;
 		
 		massByG = (int) (radius*radius*massByGravityConstant);
@@ -59,9 +65,10 @@ public class Planet {
 	}
 	
 	private void drawSelf(Canvas canvas){
-		Paint paint = new Paint();
-		paint.setColor(Color.BLUE);
-		canvas.drawCircle(rx, ry, radius, paint);
+		//Paint paint = new Paint();
+		//paint.setColor(Color.BLUE);
+		//canvas.drawCircle(rx, ry, radius, paint);
+		canvas.drawBitmap(graphic,null,bounds,null);
 	}
 	
 	public void update(Canvas canvas, Rocket rocket){

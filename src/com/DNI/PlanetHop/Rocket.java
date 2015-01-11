@@ -21,10 +21,10 @@ public class Rocket extends AnimatedObject{
 	public float THRUST;
 	
 	public Rocket(Planet origin, float radius, Animation animation, SingleAnimation explosionAnimation) {
-		super(origin.rx, origin.ry - origin.radius - radius, radius, animation);
+		super(origin.rx, origin.ry - origin.radius - radius*.1f, radius, animation);
 		setCenter(0.5f, 0.4f);
 		//super(origin.rx, origin.ry, radius, animation);
-		THRUST = radius*.05f;
+		THRUST = radius*.01f;
 		rocketState = RocketState.Home;
 		isFiringThruster = false;
 		this.fuelRemaining = 100;

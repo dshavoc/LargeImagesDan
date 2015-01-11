@@ -3,11 +3,15 @@ package com.DNI.PlanetHop;
 import com.DNI.PlanetHop.Rocket.RocketState;
 import com.DNI.largeimagesdan.Animation;
 import com.DNI.largeimagesdan.MainActivity;
+import com.DNI.largeimagesdan.R;
 import com.DNI.largeimagesdan.SingleAnimation;
 import com.DNI.largeimagesdan.ViewType;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,19 +20,28 @@ public class PlanetHopView extends View {
 	Planet home, destination;
 	Animation rocketAnimation;
 	SingleAnimation explosionAnimation;
+	Bitmap background;
+	Bitmap planet;
 	MainActivity main;
 	long startTime = 0;
 	public int testTime;
 	public int failures;
+	RectF bounds;
 	
 	
 	public PlanetHopView(Context context, Animation rocketAnimation, SingleAnimation explosionAnimation) {
 		super(context);
 		main = (MainActivity) context;
+		bounds = new RectF(0,0,main.screenWidth,main.screenHeight);
 		this.rocketAnimation = rocketAnimation;
 		this.explosionAnimation = explosionAnimation;
+		loadBitmaps();
 		createPlanets();	//create planets before rocket
 		reset();
+	}
+	private void loadBitmaps(){
+		background = BitmapFactory.decodeResource(getResources(), R.drawable.spacebg);
+		planet = BitmapFactory.decodeResource(getResources(), R.drawable.earth);
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		if (startTime == 0) startTime = System.currentTimeMillis();
@@ -58,8 +71,8 @@ public class PlanetHopView extends View {
 	}
 	
 	private void createPlanets(){
-		home = new Planet(main.screenWidth*.2f, main.screenHeight*.23f, main.screenWidth*.06f);
-		destination = new Planet(main.screenWidth*.8f, main.screenHeight*.75f, main.screenWidth*.06f);
+		home = new Planet(main.screenWidth*.2f, main.screenHeight*.23f, main.screenWidth*.06f,planet);
+		destination = new Planet(main.screenWidth*.8f, main.screenHeight*.75f, main.screenWidth*.06f,planet);
 	}
 	
 	private void createRocket(){
@@ -80,7 +93,7 @@ public class PlanetHopView extends View {
 		//timeNow = System.currentTimeMillis();
 		//if(timeNow - timeLastUpdate > 1000/targetFps) {
 		//	timeLastUpdate = System.currentTimeMillis();
-			
+			canvas.drawBitmap(background, null, bounds, null);
 			updateWorldPhysics(canvas);
 			if( checkExitCondition() )
 				exit();
@@ -115,7 +128,6 @@ public class PlanetHopView extends View {
 	
 	private void exit() {
 		main.resourceController.processEndOfView(ViewType.planetHop);
-		
 	}
 
 }
