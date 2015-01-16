@@ -123,7 +123,7 @@ public class TicTacView extends View{
 		return true; 
 	}
 	private void exit(){
-		testTime = (int) (startTime-System.currentTimeMillis());
+		testTime = (int) (System.currentTimeMillis()-startTime);
 		main.resourceController.processEndOfView(ViewType.ticTacToe);
 	}
 	

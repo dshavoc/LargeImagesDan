@@ -117,8 +117,12 @@ public class LanderView extends View {
 		lander.update(canvas, landerAnimation, explosionAnimation);
 		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
 		{
-			if (lander.landerState == LanderState.Crashed) failures++;
-				reset();
+			if (lander.landerState == LanderState.Crashed) {
+				failures++;
+			}
+				
+				else exit();
+				 
 		}
 		paint.setColor(Color.WHITE);
 		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);     
