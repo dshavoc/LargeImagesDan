@@ -124,9 +124,11 @@ public class PlanetHopView extends View {
 						rtn = true;
 						testTime = -1;
 						}
+					
 				}
 			}
 		} else if( rocket.rocketState == RocketState.Landed ) {
+			testTime = (int) (System.currentTimeMillis()-startTime);
 			rtn = true;
 		}
 		return rtn;

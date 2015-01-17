@@ -12,7 +12,7 @@ enum PanelType{TARGET,COLOR,TEST};
 
 public class MovePane {
 	Rect bounds;
-	int currentNumber;
+	public int currentNumber;
 	private int currentSelectedNumbersSum;
 	int targetColor = Color.BLACK; // the color of the targeting indicator
 	Bitmap targetBitmap;

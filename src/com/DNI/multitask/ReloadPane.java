@@ -17,23 +17,25 @@ public class ReloadPane {
 	Vector<NumberBubble> numbers; 
 	Paint numberPaint;
 	int difficultyLevel;
-
+	int failures = 0;
+	long timeLastNewBall;
+	int newBallConstant = 500;
 	float ballSpeed;
-
+	MovePane movePane;
 	Random rand;
 
-	public ReloadPane(Rect bounds, int difficultyLevel) {
+	public ReloadPane(Rect bounds, int difficultyLevel, MovePane movePane) {
 		this.bounds = bounds;
 		this.difficultyLevel = difficultyLevel;
 		numbers = new Vector<NumberBubble>();
 		rand = new Random();
-
+		this.movePane = movePane;
 		resetBasedOnDifficulty(difficultyLevel);
 	}
 
 	private void createBubbles(int n){
 		for (int i = 0; i < n; i++)
-			addNumber(1);
+			addNumber(rand.nextInt(3));
 	}
 
 	public void resetBasedOnDifficulty(int difficultyLevel) {
@@ -45,7 +47,7 @@ public class ReloadPane {
 		numbers.clear();
 		//for(int i=0; i<(5+2*difficultyLevel); i++) {
 		//addNumber(rand.nextInt(9+difficultyLevel));
-		createBubbles(10);
+		createBubbles(3);
 		//}		
 	}
 
@@ -86,7 +88,7 @@ public class ReloadPane {
 					break;
 				}
 			}
-			addNumber(1);
+			
 		}
 		return valueClicked;
 	}
@@ -103,6 +105,10 @@ public class ReloadPane {
 
 	//Update the physics and render the canvas
 	public void update(Canvas canvas) {
+		if (System.currentTimeMillis()-timeLastNewBall>newBallConstant){
+			timeLastNewBall = System.currentTimeMillis();
+			addNumber(rand.nextInt(3));
+		}
 		int i, j;
 		//Update physics for all pairs of bubbles. This will mark them updated.
 		if (numbers.size()==1){
@@ -111,11 +117,15 @@ public class ReloadPane {
 		else {
 			for(i=0; i<numbers.size()-1; i++) {
 				
-				if (i == 0) numbers.elementAt(i).detectAndHandleCollisionWithBoundary(bounds); 
-				
+				//if (i == 0) numbers.elementAt(i).detectAndHandleCollisionWithBoundary(bounds); 
 				for(j=i+1; j<numbers.size(); j++) {//update J
 					numbers.elementAt(j).detectAndHandleCollisionWithBoundary(bounds);
 					numbers.elementAt(i).detectAndHandleCollisionWith( numbers.elementAt(j) );
+					if (numbers.elementAt(i).number > movePane.currentNumber) 
+						{
+						numbers.elementAt(i).markedForDeath = true;
+						
+						}
 				}	
 			}
 	
@@ -127,7 +137,7 @@ public class ReloadPane {
 				}
 			}
 			
-			if (rand.nextInt(500)==1) addNumber(1);
+			//if (rand.nextInt(500)==1) addNumber(1);
 			drawSelf(canvas);
 		}
 	}
@@ -205,38 +215,7 @@ public class ReloadPane {
 			return ret;
 		}
 
-		/*
-		public void detectAndHandleCollisionWithDan(NumberBubble other) {
-			PointF normal;
-			float distance = PointF.length(other.loc.x - loc.x, other.loc.y - loc.y);
-			float myVelocityNorm;
-			float otherVelocityNorm;
-
-			//if(!isUpdated) {	//Skip if this has been already been marked updated
-
-				//Detect collision
-				if(distance <= radius + other.radius) {
-					//Find normal vector towards target
-					normal = new PointF(other.loc.x - loc.x, other.loc.y - loc.y);
-					float normalMag = normal.length();
-					normal.set(normal.x/normalMag, normal.y/normalMag);		//normalize
-
-					//Update my velocity
-					myVelocityNorm = dotProduct(velocity, normal);
-					velocity.offset( -myVelocityNorm * normal.x, -myVelocityNorm * normal.y);
-					isUpdated = true;
-
-					//Update other velocity
-					otherVelocityNorm = dotProduct(other.velocity, normal);	//this normal is opposite
-					other.velocity.offset(									//so this delta is, too, to compensat
-						otherVelocityNorm * normal.x,
-						otherVelocityNorm * normal.y
-					);
-					other.isUpdated = true;
-					
-				}
-			//}
-		}*/
+		
 		
 		public void detectAndHandleCollisionWith(NumberBubble other){
 			boolean ret = false;
@@ -318,6 +297,8 @@ public class ReloadPane {
 		private void update(Canvas canvas){
 			move();
 			drawSelf(canvas);
+			
+			
 		}
 	}
 

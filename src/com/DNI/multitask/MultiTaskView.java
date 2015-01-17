@@ -27,6 +27,8 @@ public class MultiTaskView extends View{
 	public int testTime;
 	Bitmap shotgunShell;
 	public int failures=0;
+	int clicks = 0;
+	int successes = 0;
 	int difficultyLevel =1;
 	public MultiTaskView(Context context) {
 		super(context);
@@ -50,13 +52,14 @@ public class MultiTaskView extends View{
 	public void setup(Animation cowboyAnimation, Animation zombieAnimation){
 		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.2),main.screenWidth,(int)(main.screenHeight*.4)),zombieBitmaps,difficultyLevel);
 		firePane = new FirePane(new Rect(0,(int)(main.screenHeight*.4),main.screenWidth,(int)(main.screenHeight*.6)),zombieBitmaps,humanBitmaps,shotgunShell,difficultyLevel);
-		reloadPane = new ReloadPane(new Rect(0,(int)(main.screenHeight*.6),main.screenWidth,(int)(main.screenHeight*.8)), difficultyLevel);
+		reloadPane = new ReloadPane(new Rect(0,(int)(main.screenHeight*.6),main.screenWidth,(int)(main.screenHeight*.8)), difficultyLevel,movePane);
 		cinematicPane = new CinematicPane(new Rect(0,0,main.screenWidth,(int)(main.screenHeight*.2)), cowboyAnimation, zombieAnimation, difficultyLevel);
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
 		performClick();
+		clicks++;
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 		
 			if (startTime == 0) startTime = System.currentTimeMillis();
@@ -65,18 +68,24 @@ public class MultiTaskView extends View{
 			if (movePane.processClick(clickX, clickY)) {
 				movePane.shufflePanels();
 				cinematicPane.run();
+				successes++;
 			}
-			else failures++;
+			
 			if (firePane.processClick(clickX, clickY)) 
+				{
 				cinematicPane.shootZombie();
-			else failures++;
+				successes++;
+				}
 			
 			int reloadNumberClicked = reloadPane.processClick(clickX,clickY);
 			if(reloadNumberClicked > 0) {
 				if(movePane.adjustReloadNumber(reloadNumberClicked))
+					{
+					successes++;
 					firePane.reloadShotgun();
-				else failures++; /// this may cause failure with every click no on ball
+					}
 			}
+			
 			break;
 		}
 		
@@ -84,6 +93,7 @@ public class MultiTaskView extends View{
 		return true; 
 	}
 	private void exit(){
+		failures = clicks-successes;
 		failures+=cinematicPane.failures;
 		testTime = (int) (System.currentTimeMillis()-startTime);
 		main.resourceController.processEndOfView(ViewType.multitask);
