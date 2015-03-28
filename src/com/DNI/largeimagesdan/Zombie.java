@@ -9,6 +9,8 @@ public class Zombie extends AnimatedObject{
 	public ZombieAction currentZombieAction;
 	AnimatedObject player;
 	public boolean isDying;
+	private float moveErrorMean;
+ 
 	public boolean isAttacking = false;
 	//is animated is stored in animated object and decides whether or not an animated object is still being animated.
 
@@ -16,10 +18,11 @@ public class Zombie extends AnimatedObject{
 		super(rx, ry, animation);
 		//this.a = new Animation(AnimationModel.zombie, AnimationType.directionalLR);
 		radius = 50;
-		speed = 7;
+		speed = 5+rand.nextInt(6);
 		this.animation = animation;
 		currentZombieAction = ZombieAction.stand;
 		this.player = player;
+		moveErrorMean = (rand.nextInt(9)-4)/100;
 		// TODO Auto-generated constructor stub
 	}
 	private void attack(){
@@ -139,6 +142,7 @@ public class Zombie extends AnimatedObject{
 			if (t == t1 || t == t2){
 				speedX = (i+d*t)/t;
 				speedY = (j + h*t)/t;
+				float error = (float) (rand.nextGaussian()/100)+moveErrorMean;
 				int newDestinationX = (int) (speedX*t+rx);
 				int newDestinationY = (int) (speedY*t+ry);
 				setDestination(newDestinationX, newDestinationY);

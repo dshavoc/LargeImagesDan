@@ -1,21 +1,14 @@
 package com.DNI.largeimagesdan;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.util.Vector;
 
 import com.DNI.largeimagesdan.R;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -34,11 +27,10 @@ public class ZombieView extends View{
 
 	public ZombieView(Context context) {
 		super(context);
+		System.out.println("zombie view start");
 		main = (MainActivity) context;
 		unitRadius = (int) (main.screenHeight*.07);
-		//setup();
-
-		// TODO Auto-generated constructor stub
+		setup();
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -107,7 +99,9 @@ public class ZombieView extends View{
 		backGroundBmp = BitmapFactory.decodeResource(getResources(), R.drawable.zombiebackground);
 		backGroundBmp = Bitmap.createScaledBitmap(backGroundBmp, main.screenWidth, main.screenHeight, false);
 
+		player = new Cowboy(main.screenWidth*.5f,main.screenHeight*.9f,cowboyAnimation);
 		createZombieWave(main.screenWidth*.3f, main.screenHeight*.2f, 10);
+		
 	}
 	private void bounceOffWalls(AnimatedObject bouncable){
 		//specific data from source image

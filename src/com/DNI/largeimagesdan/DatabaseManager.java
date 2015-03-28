@@ -29,7 +29,7 @@ public class DatabaseManager extends Activity{
 
 	private DatabaseManager(SQLiteDatabase db){
 		mydb=db;
-		//dropTable();
+		//dropTables();
 		createTable(TESTTABLE);
 		createTable(CALIBRATIONTABLE);
 	}
@@ -59,24 +59,8 @@ public class DatabaseManager extends Activity{
 		}
 	}
 
-	private void insertUser(User u ){ // this is private because establish will insert if user does not already exist.
-		String exec =  "INSERT INTO " + TESTTABLE + "(INITIALS) VALUES('"+u.initials +"')";
-		try{
-			mydb.execSQL(exec);
-		}		
-		catch(Exception e){
-			say ("insert error");
-		}
-		exec =  "INSERT INTO " + CALIBRATIONTABLE + "(INITIALS) VALUES('"+u.initials +"')";
-		try{
-			mydb.execSQL(exec);
-		}		
-		catch(Exception e){
-			say ("insert error");
-		}
-	}
-	public void updateUser(User u, int value, DBItem variable, boolean calibration){ //confirmed functional
-		establishUser(u);
+	
+	/*public void updateUser(User u, int value, DBItem variable, boolean calibration){ //confirmed functional
 		String TABLE;
 		if (calibration) TABLE = CALIBRATIONTABLE;
 		else TABLE = TESTTABLE;
@@ -90,12 +74,45 @@ public class DatabaseManager extends Activity{
 		}
 		
 	}
+	*/
+	
+	public void updatePID(int id, int value, DBItem variable, boolean calibration){ //confirmed functional
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
+		String exec =   "UPDATE " + TABLE + " SET " + variable.toString() + "= '" 	+ 	value 	+"'  WHERE PID = '" + id + "';";
+		try{
+			mydb.execSQL(exec);
+			say ("updatePID success");
+		}		
+		catch(Exception e){
+			say ("KERR: update PID error for variable named " + variable.toString() + " with a value of " + value + ".");
+		}
+	}
 	public String returnValue(String initials, DBItem variable, boolean calibration){ //confirmed functional
 		String ret = "";
 		String TABLE;
 		if (calibration) TABLE = CALIBRATIONTABLE;
 		else TABLE = TESTTABLE;
 		String exec = "SELECT (" + variable.toString() + ")  FROM " + TABLE + " WHERE INITIALS = '" + initials + "';";  
+		Cursor allrows = mydb.rawQuery(exec, null);
+		if(allrows.moveToFirst()){
+			do{
+				ret = allrows.getString(0);
+			}
+			while(allrows.moveToNext());
+		}
+		return ret;	
+	}
+	
+	public String returnValueByID(int id, DBItem variable, boolean calibration){ //confirmed functional
+		String ret = "";
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
+		String exec = "SELECT (" + variable.toString() + ")  FROM " + TABLE + " WHERE PID = '" + id + "';";  
+		
+		
 		Cursor allrows = mydb.rawQuery(exec, null);
 		if(allrows.moveToFirst()){
 			do{
@@ -124,32 +141,45 @@ public class DatabaseManager extends Activity{
 	private void say(String s){
 		System.out.println(s);
 	}
-
-	public void establishUser(User u){
+	public void sayAllInitials(){
+		say ("saying initials");
 		try{
-			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  TESTTABLE + " WHERE INITIALS = '" + u.initials + "'", null); 
-			if(allrows.moveToFirst()){
-
-			}
-			else{
-				say ("new user");
-				insertUser(u);
-			}
+			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  TESTTABLE, null); 
+			if (allrows.moveToFirst()) {
+	            do {
+	            say (allrows.getString(1));   // get  the  data into array,or class variable
+	            
+	            } while (allrows.moveToNext());
+	        }
 		}
 		catch(Exception e){ 
+		say ("error in sayAllInitials");
 		}
 		
+	}
+	public void insertUser(String initials, boolean calibration ){ // this is private because establish will insert if user does not already exist.
+		
+		String tableName = TESTTABLE;
+		if (calibration) 
+			tableName = CALIBRATIONTABLE;
+		
+		String exec =  "INSERT INTO " + tableName + "(INITIALS) VALUES('"+initials +"')";
+		
 		try{
-			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  CALIBRATIONTABLE + " WHERE INITIALS = '" + u.initials + "'", null); 
-			if(allrows.moveToFirst()){
-
-			}
-			else{
-				say ("new user");
-				insertUser(u);
-			}
+			mydb.execSQL(exec);
+		}		
+		catch(Exception e){
+			say ("insert error");
 		}
-		catch(Exception e){ 
-		}
+	}
+		
+	public int returnCurrentMaxPID(boolean calibration){
+		int ret = 1;
+		String tableName = TESTTABLE;
+		if (calibration) 
+			tableName = CALIBRATIONTABLE;
+		Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  tableName, null); 
+		ret = allrows.getCount();
+		return ret;
 	}
 }

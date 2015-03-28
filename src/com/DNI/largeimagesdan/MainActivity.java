@@ -14,6 +14,7 @@ public class MainActivity extends ActionBarActivity {
 	public SQLiteDatabase mydb;
 	public int screenHeight;
 	public int screenWidth;
+	public boolean calibration = true;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
 	public ResourceController resourceController;
 	
@@ -27,10 +28,11 @@ public class MainActivity extends ActionBarActivity {
 		screenHeight = metrics.heightPixels;
 		screenWidth = metrics.widthPixels;
 		mydb = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
-		
 		resourceController = ResourceController.getInstance(this);
 		resourceController.changeViews(ViewType.signIn);
-		
+		resourceController.dbm.insertUser("FUCK", calibration);
+		resourceController.dbm.sayAllInitials();
+		System.out.println("Created");
 	}
 
 	@Override

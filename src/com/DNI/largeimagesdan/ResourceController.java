@@ -49,9 +49,10 @@ public class ResourceController {
 	private void loadSlowShit(){
 		new Thread(new Runnable() {
 			public void run() {	
+				System.out.println("start load");
 				zombieView = new ZombieView(main);
 				multiTaskView = new MultiTaskView(main);
-				zombieView.setup();
+				//zombieView.setup();
 				multiTaskView.setup(zombieView.cowboyAnimation, zombieView.zombieAnimation);
 				slowLoad = true;
 				slowLoadSpeed = System.currentTimeMillis()-loadStart;
@@ -72,40 +73,45 @@ public class ResourceController {
 		say (" planet hop fails = " + planetHopView.failures);
 		say (" lander time = " + landerView.testTime);
 	}
+	
+	private void updateDatabase(){
+		dbm.insertUser(signInView.initials, calibration);
+		int targetPID = dbm.returnCurrentMaxPID(calibration);
+		say("TARGET PID = "+targetPID);
+		dbm.updatePID(targetPID, signInView.timeForCompletion, DBItem.LOGINTIME, calibration);
+		dbm.updatePID(targetPID, doorView.testTime, DBItem.DOORTIME, calibration);
+		dbm.updatePID(targetPID, ticTacView.testTime, DBItem.TICTACTIME, calibration);
+		dbm.updatePID(targetPID, multiTaskView.testTime, DBItem.MULTITASKTIME, calibration);
+		dbm.updatePID(targetPID, landerView.testTime, DBItem.LANDERTIME, calibration);
+		dbm.updatePID(targetPID, planetHopView.testTime, DBItem.PLANETHOPTIME, calibration);		
+	}
 	public void processEndOfView(ViewType viewType){
 		switch (viewType){//view calls its own end process and therefore has updated all local variables to exit state.
 		case cowboy:
-			break;
-		case doors:
-			dbm.updateUser(user, doorView.testTime, DBItem.DOORTIME, calibration);
 			changeViews(ViewType.multitask);
 			break;
+		case doors:
+			changeViews(ViewType.cowboy);
+			break;
 		case lander:
-			dbm.updateUser(user, landerView.testTime,DBItem.LANDERTIME,calibration);
 			giveReport();
+			updateDatabase();
 			break;
 		case multitask:
-			dbm.updateUser(user, multiTaskView.testTime, DBItem.MULTITASKTIME, calibration);
 			changeViews(ViewType.ticTacToe);
 			break;
 		case planetHop:
 			if (planetHopView.failures <3) // completedTest
 				{
-				dbm.updateUser(user, planetHopView.testTime, DBItem.PLANETHOPTIME, calibration);
 				changeViews(ViewType.lander);
 				}
 			else // failed test
 				System.out.println("failed test");
 			break;
 		case signIn:
-			user = new User(signInView.initials);
-			dbm.establishUser(user);
-			dbm.updateUser(user, signInView.timeForCompletion, DBItem.LOGINTIME, calibration);
-			dbm.sayValue(DBItem.LOGINTIME, user.initials, true);
 			changeViews(ViewType.doors);
 			break;
 		case ticTacToe:
-			dbm.updateUser(user, ticTacView.testTime, DBItem.TICTACTIME, calibration);
 			changeViews(ViewType.planetHop);
 			break;
 		default:

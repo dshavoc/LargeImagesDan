@@ -169,7 +169,7 @@ public class AnimatedObject {
 			{
 			if (isClicked(animatedObject.rx,animatedObject.ry)){
 				setDestination(-destinationX, -destinationY); //move in opposite direction
-				speed = (int)(speed*.5);
+				speed = 1;
 				move();
 				speed = originalSpeed;
 			}
