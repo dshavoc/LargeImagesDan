@@ -3,6 +3,7 @@ package com.DNI.multitask;
 import java.util.Random;
 import java.util.Vector;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,13 +24,17 @@ public class ReloadPane {
 	float ballSpeed;
 	MovePane movePane;
 	Random rand;
+	Bitmap background;
+	RectF circleRect;
+	RectF shadowRect;
 
-	public ReloadPane(Rect bounds, int difficultyLevel, MovePane movePane) {
+	public ReloadPane(Rect bounds, int difficultyLevel, MovePane movePane, Bitmap background) {
 		this.bounds = bounds;
 		this.difficultyLevel = difficultyLevel;
 		numbers = new Vector<NumberBubble>();
 		rand = new Random();
 		this.movePane = movePane;
+		this.background = background;
 		resetBasedOnDifficulty(difficultyLevel);
 	}
 
@@ -96,7 +101,7 @@ public class ReloadPane {
 	private void drawSelf(Canvas canvas) {
 
 		//Draw background
-
+		canvas.drawBitmap(background, null, bounds, null);
 		//Draw floating numbers
 		for(int i=0; i<numbers.size(); i++) {		
 			numbers.elementAt(i).update(canvas);  
@@ -168,7 +173,8 @@ public class ReloadPane {
 		//Location in pixels, angle in range [0, 1+], radius and speed in px
 		public NumberBubble(Point location, float angle, float speed, int number) { //balls speeds do not change once created...
 			this.number = number; // number will signify mass
-			int sizeUnit = (int)(bounds.width()*.01);
+			int sizeUnit = (int)(bounds.width()*.03);
+			//radius = (int) Math.pow((3*number)/(4*3.14), 1/3)*sizeUnit;
 			radius = number*sizeUnit;
 			//isUpdated = false; // creates item and says it has yet to be updated... RCK add 1-2
 			loc = new PointF(location);
@@ -207,6 +213,7 @@ public class ReloadPane {
 			numberPaint.setColor(Color.BLACK);
 			numberPaint.setTextSize((float) (1.4*radius));
 			numberPaint.setTextAlign(Paint.Align.CENTER);
+			
 		}
 
 		public boolean containsPoint(int x, int y) {
@@ -277,8 +284,9 @@ public class ReloadPane {
 		}
 
 		private void drawSelf(Canvas canvas) {
-			RectF circleRect = new RectF(loc.x-radius, loc.y-radius, loc.x + radius, loc.y + radius); // changed such that coordinate is of center;
-			RectF shadowRect = new RectF(circleRect);
+			
+			circleRect = new RectF(loc.x-radius, loc.y-radius, loc.x + radius, loc.y + radius); // changed such that coordinate is of center;
+			shadowRect = new RectF(circleRect);
 			shadowRect.offset(SHADOW_OFFSET, SHADOW_OFFSET);
 
 			//Draw shadow

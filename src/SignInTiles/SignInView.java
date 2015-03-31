@@ -4,24 +4,31 @@ import java.util.Random;
 import java.util.Vector;
 
 import com.DNI.largeimagesdan.MainActivity;
+import com.DNI.largeimagesdan.R;
 import com.DNI.largeimagesdan.User;
 import com.DNI.largeimagesdan.ViewType;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Paint.Align;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class SignInView extends View {
+	boolean confirmStage = false;
 	public String initials;
-	private final String startingText = "INITIALS";
+	private final String startingText = "Input inititials";
 	Paint paint;
 	long timeAtFirstLetter;
 	public int timeForCompletion;
 	int numberOfClears=0;
+	Bitmap confirmBMP;
+	RectF screenBounds;
 	MainActivity main;
 	int screenWidth, screenHeight;
 	Vector<LetterTile> letters = new Vector<LetterTile>();
@@ -32,9 +39,11 @@ public class SignInView extends View {
 		main = (MainActivity) context;
 		screenWidth = main.screenWidth;
 		screenHeight = main.screenHeight;
+		screenBounds = new RectF(0,0,main.screenWidth,main.screenHeight*.85f);
 		initials = startingText;
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
+		confirmBMP = BitmapFactory.decodeResource(getResources(), R.drawable.confirm);
 		// TODO Auto-generated constructor stub
 		reset();
 	}
@@ -58,6 +67,20 @@ public class SignInView extends View {
 		boolean exit = false;
 		LetterTile tile;
 		System.out.println("process click called");
+		if(confirmStage){
+			if(clickedY < main.screenHeight*.3f) 
+				{
+				timeForCompletion = (int) (System.currentTimeMillis()-timeAtFirstLetter);
+				main.resourceController.processEndOfView(ViewType.signIn);
+				}
+			if (clickedY > main.screenHeight*.65f)
+			{
+				initials = "";
+				numberOfClears++;
+				confirmStage = false;
+			}
+		}
+		else
 		for (int i = 0; i < letters.size()&&!exit;i++){
 			tile = letters.elementAt(i);
 			if (tile.isClicked(clickedX, clickedY))
@@ -79,8 +102,7 @@ public class SignInView extends View {
 					
 					break;
 				case SUBMIT:
-					timeForCompletion = (int) (System.currentTimeMillis()-timeAtFirstLetter);
-					main.resourceController.processEndOfView(ViewType.signIn);
+					confirmStage = true;
 					//future code
 					break;
 				default:
@@ -178,13 +200,25 @@ public class SignInView extends View {
 			letters.elementAt(i).drawSelf(canvas);
 	}
 	protected void onDraw(Canvas canvas) {
-		drawLetters(canvas);
-		paint.setTextSize(screenWidth*.2f);
-		canvas.drawText(initials, 0, screenHeight*.2f, paint);
+		if (!confirmStage)
+		{drawLetters(canvas);
+		
+		//canvas.drawText(initials, 0, screenHeight*.2f, paint);
+		main.resourceController.printOnCanvas(initials, canvas, screenWidth*.1f, screenHeight*.2f, 38, Color.BLACK);
+		}
+		else 
+		{
+			canvas.drawBitmap(confirmBMP,null,screenBounds,null);
+			paint.setTextAlign(Align.CENTER);
+			paint.setColor(Color.BLACK);
+			main.resourceController.printOnCanvas(initials, canvas, main.screenWidth*.5f, main.screenHeight*.60f,60, paint);
+			
+		}
+		
 		try {  
 			Thread.sleep(30);   
 		} catch (InterruptedException e) { }      
 		invalidate();
 	}
-
+	
 }

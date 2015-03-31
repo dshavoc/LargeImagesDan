@@ -154,16 +154,23 @@ public class Tile {
 	}
 
 	public void drawSelf(Canvas canvas, int i){
-		paint.setColor(Color.WHITE);
-		canvas.drawRect(frame, paint);
 		paint.setColor(Color.BLACK);
+		
+		if (symbolBitmap != null){
+			if (symbol == 'x')
+				paint.setColor(Color.GREEN);
+			else 
+				paint.setColor(Color.RED);
+			
+		}
 		canvas.drawRect(size, paint);
+		
 		paint.setColor(Color.YELLOW);
 		paint.setTextSize(30);
 		canvas.drawText(Integer.toString(i), rx+boxSize*.5f, ry+boxSize*.5f, paint);
 		if (symbolBitmap != null)
 		{
-			canvas.drawBitmap(symbolBitmap, rx, ry, null);
+			//canvas.drawBitmap(symbolBitmap, rx, ry, null);
 		}
 	}
 }

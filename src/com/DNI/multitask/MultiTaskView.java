@@ -25,7 +25,7 @@ public class MultiTaskView extends View{
 	Vector<Bitmap> humanBitmaps = new Vector<Bitmap>();
 	long startTime = 0;
 	public int testTime;
-	Bitmap shotgunShell;
+	Bitmap shotgunShell, movePaneBG, reloadPaneBG, firePaneBG, cinematicPaneBG;
 	public int failures=0;
 	int clicks = 0;
 	int successes = 0;
@@ -47,13 +47,18 @@ public class MultiTaskView extends View{
 		zombieBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.zombie5));
 		humanBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.human1));
 		humanBitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.human2));
-		shotgunShell = BitmapFactory.decodeResource(getResources(), R.drawable.shotgunshell);
+		shotgunShell = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
+		movePaneBG = BitmapFactory.decodeResource(getResources(), R.drawable.move_pane_bg);
+		cinematicPaneBG = BitmapFactory.decodeResource(getResources(), R.drawable.cinematicbg);
+		firePaneBG = BitmapFactory.decodeResource(getResources(), R.drawable.shooting_gallery);
+		reloadPaneBG = BitmapFactory.decodeResource(getResources(), R.drawable.reloadbg);
+		
 	}
 	public void setup(Animation cowboyAnimation, Animation zombieAnimation){
-		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.2),main.screenWidth,(int)(main.screenHeight*.4)),zombieBitmaps,difficultyLevel);
-		firePane = new FirePane(new Rect(0,(int)(main.screenHeight*.4),main.screenWidth,(int)(main.screenHeight*.6)),zombieBitmaps,humanBitmaps,shotgunShell,difficultyLevel);
-		reloadPane = new ReloadPane(new Rect(0,(int)(main.screenHeight*.6),main.screenWidth,(int)(main.screenHeight*.8)), difficultyLevel,movePane);
-		cinematicPane = new CinematicPane(new Rect(0,0,main.screenWidth,(int)(main.screenHeight*.2)), cowboyAnimation, zombieAnimation, difficultyLevel);
+		movePane = new MovePane(new Rect(0,(int)(main.screenHeight*.2),main.screenWidth,(int)(main.screenHeight*.4)),zombieBitmaps,difficultyLevel,movePaneBG);
+		firePane = new FirePane(new Rect(0,(int)(main.screenHeight*.4),main.screenWidth,(int)(main.screenHeight*.6)),zombieBitmaps,humanBitmaps,shotgunShell,difficultyLevel,firePaneBG);
+		reloadPane = new ReloadPane(new Rect(0,(int)(main.screenHeight*.6),main.screenWidth,(int)(main.screenHeight*.8)), difficultyLevel,movePane,reloadPaneBG);
+		cinematicPane = new CinematicPane(new Rect(0,0,main.screenWidth,(int)(main.screenHeight*.2)), cowboyAnimation, zombieAnimation, difficultyLevel, cinematicPaneBG);
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
@@ -98,16 +103,31 @@ public class MultiTaskView extends View{
 		testTime = (int) (System.currentTimeMillis()-startTime);
 		main.resourceController.processEndOfView(ViewType.multitask);
 	}
+	float targetFps = 100;
+	float targetMsPerFrame = 1000/targetFps;
+	long timeLastUpdate = 0, timeNow = 0;
 	protected void onDraw(Canvas canvas) {
+	
+		timeNow = System.currentTimeMillis();
+		//Wait until the proper time has passed to render the next frame
+		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
+			try {  
+				Thread.sleep(1);	//Max fps = 100, throttled down to targetFps   
+			} catch (InterruptedException e) {
+				System.err.println("PlanetHopView.onDraw error");
+			}
+			timeNow = System.currentTimeMillis();
+		}
+		timeLastUpdate = timeNow;
 		
-		movePane.updatePane(canvas);
-		firePane.update(canvas);
-		if(cinematicPane.update(canvas))exit();
-		reloadPane.update(canvas);
-		try {  
-			Thread.sleep(30);   
-		} catch (InterruptedException e) { }      
-		invalidate();
-	}
+		//Draw here
+
+	movePane.updatePane(canvas);
+	firePane.update(canvas);
+	reloadPane.update(canvas);
+	if(cinematicPane.update(canvas))exit();
+	      
+	invalidate();
+}
 
 }

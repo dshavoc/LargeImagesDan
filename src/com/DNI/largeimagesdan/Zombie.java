@@ -2,12 +2,13 @@ package com.DNI.largeimagesdan;
 
 import java.util.Random;
 import android.graphics.Canvas;
+import android.widget.Toast;
 enum ZombieAction{dying,headShot,stand,attack,shuffle}
 
 public class Zombie extends AnimatedObject{
 	Random rand = new Random();
 	public ZombieAction currentZombieAction;
-	AnimatedObject player;
+	Cowboy player;
 	public boolean isDying;
 	private float moveErrorMean;
  
@@ -23,6 +24,7 @@ public class Zombie extends AnimatedObject{
 		currentZombieAction = ZombieAction.stand;
 		this.player = player;
 		moveErrorMean = (rand.nextInt(9)-4)/100;
+		
 		// TODO Auto-generated constructor stub
 	}
 	private void attack(){
@@ -30,6 +32,7 @@ public class Zombie extends AnimatedObject{
 		animationCount = 0;
 		animationFrames = 10;
 		animationStart = 12;
+		player.die();
 	}
 	private void shuffle(){
 		//currentZombieAction = ZombieAction.shuffle;

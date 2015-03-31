@@ -3,6 +3,7 @@ package com.DNI.multitask;
 import java.util.Random;
 import java.util.Vector;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,7 +17,9 @@ public class MovePane {
 	private int currentSelectedNumbersSum;
 	int targetColor = Color.BLACK; // the color of the targeting indicator
 	Bitmap targetBitmap;
+	Bitmap background;
 	int backGroundOfTest; 
+	int defaultNumber=9;
 	int difficultyNumber;
 	long timeLastShuffle;
 	Vector<PanelPosition> allPanelPositions = new Vector<PanelPosition>();
@@ -25,12 +28,14 @@ public class MovePane {
 	Random rand = new Random();
 	MovePanel targetPanel, colorPanel, testPanel;
 	
-	public MovePane(Rect bounds, Vector<Bitmap> zombieBitmaps, int difficultyNumber){
+	public MovePane(Rect bounds, Vector<Bitmap> zombieBitmaps, int difficultyNumber, Bitmap background){
 		this.bounds = bounds;
 		this.zombieBitmaps = zombieBitmaps;
 		this.difficultyNumber = difficultyNumber;
-		currentNumber = 19;
+		this.background = background;
+		currentNumber = defaultNumber;
 		shufflePanels();
+		
 	}
 	private void setRandomPanelOrder(){
 		resetAllPanelPositions();
@@ -50,13 +55,13 @@ public class MovePane {
 		if (currentNumber == currentSelectedNumbersSum){
 			ret = true;
 			currentSelectedNumbersSum = 0;
-			currentNumber = 19;
+			currentNumber = defaultNumber;
 			
 		}
 		if (currentSelectedNumbersSum>currentNumber){
 			//reset current Number and bad stuff
 			currentSelectedNumbersSum = 0;
-			currentNumber = rand.nextInt(14)+5;
+			currentNumber = rand.nextInt(4)+5;
 		}
 		return ret;
 	}
@@ -81,7 +86,7 @@ public class MovePane {
 		targetPanel.update(canvas);
 		colorPanel.update(canvas);
 		testPanel.update(canvas);
-		if (System.currentTimeMillis()-timeLastShuffle>1000)
+		if (System.currentTimeMillis()-timeLastShuffle>800)
 			if (rand.nextBoolean()) shufflePanels();
 			else timeLastShuffle = System.currentTimeMillis();
 	}
@@ -106,13 +111,13 @@ public class MovePane {
 			int third = (bounds.right-bounds.left)/3;
 			switch (panelPosition){
 			case CENTER:
-				panelBounds.set(third, bounds.top, 2*third, bounds.bottom);
+				panelBounds.set(third, (int) (bounds.top*1.15), 2*third, bounds.bottom);
 				break;
 			case LEFT:
-				panelBounds.set(bounds.left, bounds.top, third, bounds.bottom);
+				panelBounds.set(bounds.left, (int) (bounds.top*1.15), third, bounds.bottom);
 				break;
 			case RIGHT:
-				panelBounds.set(2*third, bounds.top, bounds.right, bounds.bottom);
+				panelBounds.set(2*third, (int) (bounds.top*1.15), bounds.right, bounds.bottom);
 				break;
 			default:
 				break;
@@ -162,7 +167,9 @@ public class MovePane {
 				paint.setColor(targetColor);
 				paint.setTextSize((float) (bounds.height()*.5));
 				paint.setTextAlign(Paint.Align.CENTER);
+				//resourceController should do this...
 				canvas.drawText(currentSelectedNumbersSum+"", panelBounds.centerX(), panelBounds.centerY(), paint);
+				
 				canvas.drawText(currentNumber+"", panelBounds.centerX(), panelBounds.centerY()+panelBounds.height()*.4f, paint);
 				// a nominal new years submit.
 				break;
@@ -178,6 +185,8 @@ public class MovePane {
 				break;
 			
 			}
+			canvas.drawBitmap(background, null, bounds, null);
+			
 		}
 		public boolean processClick(int clickX, int clickY){
 			boolean ret = false;

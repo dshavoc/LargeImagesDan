@@ -54,7 +54,14 @@ public class AnimatedObject {
 		centerX = 0.5f;
 		centerY = 0.5f;
 	}
-	
+	public float distanceFrom(AnimatedObject other){
+		float ret = -1;
+		if (other!=null)
+		{
+			ret = (float)Math.hypot(rx-other.rx,ry-other.ry);
+		}
+		return ret;
+	}
 	public AnimatedObject(float rx, float ry, float radius, Animation animation){
 		this.rx = rx;
 		this.ry = ry;

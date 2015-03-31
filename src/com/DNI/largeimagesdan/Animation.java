@@ -52,11 +52,15 @@ public class Animation {
 
 		try {
 			regionDecoder = BitmapRegionDecoder.newInstance(is, false);
+			System.out.println("RCK OUTPUT: Bitmap width " + regionDecoder.getWidth());
+			System.out.println("RCK OUTPUT: Bitmap height! " + regionDecoder.getHeight());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("Animation.createFrames(): BitmapRegionDecoder could not read the input stream!");
 			e1.printStackTrace();
 		}
+		
+		
 		for (int row =0; row < rows; row++) {
 			for (int col = 0; col < columns; col++)
 			{	
