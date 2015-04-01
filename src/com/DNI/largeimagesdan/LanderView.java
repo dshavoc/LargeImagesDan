@@ -87,8 +87,8 @@ public class LanderView extends View {
 		return rtn;
 	}
 	private void exit(){
-			testTime = (int) (System.currentTimeMillis()-startTime);
-			main.resourceController.processEndOfView(ViewType.lander);
+		testTime = (int) (System.currentTimeMillis()-startTime);
+		main.resourceController.processEndOfView(ViewType.lander);
 	}
 
 	
@@ -136,10 +136,9 @@ public class LanderView extends View {
 				if (lander.landerState == LanderState.Crashed) {
 					failures++;
 				}
-					
-					else exit();
-					 
+				else exit();	 
 			}
+			//else exit();	 
 		}
 		invalidate();
 	}

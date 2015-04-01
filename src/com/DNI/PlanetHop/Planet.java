@@ -19,6 +19,7 @@ public class Planet {
 	RectF bounds;
 	Bitmap graphic;
 	public float SAFE_ENTRY_SPEED = 2;		//TODO: Futz with this 
+	private boolean isRocketLandedHere = false;
 	
 	public Planet(float rx, float ry, float radius, Bitmap planetImage) {
 		this.rx = rx;
@@ -58,9 +59,14 @@ public class Planet {
 		{
 			if(Math.hypot(rocket.speedX, rocket.speedY) <= SAFE_ENTRY_SPEED) {
 				rocket.rocketState = RocketState.Landed;
+				isRocketLandedHere = true;
 			} else {
 				rocket.rocketState = RocketState.Crashed;
+				isRocketLandedHere = false;
 			}
+		}
+		else {
+			isRocketLandedHere = false;
 		}
 	}
 	
@@ -78,5 +84,9 @@ public class Planet {
 			detectCollision(rocket);
 		}
 		drawSelf(canvas);
+	}
+	
+	public boolean hasRocketLanded() {
+		return isRocketLandedHere;
 	}
 }

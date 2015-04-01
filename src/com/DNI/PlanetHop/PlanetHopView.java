@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -49,9 +50,9 @@ public class PlanetHopView extends View {
 		float third = main.screenWidth/3;
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 			// finger touches the screen
-			if (event.getX()<third)// first third
+			if (event.getX()<third)								//first third
 				rocket.rotateCounterClockwise();
-			if (event.getX()>=third && event.getX()< 2*third)// first third
+			if (event.getX()>=third && event.getX()< 2*third)	//middle third
 				rocket.fireThrusters();
 			if (event.getX()> 2*third)
 				rocket.rotateClockwise();
@@ -117,21 +118,42 @@ public class PlanetHopView extends View {
 		if( rocket.rocketState == RocketState.Crashed ) {
 			if( rocket.explosion != null ) {
 				if( rocket.explosion.isFinished ) {
-					reset();
-					failures++;
-					if (failures == 3)
-						{
-						rtn = true;
-						testTime = -1;
-						}
-					
+//					reset();
+//					failures++;
+//					if (failures == 3)
+//					{
+//						rtn = true;
+//						testTime = -1;
+//					}
+					rtn = incrementFailuresToLimit();
 				}
 			}
 		} else if( rocket.rocketState == RocketState.Landed ) {
-			testTime = (int) (System.currentTimeMillis()-startTime);
-			rtn = true;
+			//Check that landed on target planet
+			if(destination.hasRocketLanded()) {
+				//VICTORY CONDITION
+				testTime = (int) (System.currentTimeMillis()-startTime);
+				rtn = true;
+			}
+			else {
+				rtn = incrementFailuresToLimit();
+			}
 		}
 		return rtn;
+	}
+	
+	//Returns true if failure limit has been reached
+	private boolean incrementFailuresToLimit() {
+		boolean rtn = false;
+		reset();
+		failures++;
+		Log.i("DGK", "failures incremented to " + failures);
+		if (failures == 3) {
+			rtn = true;
+			testTime = -1;
+		}
+		//return rtn;
+		return false;		//PlantHopView will not impose a strike limit. ResourceController will.
 	}
 	
 	private void exit() {
