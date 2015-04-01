@@ -3,6 +3,7 @@ import android.graphics.Canvas;
 
 public class Cowboy extends AnimatedObject{
 	public boolean isShooting = false;
+	public boolean isDead = false;
 	public boolean isAtDestination = false;
 	public Cowboy(float rx, float ry, Animation animation) {
 		super(rx, ry, animation);
@@ -16,7 +17,10 @@ public class Cowboy extends AnimatedObject{
 		animationFrames = 1;
 		animationStart = 0;
 	}
-
+	public void die(){
+		isDead = true;
+		//an animation or sound effects should accompany this.
+	}
 	public void shoot(){
 	//	System.out.println("shot");
 		if(!isShooting) isShooting = true;
@@ -48,6 +52,5 @@ public class Cowboy extends AnimatedObject{
 		}
 		drawSelf(canvas, animation);	
 	}
-
 
 }

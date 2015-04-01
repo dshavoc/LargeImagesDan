@@ -22,20 +22,23 @@ public class CinematicPane {
 	long timeLastUpdate;
 	int difficultyLevel;
 	int failures=0;
-	public CinematicPane(Rect bounds, Animation cowboyAnimation, Animation zombieAnimation, int difficultyLevel){
+	public CinematicPane(Rect bounds, Animation cowboyAnimation, Animation zombieAnimation, int difficultyLevel,Bitmap background){
 		this.bounds = bounds;
+		this.background = background;
 		this.cowboyAnimation = cowboyAnimation;
 		this.zombieAnimation = zombieAnimation;
 		this.difficultyLevel = difficultyLevel;
 		rand = new Random();
-		player = new Cowboy(bounds.left+bounds.width()*.2f,bounds.centerY(),cowboyAnimation);
-		player.setDestination(bounds.right, bounds.centerY());
+		player = new Cowboy(bounds.left+bounds.width()*.2f,bounds.height()*.8f,cowboyAnimation);
+		player.setDestination(bounds.right, (int) (bounds.height()*.9));
 		player.setSpeed((int) (bounds.width()*.05));
 		addZombie();
 	}
 	
 	private void addZombie(){
-		zombies.add(new Zombie(bounds.left+bounds.width()*.05f,bounds.centerY(),player,zombieAnimation));
+		Zombie zombie = new Zombie(bounds.left+bounds.width()*.05f,bounds.height()*.8f,player,zombieAnimation);
+		zombie.radius = player.radius*1.5f;
+		zombies.add(zombie);
 	}
 	public void shootZombie(){
 		Zombie zombie;
@@ -76,19 +79,21 @@ public class CinematicPane {
 	}
 	public boolean update(Canvas canvas){
 		boolean ret = false;
+		canvas.drawBitmap(background, null, bounds, null);
 		if (running){
-			if (rand.nextBoolean()) running = false;
 			player.update(canvas);
+			player.update(canvas);
+			running = false;
 		}
 		if (player.isShooting) {
-			player.setDestination(bounds.left, bounds.centerY());
+			player.setDestination(bounds.left, (int) (bounds.height()*.8f));
 			if (System.currentTimeMillis()-timeLastUpdate>300)
 				{
 				timeLastUpdate = System.currentTimeMillis();
 				player.update(canvas);
 				}
 		}
-		else player.setDestination(bounds.right, bounds.centerY());
+		else player.setDestination(bounds.right, (int) (bounds.height()*.8f));
 			
 		if (System.currentTimeMillis()-timeLastUpdate>(5-difficultyLevel)*200)
 			{

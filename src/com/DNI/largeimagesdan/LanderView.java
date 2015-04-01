@@ -20,6 +20,7 @@ public class LanderView extends View {
 
 	Bitmap landerBmp, backgroundBmp;
 	LunarLander lander;
+	boolean intro = true;
 	Animation landerAnimation;
 	SingleAnimation explosionAnimation;
 	boolean explosionCreated = false;
@@ -60,7 +61,11 @@ public class LanderView extends View {
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
+		if (intro){
+			intro = false;
 		if (startTime == 0) startTime = System.currentTimeMillis();
+		}
+		else{
 		switch (eventaction) {
 		case MotionEvent.ACTION_DOWN: 			// finger touches the screen
 			lander.fireThrusters();
@@ -68,6 +73,7 @@ public class LanderView extends View {
 		case MotionEvent.ACTION_UP:
 			lander.stopThrusters();
 			break;
+		}
 		}
 		// tell the system that we handled the event and no further processing is required
 		return true; 
@@ -91,7 +97,8 @@ public class LanderView extends View {
 	long timeLastUpdate = 0, timeNow = 0;
 	
 	protected void onDraw(Canvas canvas) {
-		
+		String message = "Touch screen to fire thruster.";
+		String message2 = "Touch screen to start.";
 		timeNow = System.currentTimeMillis();
 		//Wait until the proper time has passed to render the next frame
 		while( (timeNow - timeLastUpdate) < targetMsPerFrame ) {
@@ -106,24 +113,33 @@ public class LanderView extends View {
 		timeLastUpdate = timeNow;
 		
 		//Draw here
-		paint.setTextSize((float) (main.screenHeight*.05));
-		paint.setColor(Color.WHITE);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
 		paint.setColor(Color.DKGRAY);
 		canvas.drawOval(landingPad, paint);
 		if( checkExitCondition() )
 			exit();
 		invalidate();   
-		lander.update(canvas, landerAnimation, explosionAnimation);
-		if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
-		{
-			if (lander.landerState == LanderState.Crashed) {
-				failures++;
-			}
-			else exit();	 
-		}
+		
+		
 		paint.setColor(Color.WHITE);
-		canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);     
+		if (intro){
+			main.resourceController.printOnCanvas(message, canvas, main.screenWidth*.1f,main.screenHeight*.1f,22,Color.WHITE);
+			main.resourceController.printOnCanvas(message2, canvas, main.screenWidth*.1f,main.screenHeight*.15f,22,Color.WHITE);
+		}
+		else //canvas.drawText("Fuel:" + lander.fuelRemaining, main.screenWidth*.1f,main.screenHeight*.1f,paint);
+		{
+			message = "Fuel:" + lander.fuelRemaining;
+			main.resourceController.printOnCanvas(message, canvas, main.screenWidth*.1f,main.screenHeight*.1f,22, Color.WHITE);
+			lander.update(canvas, landerAnimation, explosionAnimation);
+			if (lander.landerState == LanderState.Crashed || lander.landerState == LanderState.Landed)
+			{
+				if (lander.landerState == LanderState.Crashed) {
+					failures++;
+				}
+				else exit();	 
+			}
+			//else exit();	 
+		}
 		invalidate();
 	}
 }

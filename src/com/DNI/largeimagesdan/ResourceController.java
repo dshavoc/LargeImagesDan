@@ -6,9 +6,15 @@ import com.DNI.multitask.MultiTaskView;
 import doors.DoorView;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import SignInTiles.SignInView;
 
 public class ResourceController {
+	private int defaultColor = Color.BLACK;
+	private int defaultTextSize = 20;
+	
 	private static ResourceController instance = null;
 	public SignInView signInView;
 	public TicTacView ticTacView;
@@ -24,6 +30,7 @@ public class ResourceController {
 	MainActivity main;
 	DatabaseManager dbm;
 	public User user;
+	Paint paint;
 	private static String DBNAME = "DBreath.db";    // THIS IS THE SQLITE DATABASE FILE NAME
 	
 	private ResourceController(Context context){
@@ -39,6 +46,7 @@ public class ResourceController {
 		dbm = DatabaseManager.get(main.mydb);	//Initialize database manager
 		quickLoadSpeed = System.currentTimeMillis()-loadStart;
 		System.out.println ("val: quick load time = " + quickLoadSpeed);
+		paint = new Paint();
 	}
 	public static ResourceController getInstance(Context context){
 		if (instance == null)
@@ -46,6 +54,34 @@ public class ResourceController {
 		return instance;
 	}
 	
+	public void printOnCanvas(String message, Canvas canvas, float rx, float ry, int textSize, int color){
+		
+		final float scale = main.getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		int textSizePx = (int) (textSize * scale + 0.5f);
+		paint.setColor(color);
+		paint.setTextSize(textSizePx);
+		canvas.drawText(message,rx,ry,paint);
+	}
+	
+	public void printOnCanvas(String message, Canvas canvas, float rx, float ry){
+		
+		final float scale = main.getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		int textSizePx = (int) (defaultTextSize * scale + 0.5f);
+		paint.setColor(defaultColor);
+		paint.setTextSize(textSizePx);
+		canvas.drawText(message,rx,ry,paint);
+	}
+	
+	public void printOnCanvas(String message, Canvas canvas, float rx, float ry, int textSize, Paint givenPaint){
+		
+		final float scale = main.getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		int textSizePx = (int) (defaultTextSize * scale + 0.5f);
+		givenPaint.setTextSize(textSizePx);
+		canvas.drawText(message,rx,ry,givenPaint);
+	}
 	private void loadSlowShit(){
 		new Thread(new Runnable() {
 			public void run() {	
@@ -88,31 +124,33 @@ public class ResourceController {
 	public void processEndOfView(ViewType viewType){
 		switch (viewType){//view calls its own end process and therefore has updated all local variables to exit state.
 		case cowboy:
+			if (zombieView.testFailed){
+				System.out.println("test failed");
+			}
+			else 
 			changeViews(ViewType.multitask);
 			break;
 		case doors:
-			changeViews(ViewType.cowboy);
+			changeViews(ViewType.ticTacToe);
 			break;
 		case lander:
 			giveReport();
 			updateDatabase();
 			break;
 		case multitask:
-			changeViews(ViewType.ticTacToe);
+			changeViews(ViewType.planetHop);
 			break;
 		case planetHop:
-			if (planetHopView.failures <3) // completedTest
-				{
 				changeViews(ViewType.lander);
-				}
-			else // failed test
-				System.out.println("failed test");
 			break;
 		case signIn:
 			changeViews(ViewType.doors);
 			break;
 		case ticTacToe:
-			changeViews(ViewType.planetHop);
+			if (ticTacView.testFailed)
+			System.out.println("test failed");
+			else
+			changeViews(ViewType.cowboy);
 			break;
 		default:
 			break;
