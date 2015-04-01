@@ -22,6 +22,7 @@ public class MovePane {
 	int defaultNumber=9;
 	int difficultyNumber;
 	long timeLastShuffle;
+	int timeForNextShuffle;
 	Vector<PanelPosition> allPanelPositions = new Vector<PanelPosition>();
 	Vector<PanelPosition> currentPanelPositions = new Vector<PanelPosition>();
 	Vector<Bitmap> zombieBitmaps = new Vector<Bitmap>();
@@ -77,6 +78,7 @@ public class MovePane {
 	public void shufflePanels(){
 		setRandomPanelOrder();
 		timeLastShuffle = System.currentTimeMillis();
+		timeForNextShuffle = rand.nextInt(500)+650;
 		targetPanel = new MovePanel(PanelType.TARGET, currentPanelPositions.elementAt(0));
 		colorPanel = new MovePanel(PanelType.COLOR, currentPanelPositions.elementAt(1));
 		testPanel = new MovePanel(PanelType.TEST, currentPanelPositions.elementAt(2));			
@@ -86,9 +88,8 @@ public class MovePane {
 		targetPanel.update(canvas);
 		colorPanel.update(canvas);
 		testPanel.update(canvas);
-		if (System.currentTimeMillis()-timeLastShuffle>800)
-			if (rand.nextBoolean()) shufflePanels();
-			else timeLastShuffle = System.currentTimeMillis();
+		if (timeLastShuffle+timeForNextShuffle<System.currentTimeMillis())
+			shufflePanels();
 	}
 	
 	public boolean processClick(int clickX, int clickY){

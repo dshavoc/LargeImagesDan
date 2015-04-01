@@ -4,11 +4,13 @@ import com.DNI.PlanetHop.PlanetHopView;
 import com.DNI.multitask.MultiTaskView;
 
 import doors.DoorView;
+import doors.DoorsMemoryView;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import SignInTiles.SignInView;
 
 public class ResourceController {
@@ -23,6 +25,8 @@ public class ResourceController {
 	public LanderView landerView;
 	public MultiTaskView multiTaskView;
 	public PlanetHopView planetHopView;
+	public DoorsMemoryView doorsMemoryView;
+	public ResultsView resultsView;
 	boolean calibration = true; //needs to be updated later.
 	boolean quickLoad = false;
 	public boolean slowLoad = false;
@@ -38,6 +42,7 @@ public class ResourceController {
 		main = (MainActivity)context;
 		loadSlowShit();
 		signInView = new SignInView(main);
+		doorsMemoryView = new DoorsMemoryView(main);
 		ticTacView = new TicTacView(main);
 		landerView = new LanderView(main);
 		doorView = new DoorView(main);
@@ -54,6 +59,7 @@ public class ResourceController {
 		return instance;
 	}
 	
+	
 	public void printOnCanvas(String message, Canvas canvas, float rx, float ry, int textSize, int color){
 		
 		final float scale = main.getResources().getDisplayMetrics().density;
@@ -62,6 +68,17 @@ public class ResourceController {
 		paint.setColor(color);
 		paint.setTextSize(textSizePx);
 		canvas.drawText(message,rx,ry,paint);
+	}
+public void printCenteredOnCanvas(String message, Canvas canvas, float rx, float ry, int textSize, int color){
+		
+		final float scale = main.getResources().getDisplayMetrics().density;
+		// Convert the dps to pixels, based on density scale
+		int textSizePx = (int) (textSize * scale + 0.5f);
+		paint.setColor(color);
+		paint.setTextSize(textSizePx);
+		paint.setTextAlign(Align.CENTER);
+		canvas.drawText(message,rx,ry,paint);
+		paint.setTextAlign(Align.LEFT);
 	}
 	
 	public void printOnCanvas(String message, Canvas canvas, float rx, float ry){
@@ -119,7 +136,8 @@ public class ResourceController {
 		dbm.updatePID(targetPID, ticTacView.testTime, DBItem.TICTACTIME, calibration);
 		dbm.updatePID(targetPID, multiTaskView.testTime, DBItem.MULTITASKTIME, calibration);
 		dbm.updatePID(targetPID, landerView.testTime, DBItem.LANDERTIME, calibration);
-		dbm.updatePID(targetPID, planetHopView.testTime, DBItem.PLANETHOPTIME, calibration);		
+		dbm.updatePID(targetPID, planetHopView.testTime, DBItem.PLANETHOPTIME, calibration);
+		
 	}
 	public void processEndOfView(ViewType viewType){
 		switch (viewType){//view calls its own end process and therefore has updated all local variables to exit state.
@@ -136,6 +154,8 @@ public class ResourceController {
 		case lander:
 			giveReport();
 			updateDatabase();
+			resultsView = new ResultsView(main);
+			changeViews(ViewType.results);
 			break;
 		case multitask:
 			changeViews(ViewType.planetHop);
@@ -179,6 +199,12 @@ public class ResourceController {
 			break;
 		case signIn:
 			main.setContentView(signInView);
+			break;
+		case doorsMemory:
+			main.setContentView(doorsMemoryView);
+			break;
+		case results:
+			main.setContentView(resultsView);
 		default:
 			break;
 		}

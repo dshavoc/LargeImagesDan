@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
 		mydb = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		resourceController = ResourceController.getInstance(this);
 		resourceController.changeViews(ViewType.signIn);
-		resourceController.dbm.insertUser("FUCK", calibration);
+		int maxID = resourceController.dbm.returnCurrentMaxPID(true);
 		resourceController.dbm.sayAllInitials();
 		System.out.println("Created");
 	}

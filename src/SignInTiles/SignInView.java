@@ -210,9 +210,9 @@ public class SignInView extends View {
 		{
 			canvas.drawBitmap(confirmBMP,null,screenBounds,null);
 			paint.setTextAlign(Align.CENTER);
-			paint.setColor(Color.BLACK);
-			main.resourceController.printOnCanvas(initials, canvas, main.screenWidth*.5f, main.screenHeight*.60f,60, paint);
-			
+			paint.setColor(Color.RED);
+			//main.resourceController.printCenteredOnCanvas(initials, canvas, main.screenWidth*.5f, main.screenHeight*.60f, paint);
+			main.resourceController.printCenteredOnCanvas(initials, canvas,  main.screenWidth*.5f, main.screenHeight*.60f, 100, Color.RED);
 		}
 		
 		try {  

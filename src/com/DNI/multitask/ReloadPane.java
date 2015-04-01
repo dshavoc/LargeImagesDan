@@ -46,7 +46,7 @@ public class ReloadPane {
 	public void resetBasedOnDifficulty(int difficultyLevel) {
 		//TODO: Tweak all of these numbers
 
-		setBallSpeed(8 + difficultyLevel * 4);
+		setBallSpeed(rand.nextInt(5) + difficultyLevel * 4);
 
 		//Add new set of number bubbles
 		numbers.clear();
@@ -174,7 +174,8 @@ public class ReloadPane {
 		public NumberBubble(Point location, float angle, float speed, int number) { //balls speeds do not change once created...
 			this.number = number; // number will signify mass
 			int sizeUnit = (int)(bounds.width()*.03);
-			//radius = (int) Math.pow((3*number)/(4*3.14), 1/3)*sizeUnit;
+			
+			//radius = (int) (Math.pow((3*number)/(4*3.14), 1/3)*sizeUnit);
 			radius = number*sizeUnit;
 			//isUpdated = false; // creates item and says it has yet to be updated... RCK add 1-2
 			loc = new PointF(location);
@@ -201,6 +202,7 @@ public class ReloadPane {
 			this.number = number; // number will signify mass
 			int sizeUnit = (int)(bounds.width()*.01);
 			radius = number*sizeUnit;
+			//radius = (int) Math.pow((3*number)/(4*3.14),.33)*sizeUnit;
 			//isUpdated = false; // creates item and says it has yet to be updated... RCK add 1-2
 			loc = new PointF(location);
 			this.velocity = velocity;

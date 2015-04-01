@@ -86,7 +86,20 @@ public class DatabaseManager extends Activity{
 			say ("updatePID success");
 		}		
 		catch(Exception e){
-			say ("KERR: update PID error for variable named " + variable.toString() + " with a value of " + value + ".");
+			say ("update PID error for variable named " + variable.toString() + " with a value of " + value + ".");
+		}
+	}
+	public void updatePID(int id, String value, DBItem variable, boolean calibration){ //confirmed functional
+		String TABLE;
+		if (calibration) TABLE = CALIBRATIONTABLE;
+		else TABLE = TESTTABLE;
+		String exec =   "UPDATE " + TABLE + " SET " + variable.toString() + "= '" 	+ 	value 	+"'  WHERE PID = '" + id + "';";
+		try{
+			mydb.execSQL(exec);
+			say ("updatePID success");
+		}		
+		catch(Exception e){
+			say ("update PID error for variable named " + variable.toString() + " with a value of " + value + ".");
 		}
 	}
 	public String returnValue(String initials, DBItem variable, boolean calibration){ //confirmed functional
@@ -139,18 +152,19 @@ public class DatabaseManager extends Activity{
 		}
 	}
 	private void say(String s){
-		System.out.println(s);
+		System.out.println("DBM OUTPUT:" + s);
 	}
 	public void sayAllInitials(){
 		say ("saying initials");
 		try{
-			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  TESTTABLE, null); 
+			Cursor allrows  = mydb.rawQuery("SELECT * FROM "+  CALIBRATIONTABLE, null); 
 			if (allrows.moveToFirst()) {
 	            do {
 	            say (allrows.getString(1));   // get  the  data into array,or class variable
 	            
 	            } while (allrows.moveToNext());
 	        }
+			else say("no data in db");
 		}
 		catch(Exception e){ 
 		say ("error in sayAllInitials");

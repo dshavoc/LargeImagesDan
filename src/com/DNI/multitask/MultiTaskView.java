@@ -99,7 +99,7 @@ public class MultiTaskView extends View{
 	}
 	private void exit(){
 		failures = clicks-successes;
-		failures+=cinematicPane.failures;
+		//failures+=(int)(cinematicPane.failures/10);
 		testTime = (int) (System.currentTimeMillis()-startTime);
 		main.resourceController.processEndOfView(ViewType.multitask);
 	}
